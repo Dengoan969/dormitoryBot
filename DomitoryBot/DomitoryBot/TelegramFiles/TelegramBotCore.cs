@@ -4,18 +4,16 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-
 namespace Telegram
 {
-
     public class TelegramBotCore
-    { 
+    {
         CancellationTokenSource cts = new CancellationTokenSource();
-        
+
         public Task StartBot(string token)
         {
             var botClient = new TelegramBotClient(token);
-            
+
             var receiverOptions = new ReceiverOptions
             {
                 AllowedUpdates = Array.Empty<UpdateType>() // receive all update types
@@ -26,8 +24,8 @@ namespace Telegram
                 receiverOptions: receiverOptions,
                 cancellationToken: cts.Token
             );
-            
-            
+
+
             Console.ReadLine();
             cts.Cancel();
             return Task.CompletedTask;
@@ -46,7 +44,7 @@ namespace Telegram
                 Console.WriteLine($"Sent to {username} message \"{messageText}\"");
             }
         }
-        
+
         private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
             CancellationToken cancellationToken)
         {
@@ -56,23 +54,16 @@ namespace Telegram
             // Only process text messages
             if (message.Text is not { } messageText)
                 return;
-            
+
             var chatId = message.Chat.Id;
             var username = update.Message.From.Username;
 
             Console.WriteLine($"Received a '{messageText}' message in chat {username}.");
 
-            if (message.Text == "Денис пидор")
-            {
-                await SendMessage(botClient, chatId, "Да", username);
-            }
-            else
-            {
-                await SendMessage(botClient, chatId, "You said: \n" + messageText, username);    
-            }
-            // Echo received message text
-            
+            await SendMessage(botClient, chatId, "You said: \n" + messageText, username);
 
+
+            // Echo received message text
         }
 
         private Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,
