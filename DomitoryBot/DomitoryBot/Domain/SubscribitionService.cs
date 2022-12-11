@@ -1,31 +1,28 @@
 ﻿namespace DomitoryBot.Domain
 {
-    public interface ISubscribtionRepository
+    public enum SubscriptionErrors
     {
-        public Guid[] GetAllUsers(string name);
-        public Guid[] GetAdmins(string name);
-        public void SubscribeUser(Guid user, string name);
-        public void UnsubscribeUser(Guid user, string name);
-        public string[] GetSubscriptionsOfUser(Guid user);
+        AlreadySubscribed,
+        NotExistedSubscription
     }
 
-    public class SubscribitionService
+    public class SubscriptionService
     {
-        private ISubscribtionRepository subscribtionRepo;
+        private ISubscriptionRepository subscriptionRepository;
 
         public bool SubscribeUser(Guid user, string subscribName)
         {
-            if (subscribtionRepo.GetSubscriptionsOfUser(user).Contains(subscribName)) return false;
+            if (subscriptionRepository.GetSubscriptionsOfUser(user).Contains(subscribName)) return false;
 
-            subscribtionRepo.SubscribeUser(user, subscribName);
+            subscriptionRepository.SubscribeUser(user, subscribName);
             return true;
         }
 
         public bool UnsubscribeUser(Guid user, string subscribName)
         {
-            if (!subscribtionRepo.GetSubscriptionsOfUser(user).Contains(subscribName)) return false;
+            if (!subscriptionRepository.GetSubscriptionsOfUser(user).Contains(subscribName)) return false;
 
-            subscribtionRepo.UnsubscribeUser(user, subscribName);
+            subscriptionRepository.UnsubscribeUser(user, subscribName);
             return true;
         }
 
@@ -58,5 +55,14 @@
         {
             return $"{Topic}\n{Text}\n{Type}";
         }
+    }
+
+    public interface ISubscriptionRepository
+    {
+        public Guid[] GetAllUsers(string name);
+        public Guid[] GetAdmins(string name);
+        public void SubscribeUser(Guid user, string name);
+        public void UnsubscribeUser(Guid user, string name);
+        public string[] GetSubscriptionsOfUser(Guid user);
     }
 }
