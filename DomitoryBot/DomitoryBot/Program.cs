@@ -5,7 +5,7 @@ using Telegram;
 static string GetTokenFromFile()
 {
     var path = Directory.GetCurrentDirectory()
-        .Replace("bin\\Debug\\net6.0", "TelegramFiles\\token.txt");
+        .Replace("bin\\Debug\\net6.0", "TelegramFiles\\token.txt"); // todo
     var reader = new StreamReader(path);
     var token = reader.ReadToEnd();
     return token;
@@ -15,5 +15,3 @@ static string GetTokenFromFile()
 var c = new TelegramBotCore();
 var token = GetTokenFromFile();
 await c.StartBot(token);
-
-
