@@ -3,12 +3,14 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Telegram
 {
     public class TelegramBotCore
     {
         CancellationTokenSource cts = new CancellationTokenSource();
+        DialogManager dialogManager = new DialogManager();
 
         public Task StartBot(string token)
         {
@@ -48,22 +50,41 @@ namespace Telegram
         private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
             CancellationToken cancellationToken)
         {
-            // Only process Message updates: https://core.telegram.org/bots/api#message
-            if (update.Message is not { } message)
-                return;
-            // Only process text messages
-            if (message.Text is not { } messageText)
-                return;
+            switch (update.Type)
+            {
+                case UpdateType.Message:
+                    dialogManager.HandleUpdate(botClient, update);
+                    break;
+                    //var text = update.Message.Text;
+                    //switch (text)
+                    //{
+                    //    case "Button1":
+                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Button1", replyMarkup: GetButtons());
+                    //        break;
+                    //    case "Button2":
+                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Button2", replyMarkup: GetButtons());
+                    //        break;
+                    //    case "Button3":
+                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Button3", replyMarkup: GetButtons());
+                    //        break;
+                    //    case "Button4":
+                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Button4", replyMarkup: GetButtons());
+                    //        break;
+                    //    default:
+                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "You said: \n" + text, replyMarkup:GetButtons());
+                    //        break;
+                    //}
+            }
 
-            var chatId = message.Chat.Id;
-            var username = update.Message.From.Username;
 
-            Console.WriteLine($"Received a '{messageText}' message in chat {username}.");
+            //var username = update.Message.From.Username;
+            //Console.WriteLine($"Received a '{messageText}' message in chat {username}.");
 
-            await SendMessage(botClient, chatId, "You said: \n" + messageText, username);
+        }
 
-
-            // Echo received message text
+        private IReplyMarkup GetButtons()
+        {
+            return Keyboard.Menu;
         }
 
         private Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,
