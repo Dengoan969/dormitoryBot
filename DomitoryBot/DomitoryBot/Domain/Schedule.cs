@@ -122,7 +122,7 @@
 
         // record(Guid Id, Guid UserId, nvarchar(max) MachineName, Date Start, Date End)
 
-        public Dictionary<string, HashSet<TimeInterval>> GetFreeTimes()
+        public Dictionary<string, List<TimeInterval>> GetFreeTimes()
         {
             return data.GetFreeTimes();
         }
@@ -132,49 +132,64 @@
     {
         void AddRecord(Record record);
         void RemoveRecord(Record record);
-        Dictionary<string, HashSet<TimeInterval>> GetRecordsTimesByUser(Guid user);
-        Dictionary<string, HashSet<TimeInterval>> GetFreeTimes();
+        Dictionary<string, List<TimeInterval>> GetRecordsTimesByUser(Guid user);
+        Dictionary<string, List<TimeInterval>> GetFreeTimes();
     }
 
     public class ScheduleMockRepository : IRecordsRepository
     {
         private static readonly Dictionary<Guid, List<Record>> dataBase = new Dictionary<Guid, List<Record>>();
 
-        private readonly Dictionary<string, HashSet<TimeInterval>>
+        private readonly Dictionary<string, List<TimeInterval>>
             freeTimes; //todo: list vs hashset. How to work work intervals
 
-        public ScheduleMockRepository(Dictionary<string, HashSet<TimeInterval>> freeTimes)
+        public ScheduleMockRepository(Dictionary<string, List<TimeInterval>> freeTimes)
         {
             this.freeTimes = freeTimes;
         }
 
         public void AddRecord(Record record)
         {
+            if (freeTimes[record.Machine].All(x => !x.Contains(record.TimeInterval))) throw new ArgumentException("");
             if (!dataBase.ContainsKey(record.User))
             {
                 dataBase.Add(record.User, new List<Record>());
             }
 
             dataBase[record.User].Add(record);
+            var timeInterval = record.TimeInterval;
+            var indexToSeparate = freeTimes[record.Machine]
+                .FindIndex(x => x.Contains(timeInterval.Start));
+            var toAdd = freeTimes[record.Machine][indexToSeparate].ExcludeInterval(timeInterval);
+            freeTimes[record.Machine].RemoveAt(indexToSeparate);
+            for (var i = indexToSeparate; i < indexToSeparate + toAdd.Length; i++)
+                freeTimes[record.Machine].Insert(i, toAdd[i - indexToSeparate]);
         }
 
         public void RemoveRecord(Record record)
         {
+            if (freeTimes[record.Machine].Any(x => x.Contains(record.TimeInterval))) throw new ArgumentException("");
             dataBase[record.User] = dataBase[record.User]
                 .Where(x => x != record).ToList();
+            var timeInterval = record.TimeInterval;
+            var indexToInsert = freeTimes[record.Machine].FindIndex(x => x.Start >= record.TimeInterval.End);
+            if (indexToInsert == -1)
+                indexToInsert = freeTimes.Count;
+            //todo
         }
 
-        public Dictionary<string, HashSet<TimeInterval>> GetRecordsTimesByUser(Guid user)
+
+        public Dictionary<string, List<TimeInterval>> GetRecordsTimesByUser(Guid user)
         {
             if (dataBase.TryGetValue(user, out var records))
                 return records.GroupBy(x => x.Machine)
                     .ToDictionary(grouping => grouping.Key,
-                        grouping => grouping.Select(x => x.TimeInterval).ToHashSet());
+                        grouping => grouping.Select(x => x.TimeInterval).ToList());
 
-            return new Dictionary<string, HashSet<TimeInterval>>();
+            return new Dictionary<string, List<TimeInterval>>();
         }
 
-        public Dictionary<string, HashSet<TimeInterval>> GetFreeTimes()
+        public Dictionary<string, List<TimeInterval>> GetFreeTimes()
         {
             // 3 5
             //hashset free 2[]8
