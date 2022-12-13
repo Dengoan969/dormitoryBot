@@ -10,11 +10,12 @@ namespace Telegram
     public class TelegramBotCore
     {
         CancellationTokenSource cts = new CancellationTokenSource();
-        DialogManager dialogManager = new DialogManager();
+        DialogManager dialogManager;
 
         public Task StartBot(string token)
         {
             var botClient = new TelegramBotClient(token);
+            dialogManager = new DialogManager(botClient);
 
             var receiverOptions = new ReceiverOptions
             {
@@ -50,42 +51,9 @@ namespace Telegram
         private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,
             CancellationToken cancellationToken)
         {
-            switch (update.Type)
-            {
-                case UpdateType.Message:
-                    dialogManager.HandleUpdate(botClient, update);
-                    break;
-                    //var text = update.Message.Text;
-                    //switch (text)
-                    //{
-                    //    case "Button1":
-                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Button1", replyMarkup: GetButtons());
-                    //        break;
-                    //    case "Button2":
-                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Button2", replyMarkup: GetButtons());
-                    //        break;
-                    //    case "Button3":
-                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Button3", replyMarkup: GetButtons());
-                    //        break;
-                    //    case "Button4":
-                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Button4", replyMarkup: GetButtons());
-                    //        break;
-                    //    default:
-                    //        await botClient.SendTextMessageAsync(update.Message.Chat.Id, "You said: \n" + text, replyMarkup:GetButtons());
-                    //        break;
-                    //}
-            }
-
-
-            //var username = update.Message.From.Username;
-            //Console.WriteLine($"Received a '{messageText}' message in chat {username}.");
-
+            await dialogManager?.HandleUpdate(update);
         }
 
-        private IReplyMarkup GetButtons()
-        {
-            return Keyboard.Menu;
-        }
 
         private Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception,
             CancellationToken cancellationToken)

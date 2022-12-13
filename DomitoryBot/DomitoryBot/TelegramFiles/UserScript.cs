@@ -20,126 +20,100 @@ namespace Telegram
         FAQ,
         Ideas
     }
+
     public class DialogManager
     {
         Func<ITelegramBotClient, Update, Task> toPrevious;
         DialogState state;
+        public readonly TelegramBotClient BotClient;
+        public readonly Dictionary<DialogState, IChatCommand[]> commands;
 
-        public async Task HandleUpdate(ITelegramBotClient botClient, Update update)
+        public DialogManager(TelegramBotClient botClient)
         {
-            var text = update.Message.Text;
-            if (string.IsNullOrEmpty(text))
+            this.BotClient = botClient;
+            commands = new Dictionary<DialogState, IChatCommand[]> {
+                { DialogState.Start, new IChatCommand[] { new ToMenuCommand(this) } },
+                { DialogState.Menu, new IChatCommand[] {
+                    new ToWashingCommand(this), new ToMarketplaceCommand(this),
+                    new ToSubscriptionsCommand(this), new ToFAQCommand(this),
+                    new ToIdeasCommand(this) } }
+            };
+        }
+
+        public async Task HandleUpdate(Update update)
+        {
+            var text = update.Message?.Text ?? update.CallbackQuery?.Data;
+            var chatId = update.Message?.Chat.Id ?? update.CallbackQuery?.Message.Chat.Id;
+            if(!chatId.HasValue)
             {
                 return;
             }
-            switch (state)
+            if(state == DialogState.Start)
             {
-                case DialogState.Start:
-                    await StateMenu(botClient, update);
-                    break;
-                case DialogState.Menu:
-                    switch (text)
-                    {
-                        case "Стирка":
-                            await StateWashing(botClient, update);
-                            break;
-                        case "Маркетплейс":
-                            await StateMarketplace(botClient, update);
-                            break;
-                        case "Объявления":
-                            await StateSubscriptions(botClient, update);
-                            break;
-                        case "FAQ":
-                            await StateFAQ(botClient, update);
-                            break;
-                        case "Предложить идею":
-                            await StateIdeas(botClient, update);
-                            break;
-                    }
-                    break;
-                case DialogState.Washing:
-                    switch(text)
-                    {
-                        case "Назад":
-                            await StateMenu(botClient, update);
-                            break;
-                    }
-                    break;
-                case DialogState.Marketplace:
-                    switch (text)
-                    {
-                        case "Назад":
-                            await StateMenu(botClient, update);
-                            break;
-                    }
-                    break;
-                case DialogState.Subscriptions:
-                    switch (text)
-                    {
-                        case "Назад":
-                            await StateMenu(botClient, update);
-                            break;
-                    }
-                    break;
-                case DialogState.FAQ:
-                    switch (text)
-                    {
-                        case "Назад":
-                            await StateMenu(botClient, update);
-                            break;
-                    }
-                    break;
-                case DialogState.Ideas:
-                    switch (text)
-                    {
-                        case "Назад":
-                            await StateMenu(botClient, update);
-                            break;
-                    }
-                    break;
+                await StateMenu(chatId.Value);
+            }
+            else
+            {
+                await TryExecuteCommand(text, "", chatId.Value);
+                await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
             }
         }
 
-        private async Task StateMenu(ITelegramBotClient botClient, Update update)
+        private async Task TryExecuteCommand(string commandName, string text, long chatId)
+        {
+            foreach(var command in commands[state])
+            {
+                if(command.Command == commandName)
+                {
+                    await command.HandleText(text, chatId);
+                    break;
+                }
+            }
+        }
+        public async Task StateMenu(long chatId)
         {
             state = DialogState.Menu;
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Меню", replyMarkup: Keyboard.Menu);
+            await BotClient.SendTextMessageAsync(chatId, "Меню", replyMarkup: Keyboard.Menu);
         }
 
-        private async Task StateWashing(ITelegramBotClient botClient, Update update)
+        public async Task StateWashing(ChatId chatId)
         {
             state = DialogState.Washing;
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Стирка", replyMarkup: Keyboard.Washing);
+            await BotClient.SendTextMessageAsync(chatId, "Стирка", replyMarkup: Keyboard.Washing);
         }
 
-        private async Task StateMarketplace(ITelegramBotClient botClient, Update update)
+        public async Task StateMarketplace(ChatId chatId)
         {
             state = DialogState.Marketplace;
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Маркетплейс", replyMarkup: Keyboard.Marketplace);
+            await BotClient.SendTextMessageAsync(chatId, "Маркетплейс", replyMarkup: Keyboard.Marketplace);
         }
 
-        private async Task StateSubscriptions(ITelegramBotClient botClient, Update update)
+        public async Task StateSubscriptions(ChatId chatId)
         {
             state = DialogState.Subscriptions;
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Объявления", replyMarkup: Keyboard.Subscriptions);
+            await BotClient.SendTextMessageAsync(chatId, "Объявления", replyMarkup: Keyboard.Subscriptions);
         }
-        private async Task StateFAQ(ITelegramBotClient botClient, Update update)
+        public async Task StateFAQ(ChatId chatId)
         {
             state = DialogState.FAQ;
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, "FAQ", replyMarkup: Keyboard.FAQ);
+            await BotClient.SendTextMessageAsync(chatId, "FAQ", replyMarkup: Keyboard.FAQ);
         }
-        private async Task StateIdeas(ITelegramBotClient botClient, Update update)
+        public async Task StateIdeas(ChatId chatId)
         {
             state = DialogState.Ideas;
-            await botClient.SendTextMessageAsync(update.Message.Chat.Id, "Предложить идею", replyMarkup: Keyboard.Ideas);
+            await BotClient.SendTextMessageAsync(chatId, "Предложить идею", replyMarkup: Keyboard.Ideas);
         }
     }
 
     public static class Keyboard
     {
-        public static ReplyKeyboardMarkup Menu = new ReplyKeyboardMarkup(new[] {
-            new KeyboardButton[] {"Стирка", "Маркетплейс", "Объявления"},
-            new KeyboardButton[] {"FAQ", "Предложить идею"} });
+        public static InlineKeyboardMarkup Menu = new InlineKeyboardMarkup(new[] {
+            new [] {InlineKeyboardButton.WithCallbackData("Стирка","Washing"),
+                    InlineKeyboardButton.WithCallbackData("Маркетплейс","Marketplace"),
+                    InlineKeyboardButton.WithCallbackData("Объявления","Subscriptions")},
+
+            new [] {InlineKeyboardButton.WithCallbackData("FAQ", "FAQ"),
+                    InlineKeyboardButton.WithCallbackData("Предложить идею","Ideas")} });
 
         public static ReplyKeyboardMarkup Back = new ReplyKeyboardMarkup(new KeyboardButton("Назад"));
 
