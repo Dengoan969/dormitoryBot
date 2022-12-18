@@ -81,7 +81,7 @@
         {
             {WashingType.fast, TimeSpan.FromMinutes(30)},
             {WashingType.b, TimeSpan.FromMinutes(60)},
-            {WashingType.c, TimeSpan.FromMinutes(90)}, //ADD WASHING TYPES
+            {WashingType.c, TimeSpan.FromMinutes(90)} //todo ADD WASHING TYPES
         };
 
         private readonly string[] machineNames;
@@ -96,33 +96,42 @@
         public bool AddRecord(Guid user, string machine, DateTime startDate, WashingType washingType)
         {
             var finishDate = startDate.Add(washingTypes[washingType]);
-            foreach (var pair in data.GetFreeTimes())
+            var record = new Record(user, new TimeInterval(startDate, finishDate), machine);
+            try
             {
-                foreach (var timeInterval in pair.Value)
-                {
-                    var washingInterval = new TimeInterval(startDate, finishDate);
-                    if (timeInterval.Contains(washingInterval))
-                    {
-                        var record = new Record(user, washingInterval, machine);
-                        data.AddRecord(record);
-                        return true;
-                    }
-                }
+                data.AddRecord(record);
+            }
+            catch (ArgumentException e)
+            {
+                return false;
             }
 
-            return false;
+            return true;
         }
 
-        public void RemoveRecord(Guid user, TimeInterval timeInterval, string machine)
+        public bool RemoveRecord(Guid user, TimeInterval timeInterval, string machine)
         {
             var record = new Record(user, timeInterval, machine);
-            data.RemoveRecord(record);
+            try
+            {
+                data.RemoveRecord(record);
+            }
+            catch (ArgumentException e)
+            {
+                return false;
+            }
+
+            return true;
         }
 
+        public List<Record> GetRecordsTimesByUser(Guid user)
+        {
+            return data.GetRecordsTimesByUser(user);
+        }
 
         // record(Guid Id, Guid UserId, nvarchar(max) MachineName, Date Start, Date End)
 
-        public Dictionary<string, List<TimeInterval>> GetFreeTimes()
+        public Dictionary<string, List<DateTime>> GetFreeTimes()
         {
             return data.GetFreeTimes();
         }
@@ -132,70 +141,81 @@
     {
         void AddRecord(Record record);
         void RemoveRecord(Record record);
-        Dictionary<string, List<TimeInterval>> GetRecordsTimesByUser(Guid user);
-        Dictionary<string, List<TimeInterval>> GetFreeTimes();
+        List<Record> GetRecordsTimesByUser(Guid user);
+        Dictionary<string, List<DateTime>> GetFreeTimes();
     }
 
     public class ScheduleMockRepository : IRecordsRepository
     {
         private static readonly Dictionary<Guid, List<Record>> dataBase = new Dictionary<Guid, List<Record>>();
+        private readonly Dictionary<string, List<bool>> freeTimes;
 
-        private readonly Dictionary<string, List<TimeInterval>>
-            freeTimes; //todo: list vs hashset. How to work work intervals
+        //todo: list vs hashset. How to work work intervals
 
-        public ScheduleMockRepository(Dictionary<string, List<TimeInterval>> freeTimes)
+
+        public ScheduleMockRepository(Dictionary<string, List<bool>> freeTimes)
         {
             this.freeTimes = freeTimes;
         }
 
         public void AddRecord(Record record)
         {
-            if (freeTimes[record.Machine].All(x => !x.Contains(record.TimeInterval))) throw new ArgumentException("");
+            var startIndex = GetIndexByDate(record.TimeInterval.Start);
+            var endIndex = GetIndexByDate(record.TimeInterval.End);
+            for (var i = startIndex; i < endIndex; i++)
+                if (freeTimes[record.Machine][i])
+                    throw new ArgumentException();
             if (!dataBase.ContainsKey(record.User))
             {
                 dataBase.Add(record.User, new List<Record>());
             }
 
-            dataBase[record.User].Add(record);
-            var timeInterval = record.TimeInterval;
-            var indexToSeparate = freeTimes[record.Machine]
-                .FindIndex(x => x.Contains(timeInterval.Start));
-            var toAdd = freeTimes[record.Machine][indexToSeparate].ExcludeInterval(timeInterval);
-            freeTimes[record.Machine].RemoveAt(indexToSeparate);
-            for (var i = indexToSeparate; i < indexToSeparate + toAdd.Length; i++)
-                freeTimes[record.Machine].Insert(i, toAdd[i - indexToSeparate]);
+            for (var i = startIndex; i < endIndex; i++) freeTimes[record.Machine][i] = true;
         }
 
         public void RemoveRecord(Record record)
         {
-            if (freeTimes[record.Machine].Any(x => x.Contains(record.TimeInterval))) throw new ArgumentException("");
+            var startIndex = GetIndexByDate(record.TimeInterval.Start);
+            var endIndex = GetIndexByDate(record.TimeInterval.End);
+            for (var i = startIndex; i < endIndex; i++)
+                if (!freeTimes[record.Machine][i])
+                    throw new ArgumentException();
             dataBase[record.User] = dataBase[record.User]
                 .Where(x => x != record).ToList();
-            var timeInterval = record.TimeInterval;
-            var indexToInsert = freeTimes[record.Machine].FindIndex(x => x.Start >= record.TimeInterval.End);
-            if (indexToInsert == -1)
-                indexToInsert = freeTimes.Count;
-            //todo
+
+            for (var i = startIndex; i < endIndex; i++) freeTimes[record.Machine][i] = false;
         }
 
 
-        public Dictionary<string, List<TimeInterval>> GetRecordsTimesByUser(Guid user)
+        public List<Record> GetRecordsTimesByUser(Guid user)
         {
             if (dataBase.TryGetValue(user, out var records))
-                return records.GroupBy(x => x.Machine)
-                    .ToDictionary(grouping => grouping.Key,
-                        grouping => grouping.Select(x => x.TimeInterval).ToList());
+                return records;
 
-            return new Dictionary<string, List<TimeInterval>>();
+            return new List<Record>();
         }
 
-        public Dictionary<string, List<TimeInterval>> GetFreeTimes()
+        public Dictionary<string, List<DateTime>> GetFreeTimes()
         {
-            // 3 5
-            //hashset free 2[]8
-            //0[]2 6[]9
-            //data.
-            return freeTimes;
+            var today = DateTime.Today;
+            var times = new Dictionary<string, List<DateTime>>();
+            foreach (var machine in freeTimes.Keys)
+            {
+                times[machine] = new List<DateTime>();
+                var begin = today;
+                for (var i = 0; i < freeTimes[machine].Count; i++)
+                    if (!freeTimes[machine][i])
+                        times[machine].Add(today.AddMinutes(30 * i));
+            }
+
+            return times;
+        }
+
+        private int GetIndexByDate(DateTime date)
+        {
+            var today = DateTime.Today;
+            var diff = date - today;
+            return diff.Days * 48 + diff.Hours * 2 + diff.Minutes / 30;
         }
     }
 }
