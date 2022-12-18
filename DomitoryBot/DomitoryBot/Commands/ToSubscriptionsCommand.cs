@@ -3,23 +3,24 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram;
 using Telegram.Bot;
 
-namespace Telegram
+namespace DomitoryBot.Commands
 {
-    public class ToMarketplaceCommand : IChatCommand
+    public class ToSubscriptionsCommand : IChatCommand
     {
         private readonly DialogManager dialogManager;
-        public string Command => "Marketplace";
+        public string Command => "FAQ";
 
-        public ToMarketplaceCommand(DialogManager dialogManager)
+        public ToSubscriptionsCommand(DialogManager dialogManager)
         {
             this.dialogManager = dialogManager;
         }
 
         public async Task HandleText(string text, long chatId)
         {
-            await dialogManager.StateMarketplace(chatId);
+            await dialogManager.StateSubscriptions(chatId);
         }
     }
 }

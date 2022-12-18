@@ -3,9 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Telegram;
 using Telegram.Bot;
 
-namespace Telegram
+namespace DomitoryBot.Commands
 {
     public class ToMenuCommand : IChatCommand
     {

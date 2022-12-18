@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using DomitoryBot.Commands;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
@@ -7,6 +8,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace Telegram
 {
+    //[Flags]
     public enum DialogState
     {
         Start,
@@ -55,7 +57,11 @@ namespace Telegram
             else
             {
                 await TryExecuteCommand(text, "", chatId.Value);
-                await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
+                if(update.CallbackQuery!=null)
+                {
+                    await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
+                }
+                
             }
         }
 
