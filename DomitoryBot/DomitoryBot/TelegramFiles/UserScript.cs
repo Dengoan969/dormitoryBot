@@ -5,6 +5,7 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using Ninject.Modules;
 
 namespace Telegram
 {
@@ -38,7 +39,10 @@ namespace Telegram
                 { DialogState.Menu, new IChatCommand[] {
                     new ToWashingCommand(this), new ToMarketplaceCommand(this),
                     new ToSubscriptionsCommand(this), new ToFAQCommand(this),
-                    new ToIdeasCommand(this) } }
+                    new ToIdeasCommand(this) } },
+                {DialogState.Washing, new IChatCommand[] {
+                    new FreeSlotsCommand(this), new MyEntriesCommand(this),
+                new BackCommand(this), new CreateEntryCommand(this), new DeleteEntryCommand(this)} }
             };
         }
 
@@ -46,30 +50,33 @@ namespace Telegram
         {
             var text = update.Message?.Text ?? update.CallbackQuery?.Data;
             var chatId = update.Message?.Chat.Id ?? update.CallbackQuery?.Message.Chat.Id;
-            if(!chatId.HasValue)
+            if (!chatId.HasValue)
             {
                 return;
             }
-            if(state == DialogState.Start)
+            if (state == DialogState.Start)
             {
                 await StateMenu(chatId.Value);
             }
             else
             {
                 await TryExecuteCommand(text, "", chatId.Value);
-                if(update.CallbackQuery!=null)
-                {
-                    await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
-                }
-                
+            }
+            if (update.CallbackQuery != null)
+            {
+                await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
+            }
+            if (update.Message != null)
+            {
+                await BotClient.DeleteMessageAsync(chatId, update.Message.MessageId);
             }
         }
 
         private async Task TryExecuteCommand(string commandName, string text, long chatId)
         {
-            foreach(var command in commands[state])
+            foreach (var command in commands[state])
             {
-                if(command.Command == commandName)
+                if (command.Command == commandName)
                 {
                     await command.HandleText(text, chatId);
                     break;
@@ -87,6 +94,7 @@ namespace Telegram
             state = DialogState.Washing;
             await BotClient.SendTextMessageAsync(chatId, "Стирка", replyMarkup: Keyboard.Washing);
         }
+
 
         public async Task StateMarketplace(ChatId chatId)
         {
@@ -121,25 +129,41 @@ namespace Telegram
             new [] {InlineKeyboardButton.WithCallbackData("FAQ", "FAQ"),
                     InlineKeyboardButton.WithCallbackData("Предложить идею","Ideas")} });
 
-        public static ReplyKeyboardMarkup Back = new ReplyKeyboardMarkup(new KeyboardButton("Назад"));
+        //public static ReplyKeyboardMarkup Back = new ReplyKeyboardMarkup(new KeyboardButton("Назад"));
 
-        public static ReplyKeyboardMarkup Washing = new ReplyKeyboardMarkup(new[] {
-            new KeyboardButton[] {"Свободные слоты", "Мои записи", "Назад"},
-            new KeyboardButton[] {"Записаться", "Удалить запись"} });
+        public static InlineKeyboardMarkup Washing = new InlineKeyboardMarkup(new[] {
+            new [] {InlineKeyboardButton.WithCallbackData("Свободные слоты","FreeSlots"),
+                    InlineKeyboardButton.WithCallbackData("Мои записи","MyEntries"),
+                    InlineKeyboardButton.WithCallbackData("Назад","Back")},
 
-        public static ReplyKeyboardMarkup Washing_Date = new ReplyKeyboardMarkup(new[] {
-            new KeyboardButton[] {"Сегодня", "Завтра","Послезавтра", "Назад"}});
+            new [] {InlineKeyboardButton.WithCallbackData("Записаться", "CreateEntry"),
+                    InlineKeyboardButton.WithCallbackData("Удалить запись","DeleteEntry")} });
 
-        public static ReplyKeyboardMarkup Washing_Machine = new ReplyKeyboardMarkup(new[] {
-            new KeyboardButton[] {"1", "2","3", "Назад"}});
+        public static InlineKeyboardMarkup Washing_Date = new InlineKeyboardMarkup(new[] {
+            new [] {InlineKeyboardButton.WithCallbackData("Сегодня","FreeSlots"),
+                    InlineKeyboardButton.WithCallbackData("Завтра","MyEntries"),
+                    InlineKeyboardButton.WithCallbackData("Послезавтра","Back"),
+                    InlineKeyboardButton.WithCallbackData("Назад","Back")} });
 
-        public static ReplyKeyboardMarkup Marketplace = new ReplyKeyboardMarkup(new[] {
-            new KeyboardButton[] {"Все объявления", "Мои объявления"},
-            new KeyboardButton[] {"Создать объявление", "Назад" } });
+        public static InlineKeyboardMarkup Washing_Machine = new InlineKeyboardMarkup(new[] {
+            new [] {InlineKeyboardButton.WithCallbackData("1","FreeSlots"),
+                    InlineKeyboardButton.WithCallbackData("2","MyEntries"),
+                    InlineKeyboardButton.WithCallbackData("3","Back"),
+                    InlineKeyboardButton.WithCallbackData("Назад","Back")} });
 
-        public static ReplyKeyboardMarkup Subscriptions = new ReplyKeyboardMarkup(new[] {
-            new KeyboardButton[] {"Подписаться", "Отписаться"},
-            new KeyboardButton[] {"Создать объявление", "Назад" } });
+        public static InlineKeyboardMarkup Marketplace = new InlineKeyboardMarkup(new[] {
+            new [] {InlineKeyboardButton.WithCallbackData("Все объявления","FreeSlots"),
+                    InlineKeyboardButton.WithCallbackData("Мои объявления","MyEntries")},
+
+            new [] {InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateEntry"),
+                    InlineKeyboardButton.WithCallbackData("Назад","DeleteEntry")} });
+
+        public static InlineKeyboardMarkup Subscriptions = new InlineKeyboardMarkup(new[] {
+            new [] {InlineKeyboardButton.WithCallbackData("Подписаться","FreeSlots"),
+                    InlineKeyboardButton.WithCallbackData("Отписаться","MyEntries")},
+
+            new [] {InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateEntry"),
+                    InlineKeyboardButton.WithCallbackData("Назад","DeleteEntry")} });
 
         public static ReplyKeyboardMarkup FAQ = new ReplyKeyboardMarkup(new KeyboardButton("Назад"));
 

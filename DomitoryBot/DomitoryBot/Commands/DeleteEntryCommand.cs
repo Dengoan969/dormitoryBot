@@ -8,19 +8,19 @@ using Telegram.Bot;
 
 namespace DomitoryBot.Commands
 {
-    public class ToSubscriptionsCommand : IChatCommand
+    public class DeleteEntryCommand : IChatCommand
     {
         private readonly DialogManager dialogManager;
-        public string Command => "Subscriptions";
+        public string Command => "DeleteEntry";
 
-        public ToSubscriptionsCommand(DialogManager dialogManager)
+        public DeleteEntryCommand(DialogManager dialogManager)
         {
             this.dialogManager = dialogManager;
         }
 
         public async Task HandleText(string text, long chatId)
         {
-            await dialogManager.StateSubscriptions(chatId);
+            await dialogManager.StateFAQ(chatId);
         }
     }
 }
