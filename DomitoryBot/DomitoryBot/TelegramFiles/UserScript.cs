@@ -56,7 +56,7 @@ namespace Telegram
             }
             if (state == DialogState.Start)
             {
-                await StateMenu(chatId.Value);
+                await ChangeState(DialogState.Menu, chatId, "Меню", Keyboard.Menu);
             }
             else
             {
@@ -83,39 +83,11 @@ namespace Telegram
                 }
             }
         }
-        public async Task StateMenu(long chatId)
-        {
-            state = DialogState.Menu;
-            await BotClient.SendTextMessageAsync(chatId, "Меню", replyMarkup: Keyboard.Menu);
-        }
 
-        public async Task StateWashing(ChatId chatId)
+        public async Task ChangeState(DialogState newState, ChatId chatId, string message, IReplyMarkup keyboard)
         {
-            state = DialogState.Washing;
-            await BotClient.SendTextMessageAsync(chatId, "Стирка", replyMarkup: Keyboard.Washing);
-        }
-
-
-        public async Task StateMarketplace(ChatId chatId)
-        {
-            state = DialogState.Marketplace;
-            await BotClient.SendTextMessageAsync(chatId, "Маркетплейс", replyMarkup: Keyboard.Marketplace);
-        }
-
-        public async Task StateSubscriptions(ChatId chatId)
-        {
-            state = DialogState.Subscriptions;
-            await BotClient.SendTextMessageAsync(chatId, "Объявления", replyMarkup: Keyboard.Subscriptions);
-        }
-        public async Task StateFAQ(ChatId chatId)
-        {
-            state = DialogState.FAQ;
-            await BotClient.SendTextMessageAsync(chatId, "FAQ", replyMarkup: Keyboard.FAQ);
-        }
-        public async Task StateIdeas(ChatId chatId)
-        {
-            state = DialogState.Ideas;
-            await BotClient.SendTextMessageAsync(chatId, "Предложить идею", replyMarkup: Keyboard.Ideas);
+            state = newState;
+            await BotClient.SendTextMessageAsync(chatId, message, replyMarkup: keyboard);
         }
     }
 

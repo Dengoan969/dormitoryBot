@@ -13,6 +13,10 @@ namespace DomitoryBot.Commands
         private readonly DialogManager dialogManager;
         public string Command => "Ideas";
 
+        public DialogState SourceState => DialogState.Menu;
+
+        public DialogState DestinationState => DialogState.Ideas;
+
         public ToIdeasCommand(DialogManager dialogManager)
         {
             this.dialogManager = dialogManager;
@@ -20,7 +24,7 @@ namespace DomitoryBot.Commands
 
         public async Task HandleText(string text, long chatId)
         {
-            await dialogManager.StateIdeas(chatId);
+            await dialogManager.ChangeState(DestinationState, chatId, "Идеи", Keyboard.Ideas);
         }
     }
 }

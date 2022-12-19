@@ -13,6 +13,10 @@ namespace DomitoryBot.Commands
         private readonly DialogManager dialogManager;
         public string Command => "Washing";
 
+        public DialogState SourceState => DialogState.Menu;
+
+        public DialogState DestinationState => DialogState.Washing;
+
         public ToWashingCommand(DialogManager dialogManager)
         {
             this.dialogManager = dialogManager;
@@ -20,7 +24,7 @@ namespace DomitoryBot.Commands
 
         public async Task HandleText(string text, long chatId)
         {
-            await dialogManager.StateWashing(chatId);
+            await dialogManager.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
         }
     }
 }

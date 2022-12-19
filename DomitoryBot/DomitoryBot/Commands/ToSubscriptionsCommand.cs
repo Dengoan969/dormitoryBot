@@ -13,6 +13,10 @@ namespace DomitoryBot.Commands
         private readonly DialogManager dialogManager;
         public string Command => "Subscriptions";
 
+        public DialogState SourceState => DialogState.Menu;
+
+        public DialogState DestinationState => DialogState.Subscriptions;
+
         public ToSubscriptionsCommand(DialogManager dialogManager)
         {
             this.dialogManager = dialogManager;
@@ -20,7 +24,7 @@ namespace DomitoryBot.Commands
 
         public async Task HandleText(string text, long chatId)
         {
-            await dialogManager.StateSubscriptions(chatId);
+            await dialogManager.ChangeState(DestinationState, chatId, "Подписки", Keyboard.Subscriptions);
         }
     }
 }

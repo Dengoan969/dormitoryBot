@@ -13,6 +13,10 @@ namespace DomitoryBot.Commands
         private readonly DialogManager dialogManager;
         public string Command => "CreateEntry";
 
+        public DialogState SourceState => DialogState.Washing;
+
+        public DialogState DestinationState => throw new NotImplementedException();
+
         public CreateEntryCommand(DialogManager dialogManager)
         {
             this.dialogManager = dialogManager;
@@ -20,7 +24,7 @@ namespace DomitoryBot.Commands
 
         public async Task HandleText(string text, long chatId)
         {
-            //await dialogManager.Was(chatId);
+            await dialogManager.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
         }
     }
 }

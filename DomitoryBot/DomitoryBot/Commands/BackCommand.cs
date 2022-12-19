@@ -13,6 +13,10 @@ namespace DomitoryBot.Commands
         private readonly DialogManager dialogManager;
         public string Command => "Back";
 
+        public DialogState SourceState => throw new NotImplementedException();
+
+        public DialogState DestinationState => throw new NotImplementedException();
+
         public BackCommand(DialogManager dialogManager)
         {
             this.dialogManager = dialogManager;
@@ -21,7 +25,7 @@ namespace DomitoryBot.Commands
         public async Task HandleText(string text, long chatId)
         {
             //ЗАГОТОВКА КОМАНДЫ
-            await dialogManager.StateMenu(chatId);
+            await dialogManager.ChangeState(DestinationState, chatId, "Меню", Keyboard.Menu);
         }
     }
 }
