@@ -35,6 +35,11 @@ namespace DomitoryBot.Domain
             return subscriptionRepository.GetSubscriptionsOfUser(userId);
         }
 
+        public void AddAdmin(string sub, long caller, long userToAdd)
+        {
+            subscriptionRepository.AddAdmin(sub, caller, userToAdd);
+        }
+
         public bool IsUserAdmin(long userId, string sub)
         {
             return subscriptionRepository.GetAdmins(sub).Contains(userId);
