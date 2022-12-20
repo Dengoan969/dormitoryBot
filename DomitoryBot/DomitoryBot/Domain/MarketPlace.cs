@@ -1,36 +1,12 @@
 ﻿namespace DomitoryBot.Domain
 {
-    public class MarketPlace
-    {
-        public bool CreateAdvert()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Advert[] GetAdverts()
-        {
-            throw new NotImplementedException();
-        }
-
-        public Advert[] GetUserAdverts(Guid user)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void RemoveAdvert(Guid advertGuid)
-        {
-            throw new NotImplementedException();
-        }
-    }
-
-
     public enum AdvertStatus
     {
         Active,
         Finished,
     }
 
-    public class Advert
+    public class Advert //Record? (not class)
     {
         public readonly AdvertStatus AdvertStatus;
         public readonly Guid Author;
@@ -52,22 +28,60 @@
         }
     }
 
-    public interface IAdvertsRepository
+    public class MarketPlace
     {
-        public void AddAdvert(Advert advert);
-        public void RemoveAdvert(Advert advert);
-    }
-
-    public class AdvertMockRepository : IAdvertsRepository
-    {
-        public void AddAdvert(Advert advert)
+        IAdvertsRepository repository = new AdvertMockRepository();
+        public bool CreateAdvert()
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveAdvert(Advert advert)
+        public Advert[] GetAdverts()
         {
-            throw new NotImplementedException();
+            return repository.GetAdverts();
+        }
+
+        public Advert[] GetUserAdverts(Guid user)
+        {
+            return repository.GetUserAdverts(user);
+        }
+
+        public void RemoveAdvert(Guid advertGuid)
+        {
+            repository.RemoveAdvert(advertGuid);
+        }
+    }
+
+    public interface IAdvertsRepository
+    {
+        void AddAdvert(Advert advert);
+        void RemoveAdvert(Guid advertGuid);
+        Advert[] GetAdverts();
+        Advert[] GetUserAdverts(Guid user);
+    }
+
+    public class AdvertMockRepository : IAdvertsRepository
+    {
+        private readonly List<Advert> adverts = new List<Advert>();
+
+        public void AddAdvert(Advert advert)
+        {
+            adverts.Add(advert);
+        }
+
+        public Advert[] GetAdverts()
+        {
+            return adverts.ToArray();
+        }
+
+        public Advert[] GetUserAdverts(Guid user)
+        {
+            return adverts.Where(x => x.Author == user).ToArray();
+        }
+
+        public void RemoveAdvert(Guid advertGuid)
+        {
+            adverts.Remove(adverts.FirstOrDefault(x => x.Guid == advertGuid));
         }
     }
 }
