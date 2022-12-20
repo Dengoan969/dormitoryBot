@@ -29,6 +29,11 @@
     {
         private IAdvertsRepository repository;
 
+        public MarketPlace(IAdvertsRepository repository)
+        {
+            this.repository = repository;
+        }
+
         public bool CreateAdvert(long author, string text, string price, TimeSpan time)
         {
             var advert = new Advert(author, text, price, time);

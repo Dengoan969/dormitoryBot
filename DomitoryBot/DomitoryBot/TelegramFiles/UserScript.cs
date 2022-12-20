@@ -17,6 +17,9 @@ namespace Telegram
         Washing_Machine,
         Washing_Type,
         Marketplace,
+        Marketplace_Text,
+        Marketplace_Price,
+        Marketplace_Time,
         Subscriptions,
         FAQ,
         Ideas,
@@ -70,7 +73,7 @@ namespace Telegram
                     case UpdateType.Message:
                         var input = update.Message;
                         await TryHandleMessage(input, chatId.Value);
-                        await BotClient.DeleteMessageAsync(chatId, update.Message.MessageId);
+                        //await BotClient.DeleteMessageAsync(chatId, update.Message.MessageId);
                         break;
                     case UpdateType.CallbackQuery:
                         var command = update.CallbackQuery.Data;
@@ -188,14 +191,14 @@ namespace Telegram
         {
             new[]
             {
-                InlineKeyboardButton.WithCallbackData("Все объявления", "FreeSlots"),
-                InlineKeyboardButton.WithCallbackData("Мои объявления", "MyEntries")
+                InlineKeyboardButton.WithCallbackData("Все объявления", "AllAdverts"),
+                InlineKeyboardButton.WithCallbackData("Мои объявления", "MyAdverts")
             },
 
             new[]
             {
-                InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateEntry"),
-                InlineKeyboardButton.WithCallbackData("Назад", "DeleteEntry")
+                InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateAdvert"),
+                InlineKeyboardButton.WithCallbackData("Назад", "Back")
             }
         });
 
@@ -203,7 +206,7 @@ namespace Telegram
         {
             new[]
             {
-                InlineKeyboardButton.WithCallbackData("Назад", "DeleteEntry")
+                InlineKeyboardButton.WithCallbackData("Назад", "Back")
             }
         });
 
