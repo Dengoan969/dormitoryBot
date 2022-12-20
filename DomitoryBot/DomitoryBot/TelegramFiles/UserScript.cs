@@ -1,7 +1,5 @@
 ﻿using DomitoryBot.Commands;
 using Telegram.Bot;
-using Telegram.Bot.Exceptions;
-using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
@@ -25,10 +23,10 @@ namespace Telegram
 
     public class DialogManager
     {
-        Func<ITelegramBotClient, Update, Task> toPrevious;
-        DialogState state;
         public readonly TelegramBotClient BotClient;
         public readonly Dictionary<DialogState, IChatCommand[]> stateCommands;
+        public readonly IUsersStateRepository USR = new MockStateRepository();
+        Func<ITelegramBotClient, Update, Task> toPrevious;
 
         public DialogManager(TelegramBotClient botClient, IChatCommand[] commands)
         {
@@ -38,8 +36,8 @@ namespace Telegram
             {
                 stateCommands[state] = commands
                     .Where(x => x.SourceState == state || x.SourceState == DialogState.None
-                                                       && state != DialogState.Start
-                                                       && state != DialogState.Menu)
+                        && state != DialogState.Start
+                        && state != DialogState.Menu)
                     .ToArray();
             }
         }
@@ -51,9 +49,10 @@ namespace Telegram
             {
                 return;
             }
-            if (state == DialogState.Start)
+
+            if (!USR.ContainsKey(chatId.Value))
             {
-                await ChangeState(DialogState.Menu, chatId, "Меню", Keyboard.Menu);
+                await ChangeState(DialogState.Menu, chatId.Value, "Меню", Keyboard.Menu);
             }
             else
             {
@@ -75,43 +74,89 @@ namespace Telegram
 
         private async Task TryExecuteCommand(string commandName, long chatId)
         {
-            var command = (IExecutableCommand)stateCommands[state]
+            var command = (IExecutableCommand) stateCommands[USR.GetState(chatId)]
                 .First(x => x is IExecutableCommand command && command.Name == commandName);
             await command.Execute(chatId);
         }
 
         private async Task TryHandleMessage(Message message, long chatId)
         {
-            var command = (IHandleTextCommand)stateCommands[state].First(x => x is IHandleTextCommand);
+            var command = (IHandleTextCommand) stateCommands[USR.GetState(chatId)].First(x => x is IHandleTextCommand);
             await command.HandleMessage(message, chatId);
         }
 
-        public async Task ChangeState(DialogState newState, ChatId chatId, string message, IReplyMarkup keyboard)
+        public async Task ChangeState(DialogState newState, long chatId, string message, IReplyMarkup keyboard)
         {
-            state = newState;
+            USR.SetState(chatId, newState);
             await BotClient.SendTextMessageAsync(chatId, message, replyMarkup: keyboard);
+        }
+    }
+
+    public interface IUsersStateRepository
+    {
+        public DialogState GetState(long id);
+        public bool ContainsKey(long id);
+        public void SetState(long id, DialogState state);
+    }
+
+    public class MockStateRepository : IUsersStateRepository
+    {
+        private readonly Dictionary<long, DialogState> db = new();
+
+
+        public DialogState GetState(long id)
+        {
+            if (!db.ContainsKey(id)) throw new ArgumentException("User doesn't exists");
+
+            return db[id];
+        }
+
+        public bool ContainsKey(long id)
+        {
+            return db.ContainsKey(id);
+        }
+
+        public void SetState(long id, DialogState state)
+        {
+            db[id] = state;
         }
     }
 
     public static class Keyboard
     {
-        public static InlineKeyboardMarkup Menu = new InlineKeyboardMarkup(new[] {
-            new [] {InlineKeyboardButton.WithCallbackData("Стирка","Washing"),
-                    InlineKeyboardButton.WithCallbackData("Маркетплейс","Marketplace"),
-                    InlineKeyboardButton.WithCallbackData("Объявления","Subscriptions")},
+        public static InlineKeyboardMarkup Menu = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Стирка", "Washing"),
+                InlineKeyboardButton.WithCallbackData("Маркетплейс", "Marketplace"),
+                InlineKeyboardButton.WithCallbackData("Объявления", "Subscriptions")
+            },
 
-            new [] {InlineKeyboardButton.WithCallbackData("FAQ", "FAQ"),
-                    InlineKeyboardButton.WithCallbackData("Предложить идею","Ideas")} });
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("FAQ", "FAQ"),
+                InlineKeyboardButton.WithCallbackData("Предложить идею", "Ideas")
+            }
+        });
 
         //public static ReplyKeyboardMarkup Back = new ReplyKeyboardMarkup(new KeyboardButton("Назад"));
 
-        public static InlineKeyboardMarkup Washing = new InlineKeyboardMarkup(new[] {
-            new [] {InlineKeyboardButton.WithCallbackData("Свободные слоты","FreeSlots"),
-                    InlineKeyboardButton.WithCallbackData("Мои записи","MyEntries"),
-                    InlineKeyboardButton.WithCallbackData("Назад","Back")},
+        public static InlineKeyboardMarkup Washing = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Свободные слоты", "FreeSlots"),
+                InlineKeyboardButton.WithCallbackData("Мои записи", "MyEntries"),
+                InlineKeyboardButton.WithCallbackData("Назад", "Back")
+            },
 
-            new [] {InlineKeyboardButton.WithCallbackData("Записаться", "CreateEntry"),
-                    InlineKeyboardButton.WithCallbackData("Удалить запись","DeleteEntry")} });
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Записаться", "CreateEntry"),
+                InlineKeyboardButton.WithCallbackData("Удалить запись", "DeleteEntry")
+            }
+        });
 
         //public static InlineKeyboardMarkup Washing_Date = new InlineKeyboardMarkup(new[] {
         //    new [] {InlineKeyboardButton.WithCallbackData("Сегодня","FreeSlots"),
@@ -119,25 +164,46 @@ namespace Telegram
         //            InlineKeyboardButton.WithCallbackData("Послезавтра","Back"),
         //            InlineKeyboardButton.WithCallbackData("Назад","Back")} });
 
-        public static InlineKeyboardMarkup Washing_Machine = new InlineKeyboardMarkup(new[] {
-            new [] {InlineKeyboardButton.WithCallbackData("1","FreeSlots"),
-                    InlineKeyboardButton.WithCallbackData("2","MyEntries"),
-                    InlineKeyboardButton.WithCallbackData("3","Back"),
-                    InlineKeyboardButton.WithCallbackData("Назад","Back")} });
+        public static InlineKeyboardMarkup Washing_Machine = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("1", "FreeSlots"),
+                InlineKeyboardButton.WithCallbackData("2", "MyEntries"),
+                InlineKeyboardButton.WithCallbackData("3", "Back"),
+                InlineKeyboardButton.WithCallbackData("Назад", "Back")
+            }
+        });
 
-        public static InlineKeyboardMarkup Marketplace = new InlineKeyboardMarkup(new[] {
-            new [] {InlineKeyboardButton.WithCallbackData("Все объявления","FreeSlots"),
-                    InlineKeyboardButton.WithCallbackData("Мои объявления","MyEntries")},
+        public static InlineKeyboardMarkup Marketplace = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Все объявления", "FreeSlots"),
+                InlineKeyboardButton.WithCallbackData("Мои объявления", "MyEntries")
+            },
 
-            new [] {InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateEntry"),
-                    InlineKeyboardButton.WithCallbackData("Назад","DeleteEntry")} });
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateEntry"),
+                InlineKeyboardButton.WithCallbackData("Назад", "DeleteEntry")
+            }
+        });
 
-        public static InlineKeyboardMarkup Subscriptions = new InlineKeyboardMarkup(new[] {
-            new [] {InlineKeyboardButton.WithCallbackData("Подписаться","FreeSlots"),
-                    InlineKeyboardButton.WithCallbackData("Отписаться","MyEntries")},
+        public static InlineKeyboardMarkup Subscriptions = new InlineKeyboardMarkup(new[]
+        {
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Подписаться", "FreeSlots"),
+                InlineKeyboardButton.WithCallbackData("Отписаться", "MyEntries")
+            },
 
-            new [] {InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateEntry"),
-                    InlineKeyboardButton.WithCallbackData("Назад","DeleteEntry")} });
+            new[]
+            {
+                InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateEntry"),
+                InlineKeyboardButton.WithCallbackData("Назад", "DeleteEntry")
+            }
+        });
 
         public static ReplyKeyboardMarkup FAQ = new ReplyKeyboardMarkup(new KeyboardButton("Назад"));
 

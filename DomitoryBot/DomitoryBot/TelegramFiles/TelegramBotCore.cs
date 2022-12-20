@@ -1,13 +1,11 @@
-﻿using Telegram.Bot;
+﻿using DomitoryBot.Commands;
+using Ninject;
+using Ninject.Extensions.Conventions;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
-using Ninject;
-using Ninject.Extensions.Conventions;
-using Ninject.Extensions.Factory;
-using DomitoryBot.Commands;
 
 namespace Telegram
 {
@@ -20,8 +18,10 @@ namespace Telegram
         {
             var botClient = new TelegramBotClient(token);
             var container = new StandardKernel();
+            container.Bind<DialogManager>().ToSelf().InSingletonScope();
             container.Bind<TelegramBotClient>().ToConstant(botClient);
-            container.Bind(c => c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>().BindAllInterfaces());
+            container.Bind(c =>
+                c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>().BindAllInterfaces());
             dialogManager = container.Get<DialogManager>();
 
             var receiverOptions = new ReceiverOptions
