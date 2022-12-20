@@ -18,8 +18,8 @@ public class RecordToSchedule : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        DateTime.TryParseExact(message.Text, "dd.MM HH:mm")
-        {
-        }
+        //DateTime.TryParseExact(message.Text, "dd.MM HH:mm")
+        //{
+        //}
     }
 }
