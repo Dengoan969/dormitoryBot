@@ -22,7 +22,7 @@ namespace DomitoryBot.Commands
             this.dialogManager = dialogManager;
         }
 
-        public async Task HandleText(string text, long chatId)
+        public async Task Execute(string text, long chatId)
         {
             //ЗАГОТОВКА КОМАНДЫ
             await dialogManager.ChangeState(DestinationState, chatId, "Меню", Keyboard.Menu);

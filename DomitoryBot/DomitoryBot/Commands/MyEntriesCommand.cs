@@ -22,7 +22,7 @@ namespace DomitoryBot.Commands
             this.dialogManager = dialogManager;
         }
 
-        public async Task HandleText(string text, long chatId)
+        public async Task Execute(string text, long chatId)
         {
             await dialogManager.BotClient.SendTextMessageAsync(chatId, "Тут список всех записей");
             await dialogManager.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);

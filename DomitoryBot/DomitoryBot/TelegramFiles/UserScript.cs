@@ -41,14 +41,13 @@ namespace Telegram
                     new ToSubscriptionsCommand(this), new ToFAQCommand(this),
                     new ToIdeasCommand(this) } },
                 {DialogState.Washing, new IChatCommand[] {
-                    new FreeSlotsCommand(this), new MyEntriesCommand(this),
+                    new ToFreeSlotsCommand(this), new MyEntriesCommand(this),
                 new BackCommand(this), new CreateEntryCommand(this), new DeleteEntryCommand(this)} }
             };
         }
 
         public async Task HandleUpdate(Update update)
         {
-            var text = update.Message?.Text ?? update.CallbackQuery?.Data;
             var chatId = update.Message?.Chat.Id ?? update.CallbackQuery?.Message.Chat.Id;
             if (!chatId.HasValue)
             {
@@ -60,7 +59,16 @@ namespace Telegram
             }
             else
             {
-                await TryExecuteCommand(text, "", chatId.Value);
+                var command = update.CallbackQuery?.Data;
+                var input = update.Message?.Text;
+                if(command != null)
+                {
+                    await TryExecuteCommand(command, chatId.Value);
+                }
+                else if (input != null)
+                {
+                    await TryHandleText(input, chatId.Value);
+                }
             }
             if (update.CallbackQuery != null)
             {
@@ -72,16 +80,17 @@ namespace Telegram
             }
         }
 
-        private async Task TryExecuteCommand(string commandName, string text, long chatId)
+        private async Task TryExecuteCommand(string commandName, long chatId)
         {
-            foreach (var command in commands[state])
-            {
-                if (command.Command == commandName)
-                {
-                    await command.HandleText(text, chatId);
-                    break;
-                }
-            }
+            var command = (IExecutableCommand) commands[state]
+                .First(x => x is IExecutableCommand command && command.Name == commandName);
+            await command.Execute(chatId);
+        }
+
+        private async Task TryHandleText(string text, long chatId)
+        {
+            var command = (IHandleTextCommand)commands[state].First(x => x is IHandleTextCommand);
+            await command.HandleText(text, chatId);
         }
 
         public async Task ChangeState(DialogState newState, ChatId chatId, string message, IReplyMarkup keyboard)

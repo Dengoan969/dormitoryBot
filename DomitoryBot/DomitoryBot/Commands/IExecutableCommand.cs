@@ -7,9 +7,9 @@ using Telegram;
 
 namespace DomitoryBot.Commands
 {
-    public interface IChatCommand
+    public interface IExecutableCommand : IChatCommand
     {
-        DialogState SourceState { get; }
-        DialogState DestinationState { get; }
+        public string Name { get; }
+        Task Execute(long chatId);
     }
 }

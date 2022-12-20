@@ -8,7 +8,7 @@ using Telegram.Bot;
 
 namespace DomitoryBot.Commands
 {
-    public class FreeSlotsCommand : IChatCommand
+    public class ToFreeSlotsCommand : IChatCommand
     {
         private readonly DialogManager dialogManager;
         public string Command => "FreeSlots";
@@ -17,12 +17,12 @@ namespace DomitoryBot.Commands
 
         public DialogState DestinationState => DialogState.Washing;
 
-        public FreeSlotsCommand(DialogManager dialogManager)
+        public ToFreeSlotsCommand(DialogManager dialogManager)
         {
             this.dialogManager = dialogManager;
         }
 
-        public async Task HandleText(string text, long chatId)
+        public async Task Execute(string text, long chatId)
         {
             await dialogManager.BotClient.SendTextMessageAsync(chatId, "Тут свободное время для начала стирки в виде списка");
             await dialogManager.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
