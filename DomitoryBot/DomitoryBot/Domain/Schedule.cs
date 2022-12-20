@@ -157,6 +157,8 @@
 
         public void AddRecord(Record record)
         {
+            if (record.TimeInterval.Start.Minute % 30 != 0 || record.TimeInterval.End.Minute % 30 != 0)
+                throw new ArgumentException();
             var startIndex = GetIndexByDate(record.TimeInterval.Start);
             var endIndex = GetIndexByDate(record.TimeInterval.End);
             for (var i = startIndex; i < endIndex; i++)

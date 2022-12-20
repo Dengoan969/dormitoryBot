@@ -1,5 +1,4 @@
 ﻿using Telegram;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace DomitoryBot.Commands;
@@ -22,8 +21,8 @@ public class ToDateSelect : IHandleTextCommand
         {
             dialogManager.Value.temp_input[chatId] = new List<object>();
             dialogManager.Value.temp_input[chatId].Add(message.Text);
-            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId,
-                "Введите дату начала стирки в формате: число.месяц часы:минуты");
+            await dialogManager.Value.ChangeState(DestinationState, chatId,
+                "Введите дату начала стирки в формате: число.месяц часы:минуты", Keyboard.Back);
         }
         else
         {

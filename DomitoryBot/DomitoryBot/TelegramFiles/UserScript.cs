@@ -56,6 +56,10 @@ namespace Telegram
 
         public async Task HandleUpdate(Update update)
         {
+            if (update.Message?.Date >= DateTime.Now - TimeSpan.FromSeconds(10))
+            {
+            }
+
             var chatId = update.Message?.Chat.Id ?? update.CallbackQuery?.Message.Chat.Id;
             if (!chatId.HasValue)
             {
@@ -78,7 +82,7 @@ namespace Telegram
                     case UpdateType.CallbackQuery:
                         var command = update.CallbackQuery.Data;
                         await TryExecuteCommand(command, chatId.Value);
-                        await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
+                        // await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
                         break;
                 }
             }

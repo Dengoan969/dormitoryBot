@@ -21,15 +21,14 @@ public class ToWashingTypeSelect : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if (DateTime.TryParseExact(message.Text, "dd.MM HH:mm", new CultureInfo("ruRU"), DateTimeStyles.None,
+        if (DateTime.TryParseExact(message.Text, "dd.MM HH:mm", new CultureInfo("ru-RU"), DateTimeStyles.None,
                 out var value))
         {
-            value = value.AddYears(DateTime.Today.Year);
             dialogManager.Value.temp_input[chatId].Add(value);
             var sb = new StringBuilder();
             sb.Append("Выберите тип стирки\n");
             foreach (var types in Schedule.washingTypes)
-                sb.Append($"{Enum.GetName(types.Key)} - {types.Value.Minutes} минут\n");
+                sb.Append($"{Enum.GetName(types.Key)} - {types.Value.Hours * 60 + types.Value.Minutes} минут\n");
 
             await dialogManager.Value.ChangeState(DestinationState, chatId, sb.ToString(), Keyboard.Back);
             return;

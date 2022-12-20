@@ -28,6 +28,7 @@ public class AddRecordOfWashing : IHandleTextCommand
             else
                 await dm.Value.ChangeState(DestinationState, chatId, "Что то пошло не так. Попробуйте снова",
                     Keyboard.Washing);
+            return;
         }
 
         await dm.Value.ChangeState(SourceState, chatId, "Что то пошло не так", Keyboard.Back);
