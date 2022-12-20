@@ -8,32 +8,31 @@
 
     public class Advert //Record? (not class)
     {
-        public readonly AdvertStatus AdvertStatus;
+        public readonly Guid Guid = Guid.NewGuid();
+        public readonly DateTime CreationTime = DateTime.Now;
+        public readonly AdvertStatus AdvertStatus = AdvertStatus.Active;
         public readonly Guid Author;
-        public readonly DateTime CreationTime;
-        public readonly Guid Guid;
         public readonly string Price;
         public readonly string Text;
-        public readonly TimeSpan time = TimeSpan.FromDays(7);
+        public readonly TimeSpan Time = TimeSpan.FromDays(7);
 
-        public Advert(Guid author, AdvertStatus advertStatus, DateTime creationTime, string text, string price,
-            TimeSpan time)
+        public Advert(Guid author, string text, string price, TimeSpan time)
         {
-            Guid = Guid.NewGuid();
             Author = author;
-            AdvertStatus = advertStatus;
-            CreationTime = creationTime;
             Text = text;
             Price = price;
+            Time = time;
         }
     }
 
     public class MarketPlace
     {
         IAdvertsRepository repository = new AdvertMockRepository();
-        public bool CreateAdvert()
+        public bool CreateAdvert(Guid author, string text, string price, TimeSpan time)
         {
-            throw new NotImplementedException();
+            var advert = new Advert(author, text, price, time);
+            repository.AddAdvert(advert);
+            return true;
         }
 
         public Advert[] GetAdverts()
