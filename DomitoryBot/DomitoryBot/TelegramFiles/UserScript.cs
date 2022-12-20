@@ -15,6 +15,7 @@ namespace Telegram
         Washing,
         Washing_Date,
         Washing_Machine,
+        Washing_Type,
         Marketplace,
         Subscriptions,
         FAQ,
@@ -161,7 +162,7 @@ namespace Telegram
 
             new[]
             {
-                InlineKeyboardButton.WithCallbackData("Записаться", "CreateEntry"),
+                InlineKeyboardButton.WithCallbackData("Записаться", "Machine select"),
                 InlineKeyboardButton.WithCallbackData("Удалить запись", "DeleteEntry")
             }
         });

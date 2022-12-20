@@ -70,18 +70,18 @@
 
     public enum WashingType
     {
-        fast,
-        b,
-        c
+        fast = 30,
+        medium = 60,
+        slow = 90
     }
 
     public class Schedule
     {
-        private static readonly Dictionary<WashingType, TimeSpan> washingTypes = new Dictionary<WashingType, TimeSpan>
+        public static readonly Dictionary<WashingType, TimeSpan> washingTypes = new()
         {
             {WashingType.fast, TimeSpan.FromMinutes(30)},
-            {WashingType.b, TimeSpan.FromMinutes(60)},
-            {WashingType.c, TimeSpan.FromMinutes(90)} //todo ADD WASHING TYPES
+            {WashingType.medium, TimeSpan.FromMinutes(60)},
+            {WashingType.slow, TimeSpan.FromMinutes(90)} //todo ADD WASHING TYPES
         };
 
         public readonly string[] machineNames = {"1", "2", "3"};

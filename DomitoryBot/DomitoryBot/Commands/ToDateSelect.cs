@@ -23,7 +23,11 @@ public class ToDateSelect : IHandleTextCommand
             dialogManager.Value.temp_input[chatId] = new List<object>();
             dialogManager.Value.temp_input[chatId].Add(message.Text);
             await dialogManager.Value.BotClient.SendTextMessageAsync(chatId,
-                "Введите дату в формате: число.месяц часы:минуты");
+                "Введите дату начала стирки в формате: число.месяц часы:минуты");
+        }
+        else
+        {
+            await dialogManager.Value.ChangeState(SourceState, chatId, "Не знаю такую стиралку", Keyboard.Back);
         }
     }
 }

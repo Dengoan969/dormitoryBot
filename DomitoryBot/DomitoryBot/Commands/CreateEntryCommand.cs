@@ -1,21 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram;
-using Telegram.Bot;
-
-namespace DomitoryBot.Commands
+﻿namespace DomitoryBot.Commands
 {
-    public class CreateEntryCommand : IExecutableCommand
+    /*public class CreateEntryCommand : IExecutableCommand
     {
         private readonly Lazy<DialogManager> dialogManager;
         public string Name => "CreateEntry";
 
         public DialogState SourceState => DialogState.Washing;
 
-        public DialogState DestinationState => throw new NotImplementedException();
+        public DialogState DestinationState => DialogState.Washing_Machine;
 
         public CreateEntryCommand(Lazy<DialogManager> dialogManager)
         {
@@ -26,5 +18,5 @@ namespace DomitoryBot.Commands
         {
             await dialogManager.Value.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
         }
-    }
+    }*/
 }
