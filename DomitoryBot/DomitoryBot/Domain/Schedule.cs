@@ -155,9 +155,6 @@
             {"3", new bool[48 * 3]}
         };
 
-        //todo: list vs hashset. How to work work intervals
-
-
         public void AddRecord(Record record)
         {
             var startIndex = GetIndexByDate(record.TimeInterval.Start);
