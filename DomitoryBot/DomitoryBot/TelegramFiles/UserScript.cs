@@ -29,6 +29,7 @@ namespace Telegram
         public readonly Schedule Schedule;
         public readonly Dictionary<DialogState, IChatCommand[]> stateCommands;
         public readonly SubscriptionService SubscriptionService;
+        public readonly Dictionary<long, List<object>> temp_input = new();
         public readonly IUsersStateRepository USR = new MockStateRepository();
 
         public DialogManager(TelegramBotClient botClient, IChatCommand[] commands, Schedule schedule,
@@ -175,9 +176,9 @@ namespace Telegram
         {
             new[]
             {
-                InlineKeyboardButton.WithCallbackData("1", "FreeSlots"),
-                InlineKeyboardButton.WithCallbackData("2", "MyEntries"),
-                InlineKeyboardButton.WithCallbackData("3", "Back"),
+                InlineKeyboardButton.WithCallbackData("1", "1"),
+                InlineKeyboardButton.WithCallbackData("2", "2"),
+                InlineKeyboardButton.WithCallbackData("3", "3"),
                 InlineKeyboardButton.WithCallbackData("Назад", "Back")
             }
         });
@@ -193,6 +194,14 @@ namespace Telegram
             new[]
             {
                 InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateEntry"),
+                InlineKeyboardButton.WithCallbackData("Назад", "DeleteEntry")
+            }
+        });
+
+        public static InlineKeyboardMarkup Back = new(new[]
+        {
+            new[]
+            {
                 InlineKeyboardButton.WithCallbackData("Назад", "DeleteEntry")
             }
         });

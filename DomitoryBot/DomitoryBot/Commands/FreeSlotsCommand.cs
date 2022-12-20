@@ -27,7 +27,8 @@ namespace DomitoryBot.Commands
             {
                 var sb = new StringBuilder();
                 sb.Append(rec.Key + "\n");
-                foreach (var date in rec.Value) sb.Append(date.ToString("dd.MM HH:mm") + "\n");
+                foreach (var date in rec.Value)
+                    sb.Append(date.ToString("dd.MM HH:mm") + "\n");
 
                 sb.Append("\n");
                 await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());

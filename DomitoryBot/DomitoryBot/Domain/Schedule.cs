@@ -84,7 +84,7 @@
             {WashingType.c, TimeSpan.FromMinutes(90)} //todo ADD WASHING TYPES
         };
 
-        private readonly string[] machineNames = {"1", "2", "3"};
+        public readonly string[] machineNames = {"1", "2", "3"};
         private IRecordsRepository data;
 
         public Schedule(IRecordsRepository data)

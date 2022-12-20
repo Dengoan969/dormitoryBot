@@ -2,16 +2,12 @@
 
 using Telegram;
 
-static string GetTokenFromFile()
+static string GetToken()
 {
-    var path = Directory.GetCurrentDirectory()
-        .Replace("bin\\Debug\\net6.0", "TelegramFiles\\token.txt"); // todo
-    var reader = new StreamReader(path);
-    var token = reader.ReadToEnd();
-    return token;
+    return Console.ReadLine();
 }
 
 
 var c = new TelegramBotCore();
-var token = GetTokenFromFile();
+var token = GetToken();
 await c.StartBot(token);
