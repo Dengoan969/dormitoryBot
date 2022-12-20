@@ -8,24 +8,24 @@ using Telegram.Bot;
 
 namespace DomitoryBot.Commands
 {
-    public class MyEntriesCommand : IChatCommand
+    public class MyEntriesCommand : IExecutableCommand
     {
-        private readonly DialogManager dialogManager;
-        public string Command => "MyEntries";
+        private readonly Lazy<DialogManager> dialogManager;
+        public string Name => "MyEntries";
 
         public DialogState SourceState => DialogState.Washing;
 
         public DialogState DestinationState => DialogState.Washing;
 
-        public MyEntriesCommand(DialogManager dialogManager)
+        public MyEntriesCommand(Lazy<DialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }
 
-        public async Task Execute(string text, long chatId)
+        public async Task Execute(long chatId)
         {
-            await dialogManager.BotClient.SendTextMessageAsync(chatId, "Тут список всех записей");
-            await dialogManager.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
+            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Тут список всех записей");
+            await dialogManager.Value.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
         }
     }
 }

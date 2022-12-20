@@ -4,11 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Telegram;
+using Telegram.Bot.Types;
 
 namespace DomitoryBot.Commands
 {
     public interface IHandleTextCommand : IChatCommand
     {
-        Task HandleText(string text, long chatId);
+        Task HandleMessage(Message message, long chatId);
     }
 }

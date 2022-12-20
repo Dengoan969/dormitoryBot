@@ -8,23 +8,23 @@ using Telegram.Bot;
 
 namespace DomitoryBot.Commands
 {
-    public class ToMenuCommand : IChatCommand
+    public class ToMenuCommand : IExecutableCommand
     {
-        private readonly DialogManager dialogManager;
-        public string Command => "/start";
+        private readonly Lazy<DialogManager> dialogManager;
+        public string Name => "/start";
 
         public DialogState SourceState => DialogState.Start;
 
         public DialogState DestinationState => DialogState.Menu;
 
-        public ToMenuCommand(DialogManager dialogManager)
+        public ToMenuCommand(Lazy<DialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }
 
-        public async Task Execute(string text, long chatId)
+        public async Task Execute(long chatId)
         {
-            await dialogManager.ChangeState(DestinationState, chatId, "Меню", Keyboard.Menu);
+            await dialogManager.Value.ChangeState(DestinationState, chatId, "Меню", Keyboard.Menu);
         }
     }
 }

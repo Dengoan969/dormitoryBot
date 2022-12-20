@@ -4,6 +4,10 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
+using Ninject;
+using Ninject.Extensions.Conventions;
+using Ninject.Extensions.Factory;
+using DomitoryBot.Commands;
 
 namespace Telegram
 {
@@ -15,7 +19,10 @@ namespace Telegram
         public Task StartBot(string token)
         {
             var botClient = new TelegramBotClient(token);
-            dialogManager = new DialogManager(botClient);
+            var container = new StandardKernel();
+            container.Bind<TelegramBotClient>().ToConstant(botClient);
+            container.Bind(c => c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>().BindAllInterfaces());
+            dialogManager = container.Get<DialogManager>();
 
             var receiverOptions = new ReceiverOptions
             {

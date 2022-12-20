@@ -5,7 +5,6 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
-using Ninject.Modules;
 
 namespace Telegram
 {
@@ -14,14 +13,14 @@ namespace Telegram
     {
         Start,
         Menu,
-        Back,
         Washing,
         Washing_Date,
         Washing_Machine,
         Marketplace,
         Subscriptions,
         FAQ,
-        Ideas
+        Ideas,
+        None
     }
 
     public class DialogManager
@@ -29,21 +28,20 @@ namespace Telegram
         Func<ITelegramBotClient, Update, Task> toPrevious;
         DialogState state;
         public readonly TelegramBotClient BotClient;
-        public readonly Dictionary<DialogState, IChatCommand[]> commands;
+        public readonly Dictionary<DialogState, IChatCommand[]> stateCommands;
 
-        public DialogManager(TelegramBotClient botClient)
+        public DialogManager(TelegramBotClient botClient, IChatCommand[] commands)
         {
             this.BotClient = botClient;
-            commands = new Dictionary<DialogState, IChatCommand[]> {
-                { DialogState.Start, new IChatCommand[] { new ToMenuCommand(this) } },
-                { DialogState.Menu, new IChatCommand[] {
-                    new ToWashingCommand(this), new ToMarketplaceCommand(this),
-                    new ToSubscriptionsCommand(this), new ToFAQCommand(this),
-                    new ToIdeasCommand(this) } },
-                {DialogState.Washing, new IChatCommand[] {
-                    new ToFreeSlotsCommand(this), new MyEntriesCommand(this),
-                new BackCommand(this), new CreateEntryCommand(this), new DeleteEntryCommand(this)} }
-            };
+            stateCommands = new Dictionary<DialogState, IChatCommand[]>();
+            foreach (var state in Enum.GetValues<DialogState>())
+            {
+                stateCommands[state] = commands
+                    .Where(x => x.SourceState == state || x.SourceState == DialogState.None
+                                                       && state != DialogState.Start
+                                                       && state != DialogState.Menu)
+                    .ToArray();
+            }
         }
 
         public async Task HandleUpdate(Update update)
@@ -59,38 +57,33 @@ namespace Telegram
             }
             else
             {
-                var command = update.CallbackQuery?.Data;
-                var input = update.Message?.Text;
-                if(command != null)
+                switch (update.Type)
                 {
-                    await TryExecuteCommand(command, chatId.Value);
+                    case UpdateType.Message:
+                        var input = update.Message;
+                        await TryHandleMessage(input, chatId.Value);
+                        await BotClient.DeleteMessageAsync(chatId, update.Message.MessageId);
+                        break;
+                    case UpdateType.CallbackQuery:
+                        var command = update.CallbackQuery.Data;
+                        await TryExecuteCommand(command, chatId.Value);
+                        await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
+                        break;
                 }
-                else if (input != null)
-                {
-                    await TryHandleText(input, chatId.Value);
-                }
-            }
-            if (update.CallbackQuery != null)
-            {
-                await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
-            }
-            if (update.Message != null)
-            {
-                await BotClient.DeleteMessageAsync(chatId, update.Message.MessageId);
             }
         }
 
         private async Task TryExecuteCommand(string commandName, long chatId)
         {
-            var command = (IExecutableCommand) commands[state]
+            var command = (IExecutableCommand)stateCommands[state]
                 .First(x => x is IExecutableCommand command && command.Name == commandName);
             await command.Execute(chatId);
         }
 
-        private async Task TryHandleText(string text, long chatId)
+        private async Task TryHandleMessage(Message message, long chatId)
         {
-            var command = (IHandleTextCommand)commands[state].First(x => x is IHandleTextCommand);
-            await command.HandleText(text, chatId);
+            var command = (IHandleTextCommand)stateCommands[state].First(x => x is IHandleTextCommand);
+            await command.HandleMessage(message, chatId);
         }
 
         public async Task ChangeState(DialogState newState, ChatId chatId, string message, IReplyMarkup keyboard)
@@ -120,11 +113,11 @@ namespace Telegram
             new [] {InlineKeyboardButton.WithCallbackData("Записаться", "CreateEntry"),
                     InlineKeyboardButton.WithCallbackData("Удалить запись","DeleteEntry")} });
 
-        public static InlineKeyboardMarkup Washing_Date = new InlineKeyboardMarkup(new[] {
-            new [] {InlineKeyboardButton.WithCallbackData("Сегодня","FreeSlots"),
-                    InlineKeyboardButton.WithCallbackData("Завтра","MyEntries"),
-                    InlineKeyboardButton.WithCallbackData("Послезавтра","Back"),
-                    InlineKeyboardButton.WithCallbackData("Назад","Back")} });
+        //public static InlineKeyboardMarkup Washing_Date = new InlineKeyboardMarkup(new[] {
+        //    new [] {InlineKeyboardButton.WithCallbackData("Сегодня","FreeSlots"),
+        //            InlineKeyboardButton.WithCallbackData("Завтра","MyEntries"),
+        //            InlineKeyboardButton.WithCallbackData("Послезавтра","Back"),
+        //            InlineKeyboardButton.WithCallbackData("Назад","Back")} });
 
         public static InlineKeyboardMarkup Washing_Machine = new InlineKeyboardMarkup(new[] {
             new [] {InlineKeyboardButton.WithCallbackData("1","FreeSlots"),
