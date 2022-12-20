@@ -57,9 +57,9 @@
         public readonly TimeInterval TimeInterval;
 
         //public readonly Guid guid;
-        public readonly Guid User;
+        public readonly long User;
 
-        public Record(Guid user, TimeInterval timeInterval, string machine)
+        public Record(long user, TimeInterval timeInterval, string machine)
         {
             //guid = Guid.NewGuid();
             User = user;
@@ -84,16 +84,15 @@
             {WashingType.c, TimeSpan.FromMinutes(90)} //todo ADD WASHING TYPES
         };
 
-        private readonly string[] machineNames;
+        private readonly string[] machineNames = {"1", "2", "3"};
         private IRecordsRepository data;
 
-        public Schedule(IRecordsRepository data, string[] machineNames)
+        public Schedule(IRecordsRepository data)
         {
             this.data = data;
-            this.machineNames = machineNames;
         }
 
-        public bool AddRecord(Guid user, string machine, DateTime startDate, WashingType washingType)
+        public bool AddRecord(long user, string machine, DateTime startDate, WashingType washingType)
         {
             var finishDate = startDate.Add(washingTypes[washingType]);
             var record = new Record(user, new TimeInterval(startDate, finishDate), machine);
@@ -109,7 +108,7 @@
             return true;
         }
 
-        public bool RemoveRecord(Guid user, TimeInterval timeInterval, string machine)
+        public bool RemoveRecord(long user, TimeInterval timeInterval, string machine)
         {
             var record = new Record(user, timeInterval, machine);
             try
@@ -124,7 +123,7 @@
             return true;
         }
 
-        public List<Record> GetRecordsTimesByUser(Guid user)
+        public List<Record> GetRecordsTimesByUser(long user)
         {
             return data.GetRecordsTimesByUser(user);
         }
@@ -141,22 +140,23 @@
     {
         void AddRecord(Record record);
         void RemoveRecord(Record record);
-        List<Record> GetRecordsTimesByUser(Guid user);
+        List<Record> GetRecordsTimesByUser(long user);
         Dictionary<string, List<DateTime>> GetFreeTimes();
     }
 
-    public class ScheduleMockRepository : IRecordsRepository
+    public class MockScheduleRepository : IRecordsRepository
     {
-        private static readonly Dictionary<Guid, List<Record>> dataBase = new Dictionary<Guid, List<Record>>();
-        private readonly Dictionary<string, List<bool>> freeTimes;
+        private static readonly Dictionary<long, List<Record>> dataBase = new();
+
+        private readonly Dictionary<string, bool[]> freeTimes = new()
+        {
+            {"1", new bool[48 * 3]},
+            {"2", new bool[48 * 3]},
+            {"3", new bool[48 * 3]}
+        };
 
         //todo: list vs hashset. How to work work intervals
 
-
-        public ScheduleMockRepository(Dictionary<string, List<bool>> freeTimes)
-        {
-            this.freeTimes = freeTimes;
-        }
 
         public void AddRecord(Record record)
         {
@@ -187,7 +187,7 @@
         }
 
 
-        public List<Record> GetRecordsTimesByUser(Guid user)
+        public List<Record> GetRecordsTimesByUser(long user)
         {
             if (dataBase.TryGetValue(user, out var records))
                 return records;
@@ -203,7 +203,7 @@
             {
                 times[machine] = new List<DateTime>();
                 var begin = today;
-                for (var i = 0; i < freeTimes[machine].Count; i++)
+                for (var i = 0; i < freeTimes[machine].Length; i++)
                     if (!freeTimes[machine][i])
                         times[machine].Add(today.AddMinutes(30 * i));
             }

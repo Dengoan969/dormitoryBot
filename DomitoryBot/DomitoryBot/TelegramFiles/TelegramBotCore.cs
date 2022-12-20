@@ -1,4 +1,5 @@
 ﻿using DomitoryBot.Commands;
+using DomitoryBot.Domain;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Telegram.Bot;
@@ -18,8 +19,12 @@ namespace Telegram
         {
             var botClient = new TelegramBotClient(token);
             var container = new StandardKernel();
+            container.Bind<IRecordsRepository>().To<MockScheduleRepository>();
+            container.Bind<ISubscriptionRepository>().To<MockSubscribitionRepository>();
+            container.Bind<IAdvertsRepository>().To<MockAdvertRepository>();
             container.Bind<DialogManager>().ToSelf().InSingletonScope();
             container.Bind<TelegramBotClient>().ToConstant(botClient);
+
             container.Bind(c =>
                 c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>().BindAllInterfaces());
             dialogManager = container.Get<DialogManager>();
@@ -39,20 +44,6 @@ namespace Telegram
             Console.ReadLine();
             cts.Cancel();
             return Task.CompletedTask;
-        }
-
-        private async Task SendMessage(ITelegramBotClient botClient,
-            long chatId, string messageText, string? username = null)
-        {
-            Message sentMessage = await botClient.SendTextMessageAsync(
-                chatId: chatId,
-                text: messageText,
-                cancellationToken: cts.Token);
-
-            if (username != null)
-            {
-                Console.WriteLine($"Sent to {username} message \"{messageText}\"");
-            }
         }
 
         private async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update,

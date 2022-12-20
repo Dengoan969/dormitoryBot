@@ -1,4 +1,5 @@
 ﻿using DomitoryBot.Commands;
+using DomitoryBot.Domain;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
@@ -24,13 +25,19 @@ namespace Telegram
     public class DialogManager
     {
         public readonly TelegramBotClient BotClient;
+        public readonly MarketPlace MarketPlace;
+        public readonly Schedule Schedule;
         public readonly Dictionary<DialogState, IChatCommand[]> stateCommands;
+        public readonly SubscriptionService SubscriptionService;
         public readonly IUsersStateRepository USR = new MockStateRepository();
-        Func<ITelegramBotClient, Update, Task> toPrevious;
 
-        public DialogManager(TelegramBotClient botClient, IChatCommand[] commands)
+        public DialogManager(TelegramBotClient botClient, IChatCommand[] commands, Schedule schedule,
+            MarketPlace marketPlace, SubscriptionService subscriptionService)
         {
-            this.BotClient = botClient;
+            BotClient = botClient;
+            Schedule = schedule;
+            MarketPlace = marketPlace;
+            SubscriptionService = subscriptionService;
             stateCommands = new Dictionary<DialogState, IChatCommand[]>();
             foreach (var state in Enum.GetValues<DialogState>())
             {

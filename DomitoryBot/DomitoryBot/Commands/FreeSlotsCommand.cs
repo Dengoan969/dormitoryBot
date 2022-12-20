@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Telegram;
 using Telegram.Bot;
 
@@ -11,20 +7,32 @@ namespace DomitoryBot.Commands
     public class FreeSlotsCommand : IExecutableCommand
     {
         private readonly Lazy<DialogManager> dialogManager;
-        public string Name => "FreeSlots";
-
-        public DialogState SourceState => DialogState.Washing;
-
-        public DialogState DestinationState => DialogState.Washing;
 
         public FreeSlotsCommand(Lazy<DialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }
 
+        public string Name => "FreeSlots";
+
+        public DialogState SourceState => DialogState.Washing;
+
+        public DialogState DestinationState => DialogState.Washing;
+
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Тут свободное время для начала стирки в виде списка");
+            var freeTimes = dialogManager.Value.Schedule.GetFreeTimes();
+
+            foreach (var rec in freeTimes)
+            {
+                var sb = new StringBuilder();
+                sb.Append(rec.Key + "\n");
+                foreach (var date in rec.Value) sb.Append(date.ToString("dd.MM HH:mm") + "\n");
+
+                sb.Append("\n");
+                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
+            }
+
             await dialogManager.Value.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
         }
     }

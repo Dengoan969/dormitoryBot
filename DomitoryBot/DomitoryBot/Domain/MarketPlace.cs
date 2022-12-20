@@ -8,15 +8,15 @@
 
     public class Advert //Record? (not class)
     {
-        public readonly Guid Guid = Guid.NewGuid();
-        public readonly DateTime CreationTime = DateTime.Now;
         public readonly AdvertStatus AdvertStatus = AdvertStatus.Active;
-        public readonly Guid Author;
+        public readonly long Author;
+        public readonly DateTime CreationTime = DateTime.Now;
+        public readonly Guid Guid = Guid.NewGuid();
         public readonly string Price;
         public readonly string Text;
         public readonly TimeSpan Time = TimeSpan.FromDays(7);
 
-        public Advert(Guid author, string text, string price, TimeSpan time)
+        public Advert(long author, string text, string price, TimeSpan time)
         {
             Author = author;
             Text = text;
@@ -27,8 +27,9 @@
 
     public class MarketPlace
     {
-        IAdvertsRepository repository = new AdvertMockRepository();
-        public bool CreateAdvert(Guid author, string text, string price, TimeSpan time)
+        private IAdvertsRepository repository;
+
+        public bool CreateAdvert(long author, string text, string price, TimeSpan time)
         {
             var advert = new Advert(author, text, price, time);
             repository.AddAdvert(advert);
@@ -40,7 +41,7 @@
             return repository.GetAdverts();
         }
 
-        public Advert[] GetUserAdverts(Guid user)
+        public Advert[] GetUserAdverts(long user)
         {
             return repository.GetUserAdverts(user);
         }
@@ -56,10 +57,10 @@
         void AddAdvert(Advert advert);
         void RemoveAdvert(Guid advertGuid);
         Advert[] GetAdverts();
-        Advert[] GetUserAdverts(Guid user);
+        Advert[] GetUserAdverts(long user);
     }
 
-    public class AdvertMockRepository : IAdvertsRepository
+    public class MockAdvertRepository : IAdvertsRepository
     {
         private readonly List<Advert> adverts = new List<Advert>();
 
@@ -73,7 +74,7 @@
             return adverts.ToArray();
         }
 
-        public Advert[] GetUserAdverts(Guid user)
+        public Advert[] GetUserAdverts(long user)
         {
             return adverts.Where(x => x.Author == user).ToArray();
         }
