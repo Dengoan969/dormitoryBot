@@ -20,8 +20,8 @@ namespace Telegram
             var botClient = new TelegramBotClient(token);
             var container = new StandardKernel();
             container.Bind<IRecordsRepository>().To<MockScheduleRepository>();
-            container.Bind<ISubscriptionRepository>().To<MockSubscribitionRepository>();
-            container.Bind<IAdvertsRepository>().To<MockAdvertRepository>();
+            container.Bind<ISubscriptionRepository>().To<MockSubscriptionRepository>();
+            container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>();
             container.Bind<DialogManager>().ToSelf().InSingletonScope();
             container.Bind<TelegramBotClient>().ToConstant(botClient);
 
