@@ -1,4 +1,5 @@
-﻿using Telegram;
+﻿using System.Text;
+using Telegram;
 
 namespace DomitoryBot.Commands;
 
@@ -11,12 +12,27 @@ public class ToRecordsOfUser : IExecutableCommand
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState { get; }
-    public DialogState DestinationState { get; }
+    public DialogState SourceState => DialogState.Washing;
+    public DialogState DestinationState => DialogState.Washing_SelectToDelete;
     public string Name => "Delete record";
 
-    public Task Execute(long chatId)
+    public async Task Execute(long chatId)
     {
-        return Task.CompletedTask;
+        var records = dialogManager.Value.Schedule.GetRecordsTimesByUser(chatId);
+
+        if (records.Count == 0)
+        {
+            await dialogManager.Value.ChangeState(SourceState, chatId, "У вас нет записей", Keyboard.Washing);
+        }
+        else
+        {
+            var sb = new StringBuilder();
+            sb.Append("Ваши записи:\n");
+            for (var i = 0; i < records.Count; i++)
+                sb.Append($"{i + 1}. {records[i].TimeInterval.Start.ToString("dd.MM HH:mm")}" +
+                          $" - {records[i].TimeInterval.End.ToString("dd.MM HH:mm")}" +
+                          $" Номер машинки:{records[i].Machine}");
+            await dialogManager.Value.ChangeState(DestinationState, chatId, sb.ToString(), Keyboard.Back);
+        }
     }
 }

@@ -9,13 +9,13 @@
             {WashingType.slow, TimeSpan.FromMinutes(90)} //todo ADD WASHING TYPES
         };
 
-        public readonly string[] machineNames = {"1", "2", "3"};
+        public readonly string[] machineNames;
         private IRecordsRepository data;
 
-        public Schedule(IRecordsRepository data, string[] machineNames)
+        public Schedule(IRecordsRepository data)
         {
             this.data = data;
-            this.machineNames = machineNames;
+            machineNames = data.GetFreeTimes().Keys.ToArray();
         }
 
         public bool AddRecord(long user, string machine, DateTime startDate, WashingType washingType)
@@ -25,9 +25,8 @@
             return data.TryAddRecord(record);
         }
 
-        public bool RemoveRecord(long user, TimeInterval timeInterval, string machine)
+        public bool RemoveRecord(ScheduleRecord record)
         {
-            var record = new ScheduleRecord(user, timeInterval, machine);
             return data.TryRemoveRecord(record);
         }
 

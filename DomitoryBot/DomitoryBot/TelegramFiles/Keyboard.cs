@@ -27,14 +27,14 @@ public static class Keyboard
         new[]
         {
             InlineKeyboardButton.WithCallbackData("Свободные слоты", "FreeSlots"),
-            InlineKeyboardButton.WithCallbackData("Мои записи", "MyEntries"),
+            InlineKeyboardButton.WithCallbackData("Мои записи", "My Records"),
             InlineKeyboardButton.WithCallbackData("Назад", "Back")
         },
 
         new[]
         {
             InlineKeyboardButton.WithCallbackData("Записаться", "Machine select"),
-            InlineKeyboardButton.WithCallbackData("Удалить запись", "DeleteEntry")
+            InlineKeyboardButton.WithCallbackData("Удалить запись", "Delete record")
         }
     });
 

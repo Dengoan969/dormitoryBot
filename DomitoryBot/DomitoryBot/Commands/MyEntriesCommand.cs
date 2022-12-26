@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Text;
 using Telegram;
 using Telegram.Bot;
 
@@ -11,21 +7,38 @@ namespace DomitoryBot.Commands
     public class MyEntriesCommand : IExecutableCommand
     {
         private readonly Lazy<DialogManager> dialogManager;
-        public string Name => "MyEntries";
-
-        public DialogState SourceState => DialogState.Washing;
-
-        public DialogState DestinationState => DialogState.Washing;
 
         public MyEntriesCommand(Lazy<DialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }
 
+        public string Name => "My Records";
+
+        public DialogState SourceState => DialogState.Washing;
+
+        public DialogState DestinationState => DialogState.Washing;
+
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Тут список всех записей");
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
+            var records = dialogManager.Value.Schedule.GetRecordsTimesByUser(chatId);
+
+            if (records.Count == 0)
+            {
+                await dialogManager.Value.ChangeState(DestinationState, chatId, "У вас нет записей", Keyboard.Washing);
+            }
+            else
+            {
+                var sb = new StringBuilder();
+                sb.Append("Ваши записи:\n");
+                for (var i = 0; i < records.Count; i++)
+                    sb.Append($"{i + 1}. {records[i].TimeInterval.Start.ToString("dd.MM HH:mm")}" +
+                              $" - {records[i].TimeInterval.End.ToString("dd.MM HH:mm")}" +
+                              $" Номер машинки:{records[i].Machine}");
+
+                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
+                await dialogManager.Value.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
+            }
         }
     }
 }

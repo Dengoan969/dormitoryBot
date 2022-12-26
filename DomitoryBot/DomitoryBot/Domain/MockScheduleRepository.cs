@@ -21,7 +21,7 @@ public class MockScheduleRepository : IRecordsRepository
             if (freeTimes[scheduleRecord.Machine][i])
                 return false;
         if (!dataBase.ContainsKey(scheduleRecord.User)) dataBase.Add(scheduleRecord.User, new List<ScheduleRecord>());
-
+        dataBase[scheduleRecord.User].Add(scheduleRecord);
         for (var i = startIndex; i < endIndex; i++) freeTimes[scheduleRecord.Machine][i] = true;
         return true;
     }

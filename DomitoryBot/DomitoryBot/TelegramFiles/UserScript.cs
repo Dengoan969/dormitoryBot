@@ -40,6 +40,7 @@ namespace Telegram
         {
             if (update.Message?.Date >= DateTime.Now - TimeSpan.FromSeconds(10))
             {
+                return;
             }
 
             var chatId = update.Message?.Chat.Id ?? update.CallbackQuery?.Message.Chat.Id;
