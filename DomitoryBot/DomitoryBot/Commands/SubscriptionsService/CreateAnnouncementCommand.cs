@@ -2,7 +2,7 @@
 using Telegram;
 using Telegram.Bot;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.SubscriptionsService
 {
     public class CreateAnnouncementCommand : IExecutableCommand
     {
@@ -17,12 +17,12 @@ namespace DomitoryBot.Commands
 
         public DialogState SourceState => DialogState.Subscriptions_Manage;
 
-        public DialogState DestinationState => DialogState.Marketplace_Text;
+        public DialogState DestinationState => DialogState.Subscriptions_Manage_Announcement_Subscription;
 
         public async Task Execute(long chatId)
         {
             await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                  "Напиши объявление (можно вместе с фото)", Keyboard.Back);
+                                                  "В какую рассылку опубликовать?", Keyboard.Back);
         }
     }
 }

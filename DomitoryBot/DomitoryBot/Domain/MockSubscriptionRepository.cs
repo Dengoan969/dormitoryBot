@@ -2,13 +2,11 @@
 
 public class MockSubscriptionRepository : ISubscriptionRepository
 {
-    private Dictionary<string, Dictionary<long, UserRights>> db;
+    private Dictionary<string, Dictionary<long, UserRights>> db = new Dictionary<string, Dictionary<long, UserRights>>();
 
-    public long[] GetAllUsers(string name)
+    public long[] GetFollowers(string name)
     {
-        if (!db.ContainsKey(name)) throw new ArgumentException("No such subscription");
-
-        return db[name].Keys.ToArray();
+        return db[name].Keys.Where(x => db[name][x] == UserRights.Follower).ToArray();
     }
 
     public void AddAdmin(string sub, long caller, long userToAdd)
@@ -23,31 +21,49 @@ public class MockSubscriptionRepository : ISubscriptionRepository
 
     public long[] GetAdmins(string name)
     {
-        if (!db.ContainsKey(name)) throw new ArgumentException("No such subscription");
+        if (!db.ContainsKey(name))
+        {
+            return new long[0];
+        }
 
         return db[name].Keys.Where(x => db[name][x] == UserRights.Admin).ToArray();
     }
-
-    public void SubscribeUser(long userId, string name)
+    public bool TryCreateSubscription(string sub, long userId)
     {
-        if (!db.ContainsKey(name)) throw new ArgumentException("No such subscription");
-
-        if (db[name].ContainsKey(userId)) throw new ArgumentException("User in subscription");
-
-        db[name][userId] = UserRights.Follower;
+        if (db.ContainsKey(sub))
+        {
+            return false;
+        }
+        db[sub] = new Dictionary<long, UserRights>() { { userId, UserRights.Admin } };
+        return true;
     }
 
-    public void UnsubscribeUser(long userId, string name)
+    public bool TrySubscribeUser(long userId, string name)
     {
-        if (!db.ContainsKey(name)) throw new ArgumentException("No such subscription");
+        if (!db.ContainsKey(name) || db[name].ContainsKey(userId))
+        {
+            return false;
+        }
+        db[name][userId] = UserRights.Follower;
+        return true;
+    }
 
-        if (!db[name].ContainsKey(userId)) throw new ArgumentException("User in subscription");
-
+    public bool TryUnsubscribeUser(long userId, string name)
+    {
+        if (!db.ContainsKey(name) || !db[name].ContainsKey(userId))
+        {
+            return false;
+        }
         db[name].Remove(userId);
+        return true;
     }
 
     public string[] GetSubscriptionsOfUser(long userId)
     {
-        return db.Keys.Where(x => db[x].ContainsKey(userId)).ToArray();
+        return db.Keys.Where(x => db[x].ContainsKey(userId) && db[x][userId] == UserRights.Follower).ToArray();
+    }
+    public string[] GetAdminSubscriptionsOfUser(long userId)
+    {
+        return db.Keys.Where(x => db[x].ContainsKey(userId) && db[x][userId] == UserRights.Admin).ToArray();
     }
 }

@@ -2,7 +2,7 @@
 using Telegram;
 using Telegram.Bot;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.SubscriptionsService
 {
     public class SubscribeCommand : IExecutableCommand
     {
@@ -13,7 +13,7 @@ namespace DomitoryBot.Commands
             this.dialogManager = dialogManager;
         }
 
-        public string Name => "Subcribe";
+        public string Name => "Subscribe";
 
         public DialogState SourceState => DialogState.Subscriptions;
 

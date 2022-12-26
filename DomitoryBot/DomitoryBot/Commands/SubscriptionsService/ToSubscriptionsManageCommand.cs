@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Telegram;
 using Telegram.Bot;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.SubscriptionsService
 {
     public class ToSubscriptionsManageCommand : IExecutableCommand
     {
@@ -24,7 +24,7 @@ namespace DomitoryBot.Commands
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Управление подписками", Keyboard.SubscriptionsManage);
+            await dialogManager.Value.ChangeState(DestinationState, chatId, "Управление рассылками", Keyboard.SubscriptionsManage);
         }
     }
 }

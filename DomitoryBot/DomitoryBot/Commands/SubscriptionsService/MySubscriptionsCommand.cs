@@ -2,7 +2,7 @@
 using Telegram;
 using Telegram.Bot;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.SubscriptionsService
 {
     public class MySubscriptionsCommand : IExecutableCommand
     {
@@ -22,9 +22,14 @@ namespace DomitoryBot.Commands
         public async Task Execute(long chatId)
         {
             var subscriptions = dialogManager.Value.SubscriptionService.GetSubscriptionsOfUser(chatId);
-
-            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, String.Join("/n",subscriptions));
-
+            if (subscriptions.Length == 0)
+            {
+                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "У тебя пока нет подписок ._.");
+            }
+            else
+            {
+                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, $"Твои подписки:/n{string.Join("/n", subscriptions)}");
+            }
             await dialogManager.Value.ChangeState(DestinationState, chatId, "Подписки", Keyboard.Subscriptions);
         }
     }

@@ -2,7 +2,7 @@
 using Telegram;
 using Telegram.Bot;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.SubscriptionsService
 {
     public class UnsubscribeCommand : IExecutableCommand
     {

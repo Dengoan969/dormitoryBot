@@ -2,7 +2,7 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.SubscriptionsService;
 
 public class HandleUnsubscribeCommand : IHandleTextCommand
 {
@@ -19,10 +19,10 @@ public class HandleUnsubscribeCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if(message.Text != null)
+        if (message.Text != null)
         {
             var subscriptionService = dialogManager.Value.SubscriptionService;
-            if(subscriptionService.UnsubscribeUser(chatId, message.Text))
+            if (subscriptionService.UnsubscribeUser(chatId, message.Text))
             {
                 await dialogManager.Value.ChangeState(DestinationState, chatId,
                                                   "Ты успешно отписался :(", Keyboard.Subscriptions);
@@ -32,7 +32,7 @@ public class HandleUnsubscribeCommand : IHandleTextCommand
                 await dialogManager.Value.ChangeState(SourceState, chatId,
                                                   "Кажется такой подписки нет, попробуй ещё раз", Keyboard.Back);
             }
-            
+
         }
         else
         {

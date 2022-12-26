@@ -2,7 +2,7 @@
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.SubscriptionsService;
 
 public class HandleSubscribeCommand : IHandleTextCommand
 {
@@ -19,20 +19,11 @@ public class HandleSubscribeCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if(message.Text != null)
+        var subscriptionService = dialogManager.Value.SubscriptionService;
+        if (message.Text != null && subscriptionService.SubscribeUser(chatId, message.Text))
         {
-            var subscriptionService = dialogManager.Value.SubscriptionService;
-            if(subscriptionService.SubscribeUser(chatId, message.Text))
-            {
-                await dialogManager.Value.ChangeState(DestinationState, chatId,
+            await dialogManager.Value.ChangeState(DestinationState, chatId,
                                                   "Круто, ты подписался!", Keyboard.Subscriptions);
-            }
-            else
-            {
-                await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                  "Кажется такой подписки нет, попробуй ещё раз", Keyboard.Back);
-            }
-            
         }
         else
         {

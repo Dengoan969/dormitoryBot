@@ -2,7 +2,7 @@
 using Telegram;
 using Telegram.Bot;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.SubscriptionsService
 {
     public class CreateSubscriptionCommand : IExecutableCommand
     {
@@ -17,13 +17,12 @@ namespace DomitoryBot.Commands
 
         public DialogState SourceState => DialogState.Subscriptions_Manage;
 
-        public DialogState DestinationState => throw new NotImplementedException();
+        public DialogState DestinationState => DialogState.Subscriptions_Manage_Subscription;
 
         public async Task Execute(long chatId)
         {
-            throw new NotImplementedException();
             await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                  "Введите описание объявления", Keyboard.Back);
+                                                  "Как называется рассылка? (Для удобства лучше начинать с #)", Keyboard.Back);
         }
     }
 }
