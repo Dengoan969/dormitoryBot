@@ -14,6 +14,6 @@ public enum DialogState
     Marketplace_Time,
     Subscriptions,
     FAQ,
-    Ideas,
+    Idea_Text,
     None
 }
