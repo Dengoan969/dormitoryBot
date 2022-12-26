@@ -24,6 +24,7 @@ namespace Telegram
             container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>();
             container.Bind<DialogManager>().ToSelf().InSingletonScope();
             container.Bind<TelegramBotClient>().ToConstant(botClient);
+            container.Bind<string[]>().ToConstant(new[] {"1", "2", "3"}).WhenInjectedInto<Schedule>();
 
             container.Bind(c =>
                 c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>().BindAllInterfaces());

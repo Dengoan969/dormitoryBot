@@ -12,40 +12,23 @@
         public readonly string[] machineNames = {"1", "2", "3"};
         private IRecordsRepository data;
 
-        public Schedule(IRecordsRepository data)
+        public Schedule(IRecordsRepository data, string[] machineNames)
         {
             this.data = data;
+            this.machineNames = machineNames;
         }
 
         public bool AddRecord(long user, string machine, DateTime startDate, WashingType washingType)
         {
             var finishDate = startDate.Add(washingTypes[washingType]);
             var record = new ScheduleRecord(user, new TimeInterval(startDate, finishDate), machine);
-            try
-            {
-                data.AddRecord(record);
-            }
-            catch (ArgumentException e)
-            {
-                return false;
-            }
-
-            return true;
+            return data.TryAddRecord(record);
         }
 
         public bool RemoveRecord(long user, TimeInterval timeInterval, string machine)
         {
             var record = new ScheduleRecord(user, timeInterval, machine);
-            try
-            {
-                data.RemoveRecord(record);
-            }
-            catch (ArgumentException e)
-            {
-                return false;
-            }
-
-            return true;
+            return data.TryRemoveRecord(record);
         }
 
         public List<ScheduleRecord> GetRecordsTimesByUser(long user)

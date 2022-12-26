@@ -11,31 +11,33 @@ public class MockScheduleRepository : IRecordsRepository
         {"3", new bool[48 * 3]}
     };
 
-    public void AddRecord(ScheduleRecord scheduleRecord)
+    public bool TryAddRecord(ScheduleRecord scheduleRecord)
     {
         if (scheduleRecord.TimeInterval.Start.Minute % 30 != 0 || scheduleRecord.TimeInterval.End.Minute % 30 != 0)
-            throw new ArgumentException();
+            return false;
         var startIndex = GetIndexByDate(scheduleRecord.TimeInterval.Start);
         var endIndex = GetIndexByDate(scheduleRecord.TimeInterval.End);
         for (var i = startIndex; i < endIndex; i++)
             if (freeTimes[scheduleRecord.Machine][i])
-                throw new ArgumentException();
+                return false;
         if (!dataBase.ContainsKey(scheduleRecord.User)) dataBase.Add(scheduleRecord.User, new List<ScheduleRecord>());
 
         for (var i = startIndex; i < endIndex; i++) freeTimes[scheduleRecord.Machine][i] = true;
+        return true;
     }
 
-    public void RemoveRecord(ScheduleRecord scheduleRecord)
+    public bool TryRemoveRecord(ScheduleRecord scheduleRecord)
     {
         var startIndex = GetIndexByDate(scheduleRecord.TimeInterval.Start);
         var endIndex = GetIndexByDate(scheduleRecord.TimeInterval.End);
         for (var i = startIndex; i < endIndex; i++)
             if (!freeTimes[scheduleRecord.Machine][i])
-                throw new ArgumentException();
+                return false;
         dataBase[scheduleRecord.User] = dataBase[scheduleRecord.User]
             .Where(x => x != scheduleRecord).ToList();
 
         for (var i = startIndex; i < endIndex; i++) freeTimes[scheduleRecord.Machine][i] = false;
+        return true;
     }
 
 
