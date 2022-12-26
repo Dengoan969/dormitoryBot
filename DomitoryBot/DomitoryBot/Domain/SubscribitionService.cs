@@ -8,25 +8,29 @@ namespace DomitoryBot.Domain
     {
         private ISubscriptionRepository subscriptionRepository;
 
+        public SubscriptionService(ISubscriptionRepository subscriptionRepository)
+        {
+            this.subscriptionRepository = subscriptionRepository;
+        }
+
         public bool SubscribeUser(long userId, string subscribName)
         {
-            if (subscriptionRepository.GetSubscriptionsOfUser(userId).Contains(subscribName)) return false;
-
-            subscriptionRepository.SubscribeUser(userId, subscribName);
-            return true;
+            return subscriptionRepository.TrySubscribeUser(userId, subscribName);
         }
 
         public bool UnsubscribeUser(long userId, string subscribName)
         {
-            if (!subscriptionRepository.GetSubscriptionsOfUser(userId).Contains(subscribName)) return false;
-
-            subscriptionRepository.UnsubscribeUser(userId, subscribName);
-            return true;
+            return subscriptionRepository.TryUnsubscribeUser(userId, subscribName);
         }
 
         public string[] GetSubscriptionsOfUser(long userId)
         {
             return subscriptionRepository.GetSubscriptionsOfUser(userId);
+        }
+
+        public string[] GetAdminSubscriptionsOfUser(long userId)
+        {
+            return subscriptionRepository.GetAdminSubscriptionsOfUser(userId);
         }
 
         public void AddAdmin(string sub, long caller, long userToAdd)
@@ -39,19 +43,24 @@ namespace DomitoryBot.Domain
             return subscriptionRepository.GetAdmins(sub).Contains(userId);
         }
 
+        public bool TryCreateSubscription(string sub, long userId)
+        {
+            return subscriptionRepository.TryCreateSubscription(sub, userId);
+        }
+
         public void SendAnnouncement(TelegramBotClient botClient, Message mes, string sub)
         {
             switch (mes.Type)
             {
                 case MessageType.Photo:
                 {
-                    foreach (var user in subscriptionRepository.GetAllUsers(sub))
+                    foreach (var user in subscriptionRepository.GetFollowers(sub))
                         botClient.SendPhotoAsync(user, mes.Photo[0].FileId, mes.Caption);
                     break;
                 }
 
                 case MessageType.Text:
-                    foreach (var user in subscriptionRepository.GetAllUsers(sub))
+                    foreach (var user in subscriptionRepository.GetFollowers(sub))
                         botClient.SendTextMessageAsync(user, mes.Text);
                     break;
             }

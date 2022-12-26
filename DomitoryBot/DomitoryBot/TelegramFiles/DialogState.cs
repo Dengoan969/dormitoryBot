@@ -15,7 +15,13 @@ public enum DialogState
     Marketplace_Price,
     Marketplace_Time,
     Subscriptions,
+    Subscriptions_Subscribe,
+    Subscriptions_Unsubscribe,
+    Subscriptions_Manage,
+    Subscriptions_Manage_Announcement_Subscription,
+    Subscriptions_Manage_Announcement_Message,
+    Subscriptions_Manage_Subscription,
     FAQ,
-    Ideas,
+    Idea_Text,
     None
 }

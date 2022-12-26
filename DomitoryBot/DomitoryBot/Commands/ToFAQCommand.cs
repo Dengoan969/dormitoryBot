@@ -15,7 +15,7 @@ namespace DomitoryBot.Commands
 
         public DialogState SourceState => DialogState.Menu;
 
-        public DialogState DestinationState => DialogState.FAQ;
+        public DialogState DestinationState => DialogState.Menu;
 
         public ToFAQCommand(Lazy<DialogManager> dialogManager)
         {
@@ -24,7 +24,8 @@ namespace DomitoryBot.Commands
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "FAQ", Keyboard.FAQ);
+            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId,"Тут умное FAQ");
+            await dialogManager.Value.ChangeState(DestinationState, chatId, "Меню", Keyboard.Menu);
         }
     }
 }

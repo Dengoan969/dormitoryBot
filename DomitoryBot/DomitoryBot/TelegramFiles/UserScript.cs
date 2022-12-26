@@ -65,7 +65,7 @@ namespace Telegram
                     case UpdateType.CallbackQuery:
                         var command = update.CallbackQuery.Data;
                         await TryExecuteCommand(command, chatId.Value);
-                        // await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
+                        await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
                         break;
                 }
             }
@@ -74,14 +74,24 @@ namespace Telegram
         private async Task TryExecuteCommand(string commandName, long chatId)
         {
             var command = (IExecutableCommand) stateCommands[USR.GetState(chatId)]
-                .First(x => x is IExecutableCommand command && command.Name == commandName);
-            await command.Execute(chatId);
+                .FirstOrDefault(x => x is IExecutableCommand command && command.Name == commandName);
+            if(command != null)
+            {
+                await command.Execute(chatId);
+            }
         }
 
         private async Task TryHandleMessage(Message message, long chatId)
         {
-            var command = (IHandleTextCommand) stateCommands[USR.GetState(chatId)].First(x => x is IHandleTextCommand);
-            await command.HandleMessage(message, chatId);
+            var command = (IHandleTextCommand) stateCommands[USR.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
+            if (command != null)
+            {
+                await command.HandleMessage(message, chatId);
+            }
+            else
+            {
+                await BotClient.SendTextMessageAsync(chatId, "Прости, но я тебя не понял :(");
+            }
         }
 
         public async Task ChangeState(DialogState newState, long chatId, string message, IReplyMarkup keyboard)

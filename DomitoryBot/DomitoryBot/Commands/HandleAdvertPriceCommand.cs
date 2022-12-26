@@ -28,7 +28,7 @@ public class HandleAdvertPriceCommand : IHandleTextCommand
         else
         {
             await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                  "Укажите награду", Keyboard.Back);
+                                                  "Напиши что предложишь в награду", Keyboard.Back);
         }
     }
 }

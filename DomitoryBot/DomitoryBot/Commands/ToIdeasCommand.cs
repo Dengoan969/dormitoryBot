@@ -15,7 +15,7 @@ namespace DomitoryBot.Commands
 
         public DialogState SourceState => DialogState.Menu;
 
-        public DialogState DestinationState => DialogState.Ideas;
+        public DialogState DestinationState => DialogState.Idea_Text;
 
         public ToIdeasCommand(Lazy<DialogManager> dialogManager)
         {
@@ -24,7 +24,8 @@ namespace DomitoryBot.Commands
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Идеи", Keyboard.Ideas);
+            await dialogManager.Value.ChangeState(DestinationState, chatId,
+                                                  "Какие есть предложения? :)", Keyboard.Back);
         }
     }
 }

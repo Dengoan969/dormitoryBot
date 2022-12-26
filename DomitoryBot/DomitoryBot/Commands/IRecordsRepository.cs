@@ -1,4 +1,6 @@
-﻿namespace DomitoryBot.Domain;
+﻿using DomitoryBot.Domain;
+
+namespace DomitoryBot.Commands;
 
 public interface IRecordsRepository
 {
