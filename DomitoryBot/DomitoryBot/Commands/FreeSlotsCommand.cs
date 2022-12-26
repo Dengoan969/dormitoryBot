@@ -56,7 +56,10 @@ public class FreeSlotsCommand : IHandleTextCommand
 
                 if (!(begin == DateTime.MinValue && last == DateTime.MinValue))
                     sb.Append($"{begin.ToString("dd.MM HH:mm")} - {last.AddMinutes(30).ToString("dd.MM HH:mm")}\n");
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
+                if (sb.Length == (rec.Key + "\n").Length)
+                    await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb + "Эта дата не доступна");
+                else
+                    await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
             }
 
             await dialogManager.Value.BotClient.SendTextMessageAsync(chatId,

@@ -8,4 +8,5 @@ public interface IRecordsRepository
     bool TryRemoveRecord(ScheduleRecord scheduleRecord);
     List<ScheduleRecord> GetRecordsTimesByUser(long user);
     Dictionary<string, List<DateTime>> GetFreeTimes();
+    void ClearPreviousDay();
 }

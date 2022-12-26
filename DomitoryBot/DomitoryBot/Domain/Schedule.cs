@@ -12,12 +12,21 @@ namespace DomitoryBot.Domain
         };
 
         public readonly string[] machineNames;
+        private readonly Timer timer;
         private IRecordsRepository data;
 
         public Schedule(IRecordsRepository data)
         {
             this.data = data;
             machineNames = data.GetFreeTimes().Keys.ToArray();
+            timer = new Timer(ClearPreviousDay, new object(), DateTime.Today.AddDays(1) - DateTime.Now,
+                TimeSpan.FromDays(1));
+        }
+
+        private void ClearPreviousDay(object stateInfo)
+        {
+            data.ClearPreviousDay();
+            Console.WriteLine("Cleared previous day");
         }
 
         public bool AddRecord(long user, string machine, DateTime startDate, WashingType washingType)

@@ -67,6 +67,19 @@ public class MockScheduleRepository : IRecordsRepository
         return times;
     }
 
+    public void ClearPreviousDay()
+    {
+        foreach (var machine in freeTimes.Keys)
+        {
+            var newDay = new bool[48 * 3];
+            for (var i = 0; i < 96; i++) newDay[i] = freeTimes[machine][i + 48];
+            freeTimes[machine] = newDay;
+        }
+
+        foreach (var user in dataBase.Keys)
+            dataBase[user] = dataBase[user].Where(x => x.TimeInterval.Start >= DateTime.Today).ToList();
+    }
+
     private int GetIndexByDate(DateTime date)
     {
         var today = DateTime.Today;
