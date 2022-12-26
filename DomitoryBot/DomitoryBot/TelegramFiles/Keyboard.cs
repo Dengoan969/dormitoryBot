@@ -82,18 +82,30 @@ public static class Keyboard
     {
         new[]
         {
-            InlineKeyboardButton.WithCallbackData("Подписаться", "FreeSlots"),
-            InlineKeyboardButton.WithCallbackData("Отписаться", "MyEntries")
+            InlineKeyboardButton.WithCallbackData("Подписаться", "Subscribe"),
+            InlineKeyboardButton.WithCallbackData("Отписаться", "Unsubscribe"),
+            InlineKeyboardButton.WithCallbackData("Мои подписки", "MySubscriptions")
         },
 
         new[]
         {
-            InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateEntry"),
-            InlineKeyboardButton.WithCallbackData("Назад", "DeleteEntry")
+            InlineKeyboardButton.WithCallbackData("Управление подписками", "SubscriptionsManage"),
+            InlineKeyboardButton.WithCallbackData("Назад", "Back")
         }
     });
 
-    public static ReplyKeyboardMarkup FAQ = new(new KeyboardButton("Назад"));
+    public static InlineKeyboardMarkup SubscriptionsManage = new(new[]
+{
+        new[]
+        {
+            InlineKeyboardButton.WithCallbackData("Мои рассылки", "AdminSubscriptions"),
+            InlineKeyboardButton.WithCallbackData("Создать рассылку", "CreateSubscription")
+        },
 
-    public static ReplyKeyboardMarkup Ideas = new(new KeyboardButton("Назад"));
+        new[]
+        {
+            InlineKeyboardButton.WithCallbackData("Опубликовать объявление", "CreateAnnouncement"),
+            InlineKeyboardButton.WithCallbackData("Назад", "Back")
+        }
+    });
 }
