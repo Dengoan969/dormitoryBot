@@ -21,9 +21,28 @@ public class HandleAdvertTimeCommand : IHandleTextCommand
         if(message.Text != null)
         {
             var temp_input = dialogManager.Value.temp_input[chatId];
-            dialogManager.Value.MarketPlace.CreateAdvert(chatId, (string)temp_input[0], (string)temp_input[1], TimeSpan.FromDays(double.Parse(message.Text)));
-            await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                  "Маркетплейс", Keyboard.Marketplace);
+            if(!int.TryParse(message.Text, out var days))
+            {
+                await dialogManager.Value.ChangeState(SourceState, chatId,
+                                                  "Кажется ты вводишь что-то не то.. Вот бы целое число", Keyboard.Back);
+            }
+            if(days <= 0)
+            {
+                await dialogManager.Value.ChangeState(SourceState, chatId,
+                                                  "Попробуй положительное число :)", Keyboard.Back);
+            }
+            else if(days > 30)
+            {
+                await dialogManager.Value.ChangeState(SourceState, chatId,
+                                                  "Слишком много, давай не больше 30", Keyboard.Back);
+            }
+            else
+            {
+                dialogManager.Value.MarketPlace.CreateAdvert(chatId, (string)temp_input[0], (string)temp_input[1], TimeSpan.FromDays(days));
+                await dialogManager.Value.ChangeState(DestinationState, chatId,
+                                                      "Маркетплейс", Keyboard.Marketplace);
+            }
+            
         }
         else
         {

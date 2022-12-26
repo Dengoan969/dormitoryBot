@@ -23,7 +23,7 @@ public class HandleAdvertTextCommand : IHandleTextCommand
             dialogManager.Value.temp_input[chatId] = new List<object>();
             dialogManager.Value.temp_input[chatId].Add(message.Text);
             await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                  "Укажите награду", Keyboard.Back);
+                                                  "Напиши что предожишь в награду", Keyboard.Back);
         }
         else
         {
