@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Telegram;
 using Telegram.Bot;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.Ideas
 {
     public class ToIdeasCommand : IExecutableCommand
     {

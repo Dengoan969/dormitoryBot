@@ -1,4 +1,4 @@
-﻿using DomitoryBot.Commands;
+﻿using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.Domain;
 using Ninject;
 using Ninject.Extensions.Conventions;

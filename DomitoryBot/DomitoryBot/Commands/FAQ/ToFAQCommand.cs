@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DomitoryBot.Commands.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using System.Threading.Tasks;
 using Telegram;
 using Telegram.Bot;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.FAQ
 {
     public class ToFAQCommand : IExecutableCommand
     {
@@ -24,7 +25,7 @@ namespace DomitoryBot.Commands
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId,"Тут умное FAQ");
+            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Тут умное FAQ");
             await dialogManager.Value.ChangeState(DestinationState, chatId, "Меню", Keyboard.Menu);
         }
     }

@@ -1,8 +1,9 @@
-﻿using DomitoryBot.Domain;
+﻿using DomitoryBot.Commands.Interfaces;
+using DomitoryBot.Domain;
 using Telegram;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.WashingSchedule;
 
 public class AddRecordOfWashing : IHandleTextCommand
 {

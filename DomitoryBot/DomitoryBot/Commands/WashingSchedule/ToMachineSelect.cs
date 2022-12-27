@@ -1,6 +1,7 @@
-﻿using Telegram;
+﻿using DomitoryBot.Commands.Interfaces;
+using Telegram;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.WashingSchedule;
 
 public class ToMachineSelect : IExecutableCommand
 {

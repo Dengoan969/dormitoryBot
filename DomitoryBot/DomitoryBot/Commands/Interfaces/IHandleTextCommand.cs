@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 using Telegram;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.Interfaces
 {
     public interface IHandleTextCommand : IChatCommand
     {

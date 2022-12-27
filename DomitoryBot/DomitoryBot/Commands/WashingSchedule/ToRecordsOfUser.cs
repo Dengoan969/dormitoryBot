@@ -1,7 +1,7 @@
 ﻿using System.Text;
 using Telegram;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.WashingSchedule;
 
 public class ToRecordsOfUser : IExecutableCommand
 {

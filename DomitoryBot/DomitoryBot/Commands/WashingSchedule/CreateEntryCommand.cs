@@ -1,4 +1,4 @@
-﻿namespace DomitoryBot.Commands
+﻿namespace DomitoryBot.Commands.WashingSchedule
 {
     /*public class CreateEntryCommand : IExecutableCommand
     {

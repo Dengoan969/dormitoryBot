@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using DomitoryBot.Commands.Interfaces;
+using System.Text;
 using Telegram;
 using Telegram.Bot;
 

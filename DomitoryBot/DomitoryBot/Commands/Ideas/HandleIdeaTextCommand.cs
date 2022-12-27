@@ -1,4 +1,5 @@
-﻿using System;
+﻿using DomitoryBot.Commands.Interfaces;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -7,7 +8,7 @@ using Telegram;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands
+namespace DomitoryBot.Commands.Ideas
 {
     public class HandleIdeaTextCommand : IHandleTextCommand
     {

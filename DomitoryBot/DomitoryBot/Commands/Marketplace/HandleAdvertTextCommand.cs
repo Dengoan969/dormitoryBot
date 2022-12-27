@@ -1,7 +1,8 @@
-﻿using Telegram;
+﻿using DomitoryBot.Commands.Interfaces;
+using Telegram;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.Marketplace;
 
 public class HandleAdvertTextCommand : IHandleTextCommand
 {
@@ -18,7 +19,7 @@ public class HandleAdvertTextCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if(message.Text != null)
+        if (message.Text != null)
         {
             dialogManager.Value.temp_input[chatId] = new List<object>();
             dialogManager.Value.temp_input[chatId].Add(message.Text);

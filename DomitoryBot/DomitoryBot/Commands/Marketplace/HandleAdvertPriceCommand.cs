@@ -1,8 +1,9 @@
-﻿using Telegram;
+﻿using DomitoryBot.Commands.Interfaces;
+using Telegram;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.Marketplace;
 
 public class HandleAdvertPriceCommand : IHandleTextCommand
 {
@@ -19,7 +20,7 @@ public class HandleAdvertPriceCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if(message.Text != null)
+        if (message.Text != null)
         {
             dialogManager.Value.temp_input[chatId].Add(message.Text);
             await dialogManager.Value.ChangeState(DestinationState, chatId,

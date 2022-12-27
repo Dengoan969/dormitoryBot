@@ -1,10 +1,11 @@
-﻿using System.Globalization;
+﻿using DomitoryBot.Commands.Interfaces;
+using System.Globalization;
 using System.Text;
 using Telegram;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.WashingSchedule;
 
 public class FreeSlotsCommand : IHandleTextCommand
 {

@@ -1,4 +1,5 @@
-﻿using Telegram;
+﻿using DomitoryBot.Commands.Interfaces;
+using Telegram;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 

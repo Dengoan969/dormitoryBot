@@ -1,7 +1,8 @@
-﻿using Telegram;
+﻿using DomitoryBot.Commands.Interfaces;
+using Telegram;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.Marketplace;
 
 public class HandleAdvertTimeCommand : IHandleTextCommand
 {
@@ -18,20 +19,20 @@ public class HandleAdvertTimeCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if(message.Text != null)
+        if (message.Text != null)
         {
             var temp_input = dialogManager.Value.temp_input[chatId];
-            if(!int.TryParse(message.Text, out var days))
+            if (!int.TryParse(message.Text, out var days))
             {
                 await dialogManager.Value.ChangeState(SourceState, chatId,
                                                   "Кажется ты вводишь что-то не то.. Вот бы целое число", Keyboard.Back);
             }
-            if(days <= 0)
+            if (days <= 0)
             {
                 await dialogManager.Value.ChangeState(SourceState, chatId,
                                                   "Попробуй положительное число :)", Keyboard.Back);
             }
-            else if(days > 30)
+            else if (days > 30)
             {
                 await dialogManager.Value.ChangeState(SourceState, chatId,
                                                   "Слишком много, давай не больше 30", Keyboard.Back);
@@ -42,7 +43,7 @@ public class HandleAdvertTimeCommand : IHandleTextCommand
                 await dialogManager.Value.ChangeState(DestinationState, chatId,
                                                       "Маркетплейс", Keyboard.Marketplace);
             }
-            
+
         }
         else
         {

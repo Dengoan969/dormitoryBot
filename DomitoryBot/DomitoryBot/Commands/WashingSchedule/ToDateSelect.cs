@@ -1,7 +1,8 @@
-﻿using Telegram;
+﻿using DomitoryBot.Commands.Interfaces;
+using Telegram;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands;
+namespace DomitoryBot.Commands.WashingSchedule;
 
 public class ToDateSelect : IHandleTextCommand
 {
