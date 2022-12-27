@@ -22,7 +22,7 @@ public class ToWashingTypeSelect : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if (DateTime.TryParseExact(message.Text, "dd.MM HH:mm", new CultureInfo("ru-RU"), DateTimeStyles.None,
+        if (DateTime.TryParseExact(message.Text, "d.M H:m", new CultureInfo("ru-RU"), DateTimeStyles.None,
                 out var value))
         {
             if (value.Minute % 30 != 0)
@@ -33,9 +33,14 @@ public class ToWashingTypeSelect : IHandleTextCommand
             {
                 dialogManager.Value.temp_input[chatId].Add(value);
                 var sb = new StringBuilder();
-                sb.Append("Выберите тип стирки\n");
-                foreach (var types in Schedule.washingTypes)
-                    sb.Append($"{Enum.GetName(types.Key)} - {types.Value.Hours * 60 + types.Value.Minutes} минут\n");
+                sb.Append("Отправьте мне номер типа стирки\n");
+                var i = 1;
+                foreach (var type in dialogManager.Value.Schedule.washingTypes)
+                {
+                    sb.Append($"{i}) {type.Key} - {type.Value.Hours * 60 + type.Value.Minutes} минут\n");
+                    i++;
+                }
+
 
                 await dialogManager.Value.ChangeState(DestinationState, chatId, sb.ToString(), Keyboard.Back);
             }

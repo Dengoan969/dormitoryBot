@@ -1,19 +1,12 @@
 ﻿namespace DomitoryBot.Domain;
 
-public record ScheduleRecord
+public record ScheduleRecord(long User, TimeInterval TimeInterval, string Machine)
 {
-    public readonly string Machine;
+    //guid = Guid.NewGuid();
+    public readonly string Machine = Machine;
 
-    public readonly TimeInterval TimeInterval;
+    public readonly TimeInterval TimeInterval = TimeInterval;
 
     //public readonly Guid guid;
-    public readonly long User;
-
-    public ScheduleRecord(long user, TimeInterval timeInterval, string machine)
-    {
-        //guid = Guid.NewGuid();
-        User = user;
-        TimeInterval = timeInterval;
-        Machine = machine;
-    }
+    public readonly long User = User;
 }

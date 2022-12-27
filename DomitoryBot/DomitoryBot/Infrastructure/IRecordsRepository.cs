@@ -4,8 +4,8 @@ namespace DomitoryBot.Infrastructure;
 
 public interface IRecordsRepository
 {
-    bool TryAddRecord(ScheduleRecord scheduleRecord);
-    bool TryRemoveRecord(ScheduleRecord scheduleRecord);
+    void AddRecord(ScheduleRecord scheduleRecord);
+    void RemoveRecord(ScheduleRecord scheduleRecord);
     List<ScheduleRecord> GetRecordsTimesByUser(long user);
     Dictionary<string, List<DateTime>> GetFreeTimes();
     void ClearPreviousDay();

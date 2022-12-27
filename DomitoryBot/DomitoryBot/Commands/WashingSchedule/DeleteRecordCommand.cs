@@ -24,7 +24,7 @@ public class DeleteRecordCommand : IHandleTextCommand
             var records = dialogManager.Value.Schedule.GetRecordsTimesByUser(chatId);
             if (num <= records.Count && num > 0)
             {
-                dialogManager.Value.Schedule.RemoveRecord(records[num - 1]);
+                dialogManager.Value.Schedule.TryRemoveRecord(records[num - 1]);
                 await dialogManager.Value.ChangeState(DestinationState, chatId, "Запись успешно удалена",
                     Keyboard.Washing);
             }

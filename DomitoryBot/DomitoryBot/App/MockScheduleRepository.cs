@@ -5,7 +5,7 @@ namespace DomitoryBot.App;
 
 public class MockScheduleRepository : IRecordsRepository
 {
-    private readonly Dictionary<long, List<ScheduleRecord>> dataBase = new();
+    private readonly Dictionary<long, List<ScheduleRecord>> dataBase;
 
     private readonly Dictionary<string, bool[]> freeTimes;
 
@@ -15,40 +15,28 @@ public class MockScheduleRepository : IRecordsRepository
         this.dataBase = dataBase;
     }
 
-    public bool TryAddRecord(ScheduleRecord scheduleRecord)
+    public void AddRecord(ScheduleRecord record)
     {
-        if (scheduleRecord.TimeInterval.Start.Minute % 30 != 0 || scheduleRecord.TimeInterval.End.Minute % 30 != 0)
-            return false;
-        var startIndex = GetIndexByDate(scheduleRecord.TimeInterval.Start);
-        var endIndex = GetIndexByDate(scheduleRecord.TimeInterval.End);
-        for (var i = startIndex; i < endIndex; i++)
-            if (freeTimes[scheduleRecord.Machine][i])
-                return false;
-        if (!dataBase.ContainsKey(scheduleRecord.User)) dataBase.Add(scheduleRecord.User, new List<ScheduleRecord>());
-        dataBase[scheduleRecord.User].Add(scheduleRecord);
-        for (var i = startIndex; i < endIndex; i++) freeTimes[scheduleRecord.Machine][i] = true;
-        return true;
+        var startIndex = GetIndexByDate(record.TimeInterval.Start);
+        var endIndex = GetIndexByDate(record.TimeInterval.End);
+        if (!dataBase.ContainsKey(record.User)) dataBase.Add(record.User, new List<ScheduleRecord>());
+        dataBase[record.User].Add(record);
+        for (var i = startIndex; i < endIndex; i++) freeTimes[record.Machine][i] = true;
     }
 
-    public bool TryRemoveRecord(ScheduleRecord scheduleRecord)
+    public void RemoveRecord(ScheduleRecord scheduleRecord)
     {
         var startIndex = GetIndexByDate(scheduleRecord.TimeInterval.Start);
         var endIndex = GetIndexByDate(scheduleRecord.TimeInterval.End);
-        for (var i = startIndex; i < endIndex; i++)
-            if (!freeTimes[scheduleRecord.Machine][i])
-                return false;
         dataBase[scheduleRecord.User] = dataBase[scheduleRecord.User]
             .Where(x => x != scheduleRecord).ToList();
 
         for (var i = startIndex; i < endIndex; i++) freeTimes[scheduleRecord.Machine][i] = false;
-        return true;
     }
-
 
     public List<ScheduleRecord> GetRecordsTimesByUser(long user)
     {
-        if (dataBase.TryGetValue(user, out var records))
-            return records;
+        if (dataBase.TryGetValue(user, out var records)) return records;
 
         return new List<ScheduleRecord>();
     }
@@ -60,7 +48,6 @@ public class MockScheduleRepository : IRecordsRepository
         foreach (var machine in freeTimes.Keys)
         {
             times[machine] = new List<DateTime>();
-            var begin = today;
             for (var i = 0; i < freeTimes[machine].Length; i++)
                 if (!freeTimes[machine][i])
                     times[machine].Add(today.AddMinutes(30 * i));

@@ -49,7 +49,7 @@ public class MockSubscriptionRepository : ISubscriptionRepository
             return false;
         }
 
-        db[sub] = new Dictionary<long, UserRights>() {{userId, UserRights.Admin}};
+        db[sub] = new Dictionary<long, UserRights> {{userId, UserRights.Admin}};
         return true;
     }
 

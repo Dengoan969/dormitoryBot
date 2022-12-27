@@ -5,20 +5,15 @@ namespace DomitoryBot.App
 {
     public class Schedule
     {
-        public static readonly Dictionary<WashingType, TimeSpan> washingTypes = new()
-        {
-            {WashingType.fast, TimeSpan.FromMinutes(30)},
-            {WashingType.medium, TimeSpan.FromMinutes(60)},
-            {WashingType.slow, TimeSpan.FromMinutes(90)} //todo ADD WASHING TYPES
-        };
-
         public readonly string[] machineNames;
         private readonly Timer timer;
+        public readonly Dictionary<string, TimeSpan> washingTypes;
         private IRecordsRepository data;
 
-        public Schedule(IRecordsRepository data)
+        public Schedule(IRecordsRepository data, Dictionary<string, TimeSpan> washingTypes)
         {
             this.data = data;
+            this.washingTypes = washingTypes;
             machineNames = data.GetFreeTimes().Keys.ToArray();
             timer = new Timer(ClearPreviousDay, new object(), DateTime.Today.AddDays(1) - DateTime.Now,
                 TimeSpan.FromDays(1));
@@ -30,16 +25,32 @@ namespace DomitoryBot.App
             Console.WriteLine("Cleared previous day");
         }
 
-        public bool AddRecord(long user, string machine, DateTime startDate, WashingType washingType)
+        public bool TryAddRecord(long user, string machine, DateTime startDate, string washingType)
         {
             var finishDate = startDate.Add(washingTypes[washingType]);
             var record = new ScheduleRecord(user, new TimeInterval(startDate, finishDate), machine);
-            return data.TryAddRecord(record);
+            if (record.TimeInterval.Start.Minute % 30 != 0)
+                return false;
+            var freeTimes = data.GetFreeTimes()[machine];
+            var timeToCheck = startDate;
+            while (timeToCheck < finishDate)
+            {
+                if (!freeTimes.Contains(timeToCheck)) return false;
+
+                timeToCheck = timeToCheck.AddMinutes(30);
+            }
+
+            data.AddRecord(record);
+            return true;
         }
 
-        public bool RemoveRecord(ScheduleRecord record)
+        public bool TryRemoveRecord(ScheduleRecord record)
         {
-            return data.TryRemoveRecord(record);
+            var records = data.GetRecordsTimesByUser(record.User);
+            if (!records.Contains(record)) return false;
+
+            data.RemoveRecord(record);
+            return true;
         }
 
         public List<ScheduleRecord> GetRecordsTimesByUser(long user)

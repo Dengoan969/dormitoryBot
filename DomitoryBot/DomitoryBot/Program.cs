@@ -30,6 +30,15 @@ namespace DomitoryBot
                 })
                 .WithConstructorArgument("dataBase", new Dictionary<long, List<ScheduleRecord>>());
 
+            container.Bind<Schedule>().ToSelf().WithConstructorArgument("washingTypes",
+                new Dictionary<string, TimeSpan>
+                {
+                    {"Полчаса", TimeSpan.FromMinutes(30)},
+                    {"Полтора часа", TimeSpan.FromMinutes(90)},
+                    {"Два с половиной часа", TimeSpan.FromMinutes(150)}
+                }
+            );
+
             container.Bind<IUsersStateRepository>().To<MockStateRepository>()
                 .WithConstructorArgument("db", new Dictionary<long, DialogState>());
 

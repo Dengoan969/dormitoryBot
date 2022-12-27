@@ -14,14 +14,14 @@ namespace DomitoryBot.App
             this.subscriptionRepository = subscriptionRepository;
         }
 
-        public bool SubscribeUser(long userId, string subscribName)
+        public bool SubscribeUser(long userId, string sub)
         {
-            return subscriptionRepository.TrySubscribeUser(userId, subscribName);
+            return subscriptionRepository.TrySubscribeUser(userId, FormattedNameOfSub(sub));
         }
 
-        public bool UnsubscribeUser(long userId, string subscribName)
+        public bool UnsubscribeUser(long userId, string sub)
         {
-            return subscriptionRepository.TryUnsubscribeUser(userId, subscribName);
+            return subscriptionRepository.TryUnsubscribeUser(userId, FormattedNameOfSub(sub));
         }
 
         public string[] GetSubscriptionsOfUser(long userId)
@@ -36,41 +36,49 @@ namespace DomitoryBot.App
 
         public void AddAdmin(string sub, long caller, long userToAdd)
         {
-            subscriptionRepository.AddAdmin(sub, caller, userToAdd);
+            subscriptionRepository.AddAdmin(FormattedNameOfSub(sub), caller, userToAdd);
         }
 
         public bool IsUserAdmin(long userId, string sub)
         {
-            return subscriptionRepository.IsUserAdmin(userId, sub);
+            return subscriptionRepository.IsUserAdmin(userId, FormattedNameOfSub(sub));
         }
 
         public bool TryCreateSubscription(string sub, long userId)
         {
-            if (sub.StartsWith("#")) return subscriptionRepository.TryCreateSubscription(sub, userId);
-            return subscriptionRepository.TryCreateSubscription("#" + sub, userId);
+            return subscriptionRepository.TryCreateSubscription(FormattedNameOfSub(sub), userId);
         }
 
         public bool TryDeleteSubscription(string sub, long userId)
         {
-            return subscriptionRepository.TryDeleteSubscription(sub, userId);
+            return subscriptionRepository.TryDeleteSubscription(FormattedNameOfSub(sub), userId);
         }
 
         public void SendAnnouncement(TelegramBotClient botClient, Message mes, string sub)
         {
+            ;
             switch (mes.Type)
             {
                 case MessageType.Photo:
                 {
-                    foreach (var user in subscriptionRepository.GetFollowers(sub))
-                        botClient.SendPhotoAsync(user, mes.Photo[0].FileId, $"{sub}\n{mes.Caption}");
+                    foreach (var user in subscriptionRepository.GetFollowers(FormattedNameOfSub(sub)))
+                        botClient.SendPhotoAsync(user, mes.Photo[0].FileId,
+                            $"{FormattedNameOfSub(sub)}\n{mes.Caption}");
                     break;
                 }
 
                 case MessageType.Text:
-                    foreach (var user in subscriptionRepository.GetFollowers(sub))
-                        botClient.SendTextMessageAsync(user, $"{sub}\n{mes.Text}");
+                    foreach (var user in subscriptionRepository.GetFollowers(FormattedNameOfSub(sub)))
+                        botClient.SendTextMessageAsync(user, $"{FormattedNameOfSub(sub)}\n{mes.Text}");
                     break;
             }
+        }
+
+        private string FormattedNameOfSub(string sub)
+        {
+            if (sub.StartsWith("#")) return sub;
+
+            return "#" + sub;
         }
     }
 }

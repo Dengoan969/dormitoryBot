@@ -1,7 +1,7 @@
-﻿using DomitoryBot.App;
+﻿using System.Text;
+using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.UI;
-using System.Text;
 using Telegram.Bot;
 
 namespace DomitoryBot.Commands.WashingSchedule
@@ -36,7 +36,7 @@ namespace DomitoryBot.Commands.WashingSchedule
                 for (var i = 0; i < records.Count; i++)
                     sb.Append($"{i + 1}. {records[i].TimeInterval.Start.ToString("dd.MM HH:mm")}" +
                               $" - {records[i].TimeInterval.End.ToString("dd.MM HH:mm")}" +
-                              $" Номер машинки:{records[i].Machine}");
+                              $" Номер машинки: {records[i].Machine}");
 
                 await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
                 await dialogManager.Value.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);

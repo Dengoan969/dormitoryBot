@@ -1,8 +1,8 @@
-﻿using DomitoryBot.App;
+﻿using System.Globalization;
+using System.Text;
+using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.UI;
-using System.Globalization;
-using System.Text;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
@@ -22,7 +22,7 @@ public class FreeSlotsCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if (DateTime.TryParseExact(message.Text, "dd.MM", new CultureInfo("ru-RU"), DateTimeStyles.None,
+        if (DateTime.TryParseExact(message.Text, "d.M", new CultureInfo("ru-RU"), DateTimeStyles.None,
                 out var value))
         {
             var freeTimes = dialogManager.Value.Schedule.GetFreeTimes();
