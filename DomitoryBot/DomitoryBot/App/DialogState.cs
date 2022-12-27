@@ -20,7 +20,8 @@ public enum DialogState
     Subscriptions_Manage,
     Subscriptions_Manage_Announcement_Subscription,
     Subscriptions_Manage_Announcement_Message,
-    Subscriptions_Manage_Subscription,
+    Subscriptions_Manage_Create_Subscription,
+    Subscriptions_Manage_Delete_Subscription,
     FAQ,
     Idea_Text,
     None

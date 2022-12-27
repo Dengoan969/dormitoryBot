@@ -6,25 +6,25 @@ using Telegram.Bot;
 
 namespace DomitoryBot.Commands.SubscriptionsService
 {
-    public class CreateSubscriptionCommand : IExecutableCommand
+    public class DeleteSubscriptionCommand : IExecutableCommand
     {
         private readonly Lazy<DialogManager> dialogManager;
 
-        public CreateSubscriptionCommand(Lazy<DialogManager> dialogManager)
+        public DeleteSubscriptionCommand(Lazy<DialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }
 
-        public string Name => "CreateSubscription";
+        public string Name => "DeleteSubscription";
 
         public DialogState SourceState => DialogState.Subscriptions_Manage;
 
-        public DialogState DestinationState => DialogState.Subscriptions_Manage_Create_Subscription;
+        public DialogState DestinationState => DialogState.Subscriptions_Manage_Delete_Subscription;
 
         public async Task Execute(long chatId)
         {
             await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                  "Как будет называться рассылка? (Для удобства лучше начинать название с #)", Keyboard.Back);
+                                                  "Какую рассылку удалить?", Keyboard.Back);
         }
     }
 }

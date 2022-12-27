@@ -31,6 +31,11 @@ public class MockSubscriptionRepository : ISubscriptionRepository
 
         return db[name].Keys.Where(x => db[name][x] == UserRights.Admin).ToArray();
     }
+    public bool IsUserAdmin(long userId, string sub)
+    {
+        return GetAdmins(sub).Contains(userId);
+    }
+
     public bool TryCreateSubscription(string sub, long userId)
     {
         if (db.ContainsKey(sub))
@@ -38,6 +43,16 @@ public class MockSubscriptionRepository : ISubscriptionRepository
             return false;
         }
         db[sub] = new Dictionary<long, UserRights>() { { userId, UserRights.Admin } };
+        return true;
+    }
+
+    public bool TryDeleteSubscription(string sub, long userId)
+    {
+        if(!db.ContainsKey(sub) || !IsUserAdmin(userId, sub))
+        {
+            return false;
+        }
+        db.Remove(sub);
         return true;
     }
 

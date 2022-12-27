@@ -29,7 +29,7 @@ public class HandleSubscribeCommand : IHandleTextCommand
         else
         {
             await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                 "Кажется такой подписки нет, попробуй ещё раз", Keyboard.Back);
+                                                 "Кажется такой подписки нет или ты уже подписан..", Keyboard.Back);
         }
     }
 }

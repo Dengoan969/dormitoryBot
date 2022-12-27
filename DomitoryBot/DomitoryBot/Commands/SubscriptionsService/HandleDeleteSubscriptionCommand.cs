@@ -6,31 +6,31 @@ using Telegram.Bot.Types;
 
 namespace DomitoryBot.Commands.SubscriptionsService;
 
-public class HandleCreateSubscriptionCommand : IHandleTextCommand
+public class HandleDeleteSubscriptionCommand : IHandleTextCommand
 {
     private readonly Lazy<DialogManager> dialogManager;
 
-    public HandleCreateSubscriptionCommand(Lazy<DialogManager> dialogManager)
+    public HandleDeleteSubscriptionCommand(Lazy<DialogManager> dialogManager)
     {
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState => DialogState.Subscriptions_Manage_Create_Subscription;
+    public DialogState SourceState => DialogState.Subscriptions_Manage_Delete_Subscription;
     public DialogState DestinationState => DialogState.Subscriptions_Manage;
 
 
     public async Task HandleMessage(Message message, long chatId)
     {
         var subscriptionService = dialogManager.Value.SubscriptionService;
-        if (message.Text != null && subscriptionService.TryCreateSubscription(message.Text, chatId))
+        if (message.Text != null && subscriptionService.TryDeleteSubscription(message.Text, chatId))
         {
             await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                  "Круто, ты создал рассылку!", Keyboard.SubscriptionsManage);
+                                                  "Рассылка удалена!", Keyboard.SubscriptionsManage);
         }
         else
         {
             await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                 "Кажется такая рассылка уже есть :( Попробуй другое название", Keyboard.Back);
+                                                 "Кажется ты не админ этой рассылки :(", Keyboard.Back);
         }
     }
 }

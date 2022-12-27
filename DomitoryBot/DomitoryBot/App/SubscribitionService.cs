@@ -41,12 +41,17 @@ namespace DomitoryBot.App
 
         public bool IsUserAdmin(long userId, string sub)
         {
-            return subscriptionRepository.GetAdmins(sub).Contains(userId);
+            return subscriptionRepository.IsUserAdmin(userId, sub);
         }
 
         public bool TryCreateSubscription(string sub, long userId)
         {
             return subscriptionRepository.TryCreateSubscription(sub, userId);
+        }
+
+        public bool TryDeleteSubscription(string sub, long userId)
+        {
+            return subscriptionRepository.TryDeleteSubscription(sub, userId);
         }
 
         public void SendAnnouncement(TelegramBotClient botClient, Message mes, string sub)
@@ -56,13 +61,13 @@ namespace DomitoryBot.App
                 case MessageType.Photo:
                     {
                         foreach (var user in subscriptionRepository.GetFollowers(sub))
-                            botClient.SendPhotoAsync(user, mes.Photo[0].FileId, mes.Caption);
+                            botClient.SendPhotoAsync(user, mes.Photo[0].FileId, $"{sub}\n{mes.Caption}");
                         break;
                     }
 
                 case MessageType.Text:
                     foreach (var user in subscriptionRepository.GetFollowers(sub))
-                        botClient.SendTextMessageAsync(user, mes.Text);
+                        botClient.SendTextMessageAsync(user, $"{sub}\n{mes.Text}");
                     break;
             }
         }

@@ -99,8 +99,8 @@ public static class Keyboard
         new[]
         {
             InlineKeyboardButton.WithCallbackData("Мои рассылки", "AdminSubscriptions"),
-            InlineKeyboardButton.WithCallbackData("Создать рассылку", "CreateSubscription")
-            // Сделать добавление другого юзера в рассылку создателем
+            InlineKeyboardButton.WithCallbackData("Создать рассылку", "CreateSubscription"),
+            InlineKeyboardButton.WithCallbackData("Удалить рассылку", "DeleteSubscription")
         },
 
         new[]
