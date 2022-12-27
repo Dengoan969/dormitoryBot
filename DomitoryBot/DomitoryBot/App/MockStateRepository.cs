@@ -1,4 +1,6 @@
-﻿namespace Telegram;
+﻿using DomitoryBot.Infrastructure;
+
+namespace DomitoryBot.App;
 
 public class MockStateRepository : IUsersStateRepository
 {

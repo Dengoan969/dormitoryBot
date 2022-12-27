@@ -1,4 +1,4 @@
-﻿namespace DomitoryBot.Domain;
+﻿namespace DomitoryBot.Infrastructure;
 
 public interface ISubscriptionRepository
 {

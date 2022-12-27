@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Telegram;
+namespace DomitoryBot.UI;
 
 public static class Keyboard
 {

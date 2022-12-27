@@ -1,6 +1,7 @@
-﻿using DomitoryBot.Commands.Interfaces;
+﻿using DomitoryBot.App;
+using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.Domain;
-using Telegram;
+using DomitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DomitoryBot.Commands.WashingSchedule;

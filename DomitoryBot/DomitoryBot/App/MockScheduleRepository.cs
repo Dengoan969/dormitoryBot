@@ -1,4 +1,7 @@
-﻿namespace DomitoryBot.Domain;
+﻿using DomitoryBot.Domain;
+using DomitoryBot.Infrastructure;
+
+namespace DomitoryBot.App;
 
 public class MockScheduleRepository : IRecordsRepository
 {

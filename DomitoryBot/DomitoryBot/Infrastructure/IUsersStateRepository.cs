@@ -1,4 +1,6 @@
-﻿namespace Telegram;
+﻿using DomitoryBot.App;
+
+namespace DomitoryBot.Infrastructure;
 
 public interface IUsersStateRepository
 {

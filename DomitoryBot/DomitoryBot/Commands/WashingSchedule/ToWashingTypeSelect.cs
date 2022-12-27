@@ -1,8 +1,9 @@
 ﻿using System.Globalization;
 using System.Text;
+using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.Domain;
-using Telegram;
+using DomitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DomitoryBot.Commands.WashingSchedule;
@@ -28,7 +29,7 @@ public class ToWashingTypeSelect : IHandleTextCommand
             dialogManager.Value.temp_input[chatId].Add(value);
             var sb = new StringBuilder();
             sb.Append("Выберите тип стирки\n");
-            foreach (var types in WashingSchedule.washingTypes)
+            foreach (var types in Schedule.washingTypes)
                 sb.Append($"{Enum.GetName(types.Key)} - {types.Value.Hours * 60 + types.Value.Minutes} минут\n");
 
             await dialogManager.Value.ChangeState(DestinationState, chatId, sb.ToString(), Keyboard.Back);

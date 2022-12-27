@@ -1,8 +1,9 @@
-﻿using Telegram.Bot;
+﻿using DomitoryBot.Infrastructure;
+using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace DomitoryBot.Domain
+namespace DomitoryBot.App
 {
     public class SubscriptionService
     {
@@ -53,11 +54,11 @@ namespace DomitoryBot.Domain
             switch (mes.Type)
             {
                 case MessageType.Photo:
-                {
-                    foreach (var user in subscriptionRepository.GetFollowers(sub))
-                        botClient.SendPhotoAsync(user, mes.Photo[0].FileId, mes.Caption);
-                    break;
-                }
+                    {
+                        foreach (var user in subscriptionRepository.GetFollowers(sub))
+                            botClient.SendPhotoAsync(user, mes.Photo[0].FileId, mes.Caption);
+                        break;
+                    }
 
                 case MessageType.Text:
                     foreach (var user in subscriptionRepository.GetFollowers(sub))

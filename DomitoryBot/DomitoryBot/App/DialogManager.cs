@@ -1,11 +1,12 @@
 ﻿using DomitoryBot.Commands.Interfaces;
-using DomitoryBot.Domain;
+using DomitoryBot.Infrastructure;
+using DomitoryBot.UI;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
-namespace Telegram
+namespace DomitoryBot.App
 {
     public class DialogManager
     {
@@ -73,9 +74,9 @@ namespace Telegram
 
         private async Task TryExecuteCommand(string commandName, long chatId)
         {
-            var command = (IExecutableCommand) stateCommands[USR.GetState(chatId)]
+            var command = (IExecutableCommand)stateCommands[USR.GetState(chatId)]
                 .FirstOrDefault(x => x is IExecutableCommand command && command.Name == commandName);
-            if(command != null)
+            if (command != null)
             {
                 await command.Execute(chatId);
             }
@@ -83,7 +84,7 @@ namespace Telegram
 
         private async Task TryHandleMessage(Message message, long chatId)
         {
-            var command = (IHandleTextCommand) stateCommands[USR.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
+            var command = (IHandleTextCommand)stateCommands[USR.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
             if (command != null)
             {
                 await command.HandleMessage(message, chatId);

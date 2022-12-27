@@ -1,9 +1,11 @@
-﻿using System;
+﻿using DomitoryBot.App;
+using DomitoryBot.Commands.Interfaces;
+using DomitoryBot.UI;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Telegram;
 using Telegram.Bot;
 
 namespace DomitoryBot.Commands.Ideas

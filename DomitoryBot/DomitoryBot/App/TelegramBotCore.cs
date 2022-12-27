@@ -1,5 +1,5 @@
 ﻿using DomitoryBot.Commands.Interfaces;
-using DomitoryBot.Domain;
+using DomitoryBot.Infrastructure;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Telegram.Bot;
@@ -8,7 +8,7 @@ using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
-namespace Telegram
+namespace DomitoryBot.App
 {
     public class TelegramBotCore
     {
@@ -24,7 +24,7 @@ namespace Telegram
             container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>();
             container.Bind<DialogManager>().ToSelf().InSingletonScope();
             container.Bind<TelegramBotClient>().ToConstant(botClient);
-            container.Bind<string[]>().ToConstant(new[] {"1", "2", "3"}).WhenInjectedExactlyInto<Schedule>();
+            container.Bind<string[]>().ToConstant(new[] { "1", "2", "3" }).WhenInjectedExactlyInto<Schedule>();
 
             container.Bind(c =>
                 c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>().BindAllInterfaces());

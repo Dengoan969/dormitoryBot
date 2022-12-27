@@ -1,4 +1,4 @@
-﻿namespace Telegram;
+﻿namespace DomitoryBot.App;
 
 public enum DialogState
 {
