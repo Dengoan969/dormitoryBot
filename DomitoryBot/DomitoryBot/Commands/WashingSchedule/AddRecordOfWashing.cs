@@ -29,7 +29,7 @@ public class AddRecordOfWashing : IHandleTextCommand
                 await dm.Value.ChangeState(DestinationState, chatId, "Вы успешно записались на стирку",
                     Keyboard.Washing);
             else
-                await dm.Value.ChangeState(DestinationState, chatId, "Что то пошло не так. Попробуйте снова",
+                await dm.Value.ChangeState(DestinationState, chatId, "Это время уже занято",
                     Keyboard.Washing);
             return;
         }

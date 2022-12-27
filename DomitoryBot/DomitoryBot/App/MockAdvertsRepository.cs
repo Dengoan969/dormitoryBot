@@ -5,7 +5,12 @@ namespace DomitoryBot.App;
 
 public class MockAdvertsRepository : IAdvertsRepository
 {
-    private readonly List<Advert> adverts = new();
+    private readonly SortedSet<Advert> adverts;
+
+    public MockAdvertsRepository(SortedSet<Advert> adverts)
+    {
+        this.adverts = adverts;
+    }
 
     public void AddAdvert(Advert advert)
     {

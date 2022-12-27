@@ -19,6 +19,6 @@ public class ToMachineSelect : IExecutableCommand
 
     public async Task Execute(long chatId)
     {
-        await dialogManager.Value.ChangeState(DestinationState, chatId, "Выберите стиралку", Keyboard.Back);
+        await dialogManager.Value.ChangeState(DestinationState, chatId, "Напишите номер стиралки", Keyboard.Back);
     }
 }

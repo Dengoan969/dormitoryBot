@@ -2,7 +2,6 @@
 using System.Text;
 using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
-using DomitoryBot.Domain;
 using DomitoryBot.UI;
 using Telegram.Bot.Types;
 
@@ -26,13 +25,21 @@ public class ToWashingTypeSelect : IHandleTextCommand
         if (DateTime.TryParseExact(message.Text, "dd.MM HH:mm", new CultureInfo("ru-RU"), DateTimeStyles.None,
                 out var value))
         {
-            dialogManager.Value.temp_input[chatId].Add(value);
-            var sb = new StringBuilder();
-            sb.Append("Выберите тип стирки\n");
-            foreach (var types in Schedule.washingTypes)
-                sb.Append($"{Enum.GetName(types.Key)} - {types.Value.Hours * 60 + types.Value.Minutes} минут\n");
+            if (value.Minute % 30 != 0)
+            {
+                await dialogManager.Value.ChangeState(SourceState, chatId, "Недопустимое время :(", Keyboard.Back);
+            }
+            else
+            {
+                dialogManager.Value.temp_input[chatId].Add(value);
+                var sb = new StringBuilder();
+                sb.Append("Выберите тип стирки\n");
+                foreach (var types in Schedule.washingTypes)
+                    sb.Append($"{Enum.GetName(types.Key)} - {types.Value.Hours * 60 + types.Value.Minutes} минут\n");
 
-            await dialogManager.Value.ChangeState(DestinationState, chatId, sb.ToString(), Keyboard.Back);
+                await dialogManager.Value.ChangeState(DestinationState, chatId, sb.ToString(), Keyboard.Back);
+            }
+
             return;
         }
 

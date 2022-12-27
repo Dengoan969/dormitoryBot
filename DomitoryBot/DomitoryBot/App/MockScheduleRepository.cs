@@ -5,14 +5,15 @@ namespace DomitoryBot.App;
 
 public class MockScheduleRepository : IRecordsRepository
 {
-    private static readonly Dictionary<long, List<ScheduleRecord>> dataBase = new();
+    private readonly Dictionary<long, List<ScheduleRecord>> dataBase = new();
 
-    private readonly Dictionary<string, bool[]> freeTimes = new()
+    private readonly Dictionary<string, bool[]> freeTimes;
+
+    public MockScheduleRepository(Dictionary<string, bool[]> freeTimes, Dictionary<long, List<ScheduleRecord>> dataBase)
     {
-        {"1", new bool[48 * 3]},
-        {"2", new bool[48 * 3]},
-        {"3", new bool[48 * 3]}
-    };
+        this.freeTimes = freeTimes;
+        this.dataBase = dataBase;
+    }
 
     public bool TryAddRecord(ScheduleRecord scheduleRecord)
     {

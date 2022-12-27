@@ -16,10 +16,10 @@ namespace DomitoryBot.App
         public readonly Dictionary<DialogState, IChatCommand[]> stateCommands;
         public readonly SubscriptionService SubscriptionService;
         public readonly Dictionary<long, List<object>> temp_input = new();
-        public readonly IUsersStateRepository USR = new MockStateRepository();
+        public readonly IUsersStateRepository USR;
 
         public DialogManager(TelegramBotClient botClient, IChatCommand[] commands, Schedule schedule,
-            MarketPlace marketPlace, SubscriptionService subscriptionService)
+            MarketPlace marketPlace, SubscriptionService subscriptionService, IUsersStateRepository USR)
         {
             //todo сделать промежуточную сущность, вынести зависимость от телеграма
             BotClient = botClient;
@@ -35,6 +35,8 @@ namespace DomitoryBot.App
                         && state != DialogState.Menu)
                     .ToArray();
             }
+
+            this.USR = USR;
         }
 
         public async Task HandleUpdate(Update update)
@@ -74,7 +76,7 @@ namespace DomitoryBot.App
 
         private async Task TryExecuteCommand(string commandName, long chatId)
         {
-            var command = (IExecutableCommand)stateCommands[USR.GetState(chatId)]
+            var command = (IExecutableCommand) stateCommands[USR.GetState(chatId)]
                 .FirstOrDefault(x => x is IExecutableCommand command && command.Name == commandName);
             if (command != null)
             {
@@ -84,7 +86,8 @@ namespace DomitoryBot.App
 
         private async Task TryHandleMessage(Message message, long chatId)
         {
-            var command = (IHandleTextCommand)stateCommands[USR.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
+            var command =
+                (IHandleTextCommand) stateCommands[USR.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
             if (command != null)
             {
                 await command.HandleMessage(message, chatId);

@@ -4,8 +4,12 @@ namespace DomitoryBot.App;
 
 public class MockStateRepository : IUsersStateRepository
 {
-    private readonly Dictionary<long, DialogState> db = new();
+    private readonly Dictionary<long, DialogState> db;
 
+    public MockStateRepository(Dictionary<long, DialogState> db)
+    {
+        this.db = db;
+    }
 
     public DialogState GetState(long id)
     {

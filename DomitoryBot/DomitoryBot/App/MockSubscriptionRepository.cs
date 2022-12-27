@@ -5,11 +5,16 @@ namespace DomitoryBot.App;
 
 public class MockSubscriptionRepository : ISubscriptionRepository
 {
-    private Dictionary<string, Dictionary<long, UserRights>> db = new Dictionary<string, Dictionary<long, UserRights>>();
+    private readonly Dictionary<string, Dictionary<long, UserRights>> db;
+
+    public MockSubscriptionRepository(Dictionary<string, Dictionary<long, UserRights>> db)
+    {
+        this.db = db;
+    }
 
     public long[] GetFollowers(string name)
     {
-        return db[name].Keys.Where(x => db[name][x] == UserRights.Follower).ToArray();
+        return db[name].Keys.ToArray();
     }
 
     public void AddAdmin(string sub, long caller, long userToAdd)
@@ -31,6 +36,7 @@ public class MockSubscriptionRepository : ISubscriptionRepository
 
         return db[name].Keys.Where(x => db[name][x] == UserRights.Admin).ToArray();
     }
+
     public bool IsUserAdmin(long userId, string sub)
     {
         return GetAdmins(sub).Contains(userId);
@@ -42,16 +48,18 @@ public class MockSubscriptionRepository : ISubscriptionRepository
         {
             return false;
         }
-        db[sub] = new Dictionary<long, UserRights>() { { userId, UserRights.Admin } };
+
+        db[sub] = new Dictionary<long, UserRights>() {{userId, UserRights.Admin}};
         return true;
     }
 
     public bool TryDeleteSubscription(string sub, long userId)
     {
-        if(!db.ContainsKey(sub) || !IsUserAdmin(userId, sub))
+        if (!db.ContainsKey(sub) || !IsUserAdmin(userId, sub))
         {
             return false;
         }
+
         db.Remove(sub);
         return true;
     }
@@ -62,6 +70,7 @@ public class MockSubscriptionRepository : ISubscriptionRepository
         {
             return false;
         }
+
         db[name][userId] = UserRights.Follower;
         return true;
     }
@@ -72,6 +81,7 @@ public class MockSubscriptionRepository : ISubscriptionRepository
         {
             return false;
         }
+
         db[name].Remove(userId);
         return true;
     }
@@ -80,6 +90,7 @@ public class MockSubscriptionRepository : ISubscriptionRepository
     {
         return db.Keys.Where(x => db[x].ContainsKey(userId) && db[x][userId] == UserRights.Follower).ToArray();
     }
+
     public string[] GetAdminSubscriptionsOfUser(long userId)
     {
         return db.Keys.Where(x => db[x].ContainsKey(userId) && db[x][userId] == UserRights.Admin).ToArray();

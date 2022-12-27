@@ -26,30 +26,31 @@ namespace DomitoryBot.Commands.Marketplace
                 if (!int.TryParse(message.Text, out var days))
                 {
                     await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                      "Кажется ты вводишь что-то не то.. Вот бы целое число", Keyboard.Back);
+                        "Кажется ты вводишь что-то не то.. Необходимо целое число дней", Keyboard.Back);
                 }
+
                 if (days <= 0)
                 {
                     await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                      "Попробуй положительное число :)", Keyboard.Back);
+                        "Попробуй положительное число :)", Keyboard.Back);
                 }
                 else if (days > 30)
                 {
                     await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                      "Слишком много, давай не больше 30", Keyboard.Back);
+                        "Слишком много, давай не больше 30", Keyboard.Back);
                 }
                 else
                 {
-                    dialogManager.Value.MarketPlace.CreateAdvert(chatId, (string)temp_input[0], (string)temp_input[1], TimeSpan.FromDays(days));
+                    dialogManager.Value.MarketPlace.CreateAdvert(chatId, (string) temp_input[0], (string) temp_input[1],
+                        TimeSpan.FromDays(days), message.From.Username);
                     await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                          "Маркетплейс", Keyboard.Marketplace);
+                        "Маркетплейс", Keyboard.Marketplace);
                 }
-
             }
             else
             {
                 await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                      "На сколько дней разместить объявление?", Keyboard.Back);
+                    "На сколько дней разместить объявление?", Keyboard.Back);
             }
         }
     }

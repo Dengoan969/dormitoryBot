@@ -46,7 +46,8 @@ namespace DomitoryBot.App
 
         public bool TryCreateSubscription(string sub, long userId)
         {
-            return subscriptionRepository.TryCreateSubscription(sub, userId);
+            if (sub.StartsWith("#")) return subscriptionRepository.TryCreateSubscription(sub, userId);
+            return subscriptionRepository.TryCreateSubscription("#" + sub, userId);
         }
 
         public bool TryDeleteSubscription(string sub, long userId)
@@ -59,11 +60,11 @@ namespace DomitoryBot.App
             switch (mes.Type)
             {
                 case MessageType.Photo:
-                    {
-                        foreach (var user in subscriptionRepository.GetFollowers(sub))
-                            botClient.SendPhotoAsync(user, mes.Photo[0].FileId, $"{sub}\n{mes.Caption}");
-                        break;
-                    }
+                {
+                    foreach (var user in subscriptionRepository.GetFollowers(sub))
+                        botClient.SendPhotoAsync(user, mes.Photo[0].FileId, $"{sub}\n{mes.Caption}");
+                    break;
+                }
 
                 case MessageType.Text:
                     foreach (var user in subscriptionRepository.GetFollowers(sub))

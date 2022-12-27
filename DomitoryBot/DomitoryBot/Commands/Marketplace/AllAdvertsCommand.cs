@@ -1,7 +1,7 @@
-﻿using DomitoryBot.App;
+﻿using System.Text;
+using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.UI;
-using System.Text;
 using Telegram.Bot;
 
 namespace DomitoryBot.Commands.Marketplace
@@ -26,7 +26,8 @@ namespace DomitoryBot.Commands.Marketplace
             var adverts = dialogManager.Value.MarketPlace.GetAdverts();
             if (adverts.Length == 0)
             {
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Пока никто не разместил объявлений..");
+                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId,
+                    "Пока никто не разместил объявлений..");
             }
             else
             {
@@ -36,9 +37,11 @@ namespace DomitoryBot.Commands.Marketplace
                     var sb = new StringBuilder();
                     sb.Append($"{advert.Text}\n\n");
                     sb.Append($"Цена вопроса: {advert.Price}\n");
+                    sb.Append($"Писать : @{advert.username}");
                     await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
                 }
             }
+
             await dialogManager.Value.ChangeState(DestinationState, chatId, "Маркетплейс", Keyboard.Marketplace);
         }
     }
