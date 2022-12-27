@@ -29,9 +29,9 @@ namespace DomitoryBot.App
             return repository.GetUserAdverts(user);
         }
 
-        public void RemoveAdvert(Guid advertGuid)
+        public void RemoveAdvert(Advert advert)
         {
-            repository.RemoveAdvert(advertGuid);
+            repository.RemoveAdvert(advert);
         }
     }
 }

@@ -22,8 +22,8 @@ public class MockAdvertsRepository : IAdvertsRepository
         return adverts.Where(x => x.Author == user).ToArray();
     }
 
-    public void RemoveAdvert(Guid advertGuid)
+    public void RemoveAdvert(Advert advert)
     {
-        adverts.Remove(adverts.FirstOrDefault(x => x.Guid == advertGuid));
+        adverts.Remove(advert);
     }
 }

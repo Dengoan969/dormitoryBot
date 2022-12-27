@@ -14,6 +14,7 @@ public enum DialogState
     Marketplace_Text,
     Marketplace_Price,
     Marketplace_Time,
+    Marketplace_Delete_Advert,
     Subscriptions,
     Subscriptions_Subscribe,
     Subscriptions_Unsubscribe,

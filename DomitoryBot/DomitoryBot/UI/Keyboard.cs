@@ -66,6 +66,7 @@ public static class Keyboard
         new[]
         {
             InlineKeyboardButton.WithCallbackData("Создать объявление", "CreateAdvert"),
+            InlineKeyboardButton.WithCallbackData("Удалить объявление", "DeleteAdvert"),
             InlineKeyboardButton.WithCallbackData("Назад", "Back")
         }
     });
