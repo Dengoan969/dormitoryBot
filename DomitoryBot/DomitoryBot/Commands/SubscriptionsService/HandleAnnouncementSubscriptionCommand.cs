@@ -1,7 +1,6 @@
 ﻿using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.UI;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace DomitoryBot.Commands.SubscriptionsService;

@@ -1,7 +1,6 @@
 ﻿using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.UI;
-using System.Text;
 using Telegram.Bot;
 
 namespace DomitoryBot.Commands.SubscriptionsService
@@ -30,7 +29,7 @@ namespace DomitoryBot.Commands.SubscriptionsService
             }
             else
             {
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, $"Твои подписки:/n{string.Join("/n", subscriptions)}");
+                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, $"Твои подписки:\n{string.Join("\n", subscriptions)}");
             }
             await dialogManager.Value.ChangeState(DestinationState, chatId, "Подписки", Keyboard.Subscriptions);
         }

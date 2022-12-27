@@ -1,8 +1,8 @@
 ﻿using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.UI;
-using Telegram.Bot;
 using Telegram.Bot.Types;
+using Telegram.Bot;
 
 namespace DomitoryBot.Commands.SubscriptionsService;
 
@@ -21,8 +21,10 @@ public class HandleAnnouncementMessageCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        dialogManager.Value.SubscriptionService.SendAnnouncement(dialogManager.Value.BotClient, message, (string)dialogManager.Value.temp_input[chatId][0]);
+        dialogManager.Value.SubscriptionService.SendAnnouncement(dialogManager.Value.BotClient, message,
+            (string)dialogManager.Value.temp_input[chatId][0]);
+        await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Круто, всем разослал!");
         await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                 "Круто, всем разослал!", Keyboard.SubscriptionsManage);
+                                                 "Управление рассылками", Keyboard.SubscriptionsManage);
     }
 }

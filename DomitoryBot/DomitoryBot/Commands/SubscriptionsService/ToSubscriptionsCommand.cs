@@ -1,12 +1,6 @@
 ﻿using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.UI;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Telegram.Bot;
 
 namespace DomitoryBot.Commands.SubscriptionsService
 {
@@ -26,7 +20,7 @@ namespace DomitoryBot.Commands.SubscriptionsService
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Подписки", Keyboard.Subscriptions);
+            await dialogManager.Value.ChangeState(DestinationState, chatId, "Объявления", Keyboard.Subscriptions);
         }
     }
 }

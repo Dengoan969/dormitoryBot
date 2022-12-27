@@ -1,7 +1,6 @@
 ﻿using DomitoryBot.App;
 using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.UI;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace DomitoryBot.Commands.SubscriptionsService;
@@ -21,25 +20,16 @@ public class HandleUnsubscribeCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if (message.Text != null)
+        var subscriptionService = dialogManager.Value.SubscriptionService;
+        if (message.Text != null && subscriptionService.UnsubscribeUser(chatId, message.Text))
         {
-            var subscriptionService = dialogManager.Value.SubscriptionService;
-            if (subscriptionService.UnsubscribeUser(chatId, message.Text))
-            {
-                await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                  "Ты успешно отписался :(", Keyboard.Subscriptions);
-            }
-            else
-            {
-                await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                  "Кажется такой подписки нет, попробуй ещё раз", Keyboard.Back);
-            }
-
+            await dialogManager.Value.ChangeState(DestinationState, chatId,
+                                              "Ты успешно отписался :(", Keyboard.Subscriptions);
         }
         else
         {
             await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                 "Кажется такой подписки нет, попробуй ещё раз", Keyboard.Back);
+                                              "Кажется такой подписки у тебя нет, попробуй ещё раз", Keyboard.Back);
         }
     }
 }
