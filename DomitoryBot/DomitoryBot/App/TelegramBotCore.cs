@@ -1,7 +1,6 @@
 ﻿using DomitoryBot.Commands.Interfaces;
 using DomitoryBot.Infrastructure;
-using Ninject;
-using Ninject.Extensions.Conventions;
+
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
@@ -12,24 +11,19 @@ namespace DomitoryBot.App
 {
     public class TelegramBotCore
     {
-        CancellationTokenSource cts = new CancellationTokenSource();
-        DialogManager dialogManager;
+        private readonly CancellationTokenSource cts;
+        private readonly DialogManager dialogManager;
+        private readonly TelegramBotClient botClient;
+
+        public TelegramBotCore(DialogManager dialogManager, TelegramBotClient botClient, CancellationTokenSource cts)
+        {
+            this.cts = cts;
+            this.dialogManager = dialogManager;
+            this.botClient = botClient;
+        }
 
         public Task StartBot(string token)
         {
-            var botClient = new TelegramBotClient(token);
-            var container = new StandardKernel();
-            container.Bind<IRecordsRepository>().To<MockScheduleRepository>();
-            container.Bind<ISubscriptionRepository>().To<MockSubscriptionRepository>();
-            container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>();
-            container.Bind<DialogManager>().ToSelf().InSingletonScope();
-            container.Bind<TelegramBotClient>().ToConstant(botClient);
-            container.Bind<string[]>().ToConstant(new[] { "1", "2", "3" }).WhenInjectedExactlyInto<Schedule>();
-
-            container.Bind(c =>
-                c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>().BindAllInterfaces());
-            dialogManager = container.Get<DialogManager>();
-
             var receiverOptions = new ReceiverOptions
             {
                 AllowedUpdates = Array.Empty<UpdateType>() // receive all update types
