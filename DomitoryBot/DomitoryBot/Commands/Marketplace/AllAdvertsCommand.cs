@@ -24,15 +24,21 @@ namespace DomitoryBot.Commands.Marketplace
         public async Task Execute(long chatId)
         {
             var adverts = dialogManager.Value.MarketPlace.GetAdverts();
-
-            foreach (var advert in adverts)
+            if (adverts.Length == 0)
             {
-                var sb = new StringBuilder();
-                sb.Append($"{advert.Text}\n");
-                sb.Append($"{advert.Price}\n");
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
+                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Пока никто не разместил объявлений..");
             }
-
+            else
+            {
+                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Все объявления:");
+                foreach (var advert in adverts)
+                {
+                    var sb = new StringBuilder();
+                    sb.Append($"{advert.Text}\n\n");
+                    sb.Append($"Цена вопроса: {advert.Price}\n");
+                    await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
+                }
+            }
             await dialogManager.Value.ChangeState(DestinationState, chatId, "Маркетплейс", Keyboard.Marketplace);
         }
     }

@@ -4,33 +4,34 @@ using DomitoryBot.UI;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.Commands.Marketplace;
-
-public class HandleAdvertPriceCommand : IHandleTextCommand
+namespace DomitoryBot.Commands.Marketplace
 {
-    private readonly Lazy<DialogManager> dialogManager;
-
-    public HandleAdvertPriceCommand(Lazy<DialogManager> dialogManager)
+    public class HandleAdvertPriceCommand : IHandleTextCommand
     {
-        this.dialogManager = dialogManager;
-    }
+        private readonly Lazy<DialogManager> dialogManager;
 
-    public DialogState SourceState => DialogState.Marketplace_Price;
-    public DialogState DestinationState => DialogState.Marketplace_Time;
-
-
-    public async Task HandleMessage(Message message, long chatId)
-    {
-        if (message.Text != null)
+        public HandleAdvertPriceCommand(Lazy<DialogManager> dialogManager)
         {
-            dialogManager.Value.temp_input[chatId].Add(message.Text);
-            await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                  "На сколько дней разместить объявление?", Keyboard.Back);
+            this.dialogManager = dialogManager;
         }
-        else
+
+        public DialogState SourceState => DialogState.Marketplace_Price;
+        public DialogState DestinationState => DialogState.Marketplace_Time;
+
+
+        public async Task HandleMessage(Message message, long chatId)
         {
-            await dialogManager.Value.ChangeState(SourceState, chatId,
-                                                  "Напиши что предложишь в награду", Keyboard.Back);
+            if (message.Text != null)
+            {
+                dialogManager.Value.temp_input[chatId].Add(message.Text);
+                await dialogManager.Value.ChangeState(DestinationState, chatId,
+                                                      "На сколько дней разместить объявление?", Keyboard.Back);
+            }
+            else
+            {
+                await dialogManager.Value.ChangeState(SourceState, chatId,
+                                                      "Напиши что просишь/предложишь в награду", Keyboard.Back);
+            }
         }
     }
 }

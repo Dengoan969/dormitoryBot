@@ -24,7 +24,7 @@ namespace DomitoryBot.Commands.Marketplace
         public async Task Execute(long chatId)
         {
             await dialogManager.Value.ChangeState(DestinationState, chatId,
-                                                  "Введите описание объявления", Keyboard.Back);
+                                                  "Напиши описание объявления", Keyboard.Back);
         }
     }
 }
