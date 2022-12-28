@@ -2,7 +2,6 @@
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
 using DormitoryBot.UI;
-using Telegram.Bot;
 
 namespace DormitoryBot.Commands.Marketplace
 {
@@ -26,12 +25,13 @@ namespace DormitoryBot.Commands.Marketplace
             var adverts = dialogManager.Value.MarketPlace.GetUserAdverts(chatId);
             if (adverts.Length == 0)
             {
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "У тебя пока нет объявлений..");
-                await dialogManager.Value.ChangeState(SourceState, chatId, "Маркетплейс", Keyboard.Marketplace);
+                await dialogManager.Value.SendTextMessageAsync(chatId, "У тебя пока нет объявлений..");
+                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Маркетплейс",
+                    SourceState, Keyboard.Marketplace);
             }
             else
             {
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Твои объявления:");
+                await dialogManager.Value.SendTextMessageAsync(chatId, "Твои объявления:");
                 for (var i = 0; i < adverts.Length; i++)
                 {
                     var advert = adverts[i];
@@ -39,11 +39,11 @@ namespace DormitoryBot.Commands.Marketplace
                     sb.Append($"{advert.Text}\n\n");
                     sb.Append($"Цена вопроса: {advert.Price}\n");
                     sb.Append($"Номер объявления: {i + 1}");
-                    await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
+                    await dialogManager.Value.SendTextMessageAsync(chatId, sb.ToString());
                 }
 
-                await dialogManager.Value.ChangeState(DestinationState, chatId,
-                    "Введи номер объявления которое хочешь удалить", Keyboard.Back);
+                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    "Введи номер объявления которое хочешь удалить", DestinationState, Keyboard.Back);
             }
         }
     }

@@ -2,7 +2,6 @@
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
 using DormitoryBot.UI;
-using Telegram.Bot;
 
 namespace DormitoryBot.Commands.Marketplace
 {
@@ -26,23 +25,24 @@ namespace DormitoryBot.Commands.Marketplace
             var adverts = dialogManager.Value.MarketPlace.GetAdverts();
             if (adverts.Length == 0)
             {
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId,
+                await dialogManager.Value.SendTextMessageAsync(chatId,
                     "Пока никто не разместил объявлений..");
             }
             else
             {
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Все объявления:");
+                await dialogManager.Value.SendTextMessageAsync(chatId, "Все объявления:");
                 foreach (var advert in adverts)
                 {
                     var sb = new StringBuilder();
                     sb.Append($"{advert.Text}\n\n");
                     sb.Append($"Цена вопроса: {advert.Price}\n");
                     sb.Append($"Писать : @{advert.Username}");
-                    await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
+                    await dialogManager.Value.SendTextMessageAsync(chatId, sb.ToString());
                 }
             }
 
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Маркетплейс", Keyboard.Marketplace);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Маркетплейс",
+                DestinationState, Keyboard.Marketplace);
         }
     }
 }

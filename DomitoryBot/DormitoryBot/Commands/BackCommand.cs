@@ -22,7 +22,8 @@ namespace DormitoryBot.Commands
         public async Task Execute(long chatId)
         {
             //ЗАГОТОВКА КОМАНДЫ
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Меню", Keyboard.Menu);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                "Меню", DestinationState, Keyboard.Menu);
         }
     }
 }

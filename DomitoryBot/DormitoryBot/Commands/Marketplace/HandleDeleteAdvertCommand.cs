@@ -1,7 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
 using DormitoryBot.UI;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.Marketplace
@@ -29,26 +28,26 @@ namespace DormitoryBot.Commands.Marketplace
                     if (num > 0 && num <= adverts.Length)
                     {
                         dialogManager.Value.MarketPlace.RemoveAdvert(adverts[num - 1]);
-                        await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Объявление удалено!");
-                        await dialogManager.Value.ChangeState(DestinationState, chatId,
-                            "Маркетплейс", Keyboard.Marketplace);
+                        await dialogManager.Value.SendTextMessageAsync(chatId, "Объявление удалено!");
+                        await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                            "Маркетплейс", DestinationState, Keyboard.Marketplace);
                     }
                     else
                     {
-                        await dialogManager.Value.ChangeState(SourceState, chatId,
-                            "Кажется это неправильный номер", Keyboard.Back);
+                        await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                            "Кажется это неправильный номер", SourceState, Keyboard.Back);
                     }
                 }
                 else
                 {
-                    await dialogManager.Value.ChangeState(SourceState, chatId,
-                        "Кажется это не номер..", Keyboard.Back);
+                    await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                        "Кажется это не номер..", SourceState, Keyboard.Back);
                 }
             }
             else
             {
-                await dialogManager.Value.ChangeState(SourceState, chatId,
-                    "Кажется это не номер..", Keyboard.Back);
+                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    "Кажется это не номер..", SourceState, Keyboard.Back);
             }
         }
     }

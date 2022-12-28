@@ -3,7 +3,6 @@ using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
 using DormitoryBot.UI;
-using Telegram.Bot;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -59,20 +58,22 @@ public class FreeSlotsCommand : IHandleTextCommand
                 if (!(begin == DateTime.MinValue && last == DateTime.MinValue))
                     sb.Append($"{begin.ToString("dd.MM HH:mm")} - {last.AddMinutes(30).ToString("dd.MM HH:mm")}\n");
                 if (sb.Length == (rec.Key + "\n").Length)
-                    await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb + "Эта дата не доступна");
+                    await dialogManager.Value.SendTextMessageAsync(chatId, sb + "Эта дата не доступна");
                 else
-                    await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
+                    await dialogManager.Value.SendTextMessageAsync(chatId, sb.ToString());
             }
 
-            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId,
+            await dialogManager.Value.SendTextMessageAsync(chatId,
                 "Примечание: выбирайте время кратное 30 минутам.\n" +
                 "Например в промежутке от 15:00 до 16:00 доступно время 15:00 и 15:30");
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                "Стирка", DestinationState, Keyboard.Washing);
         }
 
         else
         {
-            await dialogManager.Value.ChangeState(SourceState, chatId, "Неправильный ввод", Keyboard.Back);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                "Неправильный ввод", SourceState, Keyboard.Back);
         }
     }
 }

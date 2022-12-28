@@ -23,22 +23,23 @@ public class AddRecordOfWashing : IHandleTextCommand
         {
             var washingTypes = dm.Value.Schedule.WashingTypes;
             if (num < 1 || num > washingTypes.Count)
-                await dm.Value.ChangeState(SourceState, chatId, "Неправильно указан номер типа стирки",
-                    Keyboard.Back);
+                await dm.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    "Неправильно указан номер типа стирки", SourceState, Keyboard.Back);
 
             var type = washingTypes.Keys.ToArray()[num - 1];
             var machine = dm.Value.TempInput[chatId][0] as string;
             var date = dm.Value.TempInput[chatId][1] as DateTime?;
             dm.Value.TempInput[chatId] = new List<object>();
             if (dm.Value.Schedule.TryAddRecord(chatId, machine, date.Value, type))
-                await dm.Value.ChangeState(DestinationState, chatId, "Вы успешно записались на стирку",
-                    Keyboard.Washing);
+                await dm.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    "Вы успешно записались на стирку", DestinationState, Keyboard.Washing);
             else
-                await dm.Value.ChangeState(DestinationState, chatId, "Это время уже занято",
-                    Keyboard.Washing);
+                await dm.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    "Это время уже занято", DestinationState, Keyboard.Washing);
             return;
         }
 
-        await dm.Value.ChangeState(SourceState, chatId, "Что то пошло не так", Keyboard.Back);
+        await dm.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Что то пошло не так", SourceState,
+            Keyboard.Back);
     }
 }

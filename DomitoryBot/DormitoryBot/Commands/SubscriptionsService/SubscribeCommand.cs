@@ -21,8 +21,8 @@ namespace DormitoryBot.Commands.SubscriptionsService
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.ChangeState(DestinationState, chatId,
-                "На какую рассылку подписаться?", Keyboard.Back);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                "На какую рассылку подписаться?", DestinationState, Keyboard.Back);
         }
     }
 }

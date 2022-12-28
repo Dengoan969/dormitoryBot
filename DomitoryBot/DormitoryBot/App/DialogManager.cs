@@ -11,9 +11,9 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace DormitoryBot.App
 {
-    public class DialogManager
+    public class DialogManager : IDialogManager<Update, IReplyMarkup, long, string>
     {
-        public readonly TelegramBotClient BotClient;
+        private readonly TelegramBotClient BotClient;
         public readonly MarketPlace MarketPlace;
         public readonly Schedule Schedule;
         public readonly Dictionary<DialogState, IChatCommand[]> StateCommands;
@@ -42,6 +42,24 @@ namespace DormitoryBot.App
             Usr = usr;
         }
 
+        public async Task SendTextMessageAsync(long chatId, string message)
+        {
+            await BotClient.SendTextMessageAsync(chatId, message);
+        }
+
+        public async Task SendPhotoAsync(long chatId, string photoId, string? caption = null)
+        {
+            await BotClient.SendPhotoAsync(chatId, photoId, caption);
+        }
+
+        public async Task SendTextMessageWithChangingStateAndKeyboardAsync(long chatId, string message,
+            DialogState newState,
+            IReplyMarkup keyboard)
+        {
+            Usr.SetState(chatId, newState);
+            await BotClient.SendTextMessageAsync(chatId, message, replyMarkup: keyboard);
+        }
+
         public async Task HandleUpdate(Update update)
         {
             if (update.Message?.Date >= DateTime.Now - TimeSpan.FromSeconds(10))
@@ -57,7 +75,8 @@ namespace DormitoryBot.App
 
             if (!Usr.ContainsKey(chatId.Value))
             {
-                await ChangeState(DialogState.Menu, chatId.Value, "Меню", Keyboard.Menu);
+                await SendTextMessageWithChangingStateAndKeyboardAsync(chatId.Value, "Меню", DialogState.Menu,
+                    Keyboard.Menu);
             }
             else
             {
@@ -100,11 +119,16 @@ namespace DormitoryBot.App
                 await BotClient.SendTextMessageAsync(chatId, "Прости, но я тебя не понял :(");
             }
         }
+    }
 
-        public async Task ChangeState(DialogState newState, long chatId, string message, IReplyMarkup keyboard)
-        {
-            Usr.SetState(chatId, newState);
-            await BotClient.SendTextMessageAsync(chatId, message, replyMarkup: keyboard);
-        }
+    public interface IDialogManager<in TUpdate, in TKeyboard, in TChatID, in TPhotoID>
+    {
+        Task SendTextMessageAsync(long chatId, string message);
+        Task SendPhotoAsync(TChatID chatId, TPhotoID photoId, string caption);
+
+        Task SendTextMessageWithChangingStateAndKeyboardAsync(long chatId, string message, DialogState newState,
+            TKeyboard keyboard);
+
+        Task HandleUpdate(TUpdate update);
     }
 }

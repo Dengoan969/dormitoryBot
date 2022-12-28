@@ -2,7 +2,6 @@
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
 using DormitoryBot.UI;
-using Telegram.Bot;
 
 namespace DormitoryBot.Commands.WashingSchedule
 {
@@ -27,7 +26,8 @@ namespace DormitoryBot.Commands.WashingSchedule
 
             if (records.Count == 0)
             {
-                await dialogManager.Value.ChangeState(DestinationState, chatId, "У вас нет записей", Keyboard.Washing);
+                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    "У вас нет записей", DestinationState, Keyboard.Washing);
             }
             else
             {
@@ -38,8 +38,9 @@ namespace DormitoryBot.Commands.WashingSchedule
                               $" - {records[i].TimeInterval.End.ToString("dd.MM HH:mm")}" +
                               $" Номер машинки: {records[i].Machine}");
 
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
-                await dialogManager.Value.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
+                await dialogManager.Value.SendTextMessageAsync(chatId, sb.ToString());
+                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Стирка",
+                    DestinationState, Keyboard.Washing);
             }
         }
     }

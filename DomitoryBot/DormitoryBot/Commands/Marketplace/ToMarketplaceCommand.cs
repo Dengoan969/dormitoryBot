@@ -21,7 +21,8 @@ namespace DormitoryBot.Commands.Marketplace
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Маркетплейс", Keyboard.Marketplace);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                "Маркетплейс", DestinationState, Keyboard.Marketplace);
         }
     }
 }

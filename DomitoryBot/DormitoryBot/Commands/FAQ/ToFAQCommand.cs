@@ -1,7 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
 using DormitoryBot.UI;
-using Telegram.Bot;
 
 namespace DormitoryBot.Commands.FAQ
 {
@@ -22,8 +21,9 @@ namespace DormitoryBot.Commands.FAQ
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Тут умное FAQ");
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Меню", Keyboard.Menu);
+            await dialogManager.Value.SendTextMessageAsync(chatId, "Тут умное FAQ");
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Меню", DestinationState,
+                Keyboard.Menu);
         }
     }
 }

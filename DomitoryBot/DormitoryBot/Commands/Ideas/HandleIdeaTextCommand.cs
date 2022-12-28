@@ -23,13 +23,13 @@ namespace DormitoryBot.Commands.Ideas
             if (message.Text != null)
             {
                 Console.WriteLine(message.Text);
-                await dialogManager.Value.ChangeState(DestinationState, chatId,
-                    "Меню", Keyboard.Menu);
+                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    "Меню", DestinationState, Keyboard.Menu);
             }
             else
             {
-                await dialogManager.Value.ChangeState(SourceState, chatId,
-                    "Какие есть предложения? :)", Keyboard.Back);
+                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    "Какие есть предложения? :)", SourceState, Keyboard.Back);
             }
         }
     }

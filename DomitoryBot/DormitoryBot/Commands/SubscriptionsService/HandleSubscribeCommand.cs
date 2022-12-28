@@ -23,13 +23,13 @@ public class HandleSubscribeCommand : IHandleTextCommand
         var subscriptionService = dialogManager.Value.SubscriptionService;
         if (message.Text != null && subscriptionService.SubscribeUser(chatId, message.Text))
         {
-            await dialogManager.Value.ChangeState(DestinationState, chatId,
-                "Круто, ты подписался!", Keyboard.Subscriptions);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                "Круто, ты подписался!", DestinationState, Keyboard.Subscriptions);
         }
         else
         {
-            await dialogManager.Value.ChangeState(SourceState, chatId,
-                "Кажется такой подписки нет или ты уже подписан..", Keyboard.Back);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                "Кажется такой подписки нет или ты уже подписан..", SourceState, Keyboard.Back);
         }
     }
 }

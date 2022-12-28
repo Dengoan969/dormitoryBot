@@ -3,6 +3,7 @@ using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace DormitoryBot.App
 {
@@ -10,9 +11,10 @@ namespace DormitoryBot.App
     {
         private readonly TelegramBotClient botClient;
         private readonly CancellationTokenSource cts;
-        private readonly DialogManager dialogManager;
+        private readonly IDialogManager<Update, IReplyMarkup, long, string> dialogManager;
 
-        public TelegramBotCore(DialogManager dialogManager, TelegramBotClient botClient, CancellationTokenSource cts)
+        public TelegramBotCore(IDialogManager<Update, IReplyMarkup, long, string> dialogManager,
+            TelegramBotClient botClient, CancellationTokenSource cts)
         {
             this.cts = cts;
             this.dialogManager = dialogManager;

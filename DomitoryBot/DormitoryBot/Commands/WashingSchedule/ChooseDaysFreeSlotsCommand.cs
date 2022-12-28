@@ -21,7 +21,7 @@ public class ChooseDaysFreeSlotsCommand : IExecutableCommand
 
     public async Task Execute(long chatId)
     {
-        await dialogManager.Value.ChangeState(DestinationState,
-            chatId, "Введите интересующий день в формате день.месяц", Keyboard.Back);
+        await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            "Введите интересующий день в формате день.месяц", DestinationState, Keyboard.Back);
     }
 }

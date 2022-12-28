@@ -25,32 +25,32 @@ namespace DormitoryBot.Commands.Marketplace
                 var tempInput = dialogManager.Value.TempInput[chatId];
                 if (!int.TryParse(message.Text, out var days))
                 {
-                    await dialogManager.Value.ChangeState(SourceState, chatId,
-                        "Кажется ты вводишь что-то не то.. Необходимо целое число дней", Keyboard.Back);
+                    await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                        "Кажется ты вводишь что-то не то.. Необходимо целое число дней", SourceState, Keyboard.Back);
                 }
 
                 if (days <= 0)
                 {
-                    await dialogManager.Value.ChangeState(SourceState, chatId,
-                        "Попробуй положительное число :)", Keyboard.Back);
+                    await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                        "Попробуй положительное число :)", SourceState, Keyboard.Back);
                 }
                 else if (days > 30)
                 {
-                    await dialogManager.Value.ChangeState(SourceState, chatId,
-                        "Слишком много, давай не больше 30", Keyboard.Back);
+                    await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                        "Слишком много, давай не больше 30", SourceState, Keyboard.Back);
                 }
                 else
                 {
                     dialogManager.Value.MarketPlace.CreateAdvert(chatId, (string) tempInput[0], (string) tempInput[1],
                         TimeSpan.FromDays(days), message.From.Username);
-                    await dialogManager.Value.ChangeState(DestinationState, chatId,
-                        "Маркетплейс", Keyboard.Marketplace);
+                    await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                        "Маркетплейс", DestinationState, Keyboard.Marketplace);
                 }
             }
             else
             {
-                await dialogManager.Value.ChangeState(SourceState, chatId,
-                    "На сколько дней разместить объявление?", Keyboard.Back);
+                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    "На сколько дней разместить объявление?", SourceState, Keyboard.Back);
             }
         }
     }

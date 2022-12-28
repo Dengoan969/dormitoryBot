@@ -21,7 +21,8 @@ namespace DormitoryBot.Commands.WashingSchedule
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Стирка", Keyboard.Washing);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Стирка",
+                DestinationState, Keyboard.Washing);
         }
     }
 }

@@ -1,4 +1,5 @@
-﻿using DormitoryBot.App;
+﻿using DomitoryBot.Domain.Marketplace;
+using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
 using DormitoryBot.Domain.Marketplace;
 using DormitoryBot.Domain.Schedule;
@@ -7,6 +8,8 @@ using DormitoryBot.Infrastructure;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Telegram.Bot;
+using Telegram.Bot.Types;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace DormitoryBot
 {
@@ -50,7 +53,7 @@ namespace DormitoryBot
             container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>()
                 .WithConstructorArgument("adverts", new SortedSet<Advert>(new AdvertsComparator()));
 
-            container.Bind<DialogManager>().ToSelf().InSingletonScope();
+            container.Bind<IDialogManager<Update, IReplyMarkup, long, string>>().To<DialogManager>().InSingletonScope();
 
             container.Bind<TelegramBotClient>().ToConstant(new TelegramBotClient(token)).InSingletonScope();
 

@@ -1,7 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
 using DormitoryBot.UI;
-using Telegram.Bot;
 
 namespace DormitoryBot.Commands.SubscriptionsService
 {
@@ -25,15 +24,16 @@ namespace DormitoryBot.Commands.SubscriptionsService
             var subscriptions = dialogManager.Value.SubscriptionService.GetSubscriptionsOfUser(chatId);
             if (subscriptions.Length == 0)
             {
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "У тебя пока нет подписок ._.");
+                await dialogManager.Value.SendTextMessageAsync(chatId, "У тебя пока нет подписок ._.");
             }
             else
             {
-                await dialogManager.Value.BotClient.SendTextMessageAsync(chatId,
+                await dialogManager.Value.SendTextMessageAsync(chatId,
                     $"Твои подписки:\n{string.Join("\n", subscriptions)}");
             }
 
-            await dialogManager.Value.ChangeState(DestinationState, chatId, "Подписки", Keyboard.Subscriptions);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                "Подписки", DestinationState, Keyboard.Subscriptions);
         }
     }
 }

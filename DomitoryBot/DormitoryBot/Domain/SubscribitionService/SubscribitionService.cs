@@ -1,7 +1,4 @@
 ﻿using DormitoryBot.Infrastructure;
-using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.Enums;
 
 namespace DormitoryBot.Domain.SubscribitionService
 {
@@ -54,24 +51,9 @@ namespace DormitoryBot.Domain.SubscribitionService
             return subscriptionRepository.TryDeleteSubscription(FormattedNameOfSub(sub), userId);
         }
 
-        public void SendAnnouncement(TelegramBotClient botClient, Message mes, string sub)
+        public List<long> GetFollowers(string sub)
         {
-            ;
-            switch (mes.Type)
-            {
-                case MessageType.Photo:
-                {
-                    foreach (var user in subscriptionRepository.GetFollowers(FormattedNameOfSub(sub)))
-                        botClient.SendPhotoAsync(user, mes.Photo[0].FileId,
-                            $"{FormattedNameOfSub(sub)}\n{mes.Caption}");
-                    break;
-                }
-
-                case MessageType.Text:
-                    foreach (var user in subscriptionRepository.GetFollowers(FormattedNameOfSub(sub)))
-                        botClient.SendTextMessageAsync(user, $"{FormattedNameOfSub(sub)}\n{mes.Text}");
-                    break;
-            }
+            return subscriptionRepository.GetFollowers(sub).ToList();
         }
 
         private string FormattedNameOfSub(string sub)
