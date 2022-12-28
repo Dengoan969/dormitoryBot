@@ -9,7 +9,7 @@ using NUnit.Framework;
 
 namespace TestProject;
 
-public class Tests
+public class ScheduleTests
 {
     private StandardKernel Container => new();
 
