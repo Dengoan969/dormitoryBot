@@ -40,7 +40,7 @@ public class HandleAnnouncementMessageCommand : IHandleTextCommand
         }
 
         await dialogManager.Value.SendTextMessageAsync(chatId, "Круто, всем разослал!");
-        await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+        await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
             "Управление рассылками", DestinationState);
     }
 }

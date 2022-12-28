@@ -6,9 +6,9 @@ namespace DormitoryBot.Commands.Ideas
 {
     public class HandleIdeaTextCommand : IHandleTextCommand
     {
-        private readonly Lazy<ITelegramDialogSender> dialogManager;
+        private readonly Lazy<TelegramDialogManager> dialogManager;
 
-        public HandleIdeaTextCommand(Lazy<ITelegramDialogSender> dialogManager)
+        public HandleIdeaTextCommand(Lazy<TelegramDialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }
@@ -22,12 +22,12 @@ namespace DormitoryBot.Commands.Ideas
             if (message.Text != null)
             {
                 Console.WriteLine(message.Text);
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Меню", DestinationState);
             }
             else
             {
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Какие есть предложения? :)", SourceState);
             }
         }

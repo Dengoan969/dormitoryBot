@@ -21,7 +21,7 @@ namespace DormitoryBot.Commands
         public async Task Execute(long chatId)
         {
             dialogManager.Value.TempInput[chatId] = new List<object>();
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Меню",
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId, "Меню",
                 DestinationState);
         }
     }

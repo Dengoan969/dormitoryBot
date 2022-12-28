@@ -25,7 +25,7 @@ namespace DormitoryBot.Commands.WashingSchedule
 
             if (records.Count == 0)
             {
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "У вас нет записей", DestinationState);
             }
             else
@@ -38,7 +38,7 @@ namespace DormitoryBot.Commands.WashingSchedule
                               $" Номер машинки: {records[i].Machine}");
 
                 await dialogManager.Value.SendTextMessageAsync(chatId, sb.ToString());
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Стирка",
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId, "Стирка",
                     DestinationState);
             }
         }

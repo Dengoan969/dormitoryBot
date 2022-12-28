@@ -23,7 +23,6 @@ namespace DormitoryBot.App
         public TelegramDialogManager(TelegramBotClient botClient, IChatCommand[] commands, Schedule schedule,
             MarketPlace marketPlace, SubscriptionService subscriptionService, IUsersStateRepository usr)
         {
-            //todo сделать промежуточную сущность, вынести зависимость от телеграма
             BotClient = botClient;
             Schedule = schedule;
             MarketPlace = marketPlace;
@@ -51,7 +50,7 @@ namespace DormitoryBot.App
             await BotClient.SendPhotoAsync(chatId, photoId, caption);
         }
 
-        public async Task SendTextMessageWithChangingStateAndKeyboardAsync(long chatId, string message,
+        public async Task SendTextMessageWithChangingStateAsync(long chatId, string message,
             DialogState newState)
         {
             Usr.SetState(chatId, newState);
@@ -74,7 +73,7 @@ namespace DormitoryBot.App
 
             if (!Usr.ContainsKey(chatId.Value))
             {
-                await SendTextMessageWithChangingStateAndKeyboardAsync(chatId.Value, "Меню", DialogState.Menu);
+                await SendTextMessageWithChangingStateAsync(chatId.Value, "Меню", DialogState.Menu);
             }
             else
             {

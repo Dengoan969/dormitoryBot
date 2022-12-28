@@ -1,8 +1,8 @@
 ﻿namespace DormitoryBot.App;
 
-public interface IDialogSender<in TKeyboard, in TChatID, in TPhotoID>
+public interface IDialogSender
 {
-    Task SendTextMessageAsync(TChatID chatId, string message);
-    Task SendPhotoAsync(TChatID chatId, TPhotoID photoId, string caption);
-    Task SendTextMessageWithChangingStateAndKeyboardAsync(TChatID chatId, string message, DialogState newState);
+    Task SendTextMessageAsync(long chatId, string message);
+    Task SendPhotoAsync(long chatId, string photoId, string caption);
+    Task SendTextMessageWithChangingStateAsync(long chatId, string message, DialogState newState);
 }

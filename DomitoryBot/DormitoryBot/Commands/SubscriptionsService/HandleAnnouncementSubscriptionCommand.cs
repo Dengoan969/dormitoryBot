@@ -24,12 +24,12 @@ public class HandleAnnouncementSubscriptionCommand : IHandleTextCommand
         {
             dialogManager.Value.TempInput[chatId] = new List<object>();
             dialogManager.Value.TempInput[chatId].Add(message.Text);
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Какое сообщение переслать? (можно с фото)", DestinationState);
         }
         else
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Кажется ты не админ этой рассылки :(", SourceState);
         }
     }

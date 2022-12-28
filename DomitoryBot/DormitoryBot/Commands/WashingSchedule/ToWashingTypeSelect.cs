@@ -26,7 +26,7 @@ public class ToWashingTypeSelect : IHandleTextCommand
         {
             if (value.Minute % 30 != 0)
             {
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Недопустимое время :(", SourceState);
             }
             else
@@ -42,14 +42,14 @@ public class ToWashingTypeSelect : IHandleTextCommand
                 }
 
 
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     sb.ToString(), DestinationState);
             }
 
             return;
         }
 
-        await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+        await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
             "Неверный формат времени", SourceState);
     }
 }

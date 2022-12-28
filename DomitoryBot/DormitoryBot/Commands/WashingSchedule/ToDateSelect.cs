@@ -22,12 +22,12 @@ public class ToDateSelect : IHandleTextCommand
         {
             dialogManager.Value.TempInput[chatId] = new List<object>();
             dialogManager.Value.TempInput[chatId].Add(message.Text);
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Введите дату начала стирки в формате: число.месяц часы:минуты", DestinationState);
         }
         else
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Не знаю такую стиралку", SourceState);
         }
     }

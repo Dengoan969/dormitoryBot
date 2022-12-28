@@ -23,12 +23,12 @@ namespace DormitoryBot.Commands.Marketplace
             {
                 dialogManager.Value.TempInput[chatId] = new List<object>();
                 dialogManager.Value.TempInput[chatId].Add(message.Text);
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Напиши что просишь/предложишь в награду", DestinationState);
             }
             else
             {
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Напиши описание объявления", SourceState);
             }
         }

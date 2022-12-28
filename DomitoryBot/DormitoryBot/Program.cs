@@ -54,6 +54,8 @@ namespace DormitoryBot
             container.Bind<ITelegramUpdateHandler>().To<TelegramDialogManager>()
                 .InSingletonScope();
 
+            container.Bind<TelegramDialogManager>().ToSelf().InSingletonScope();
+
             container.Bind<TelegramBotClient>().ToConstant(new TelegramBotClient(token)).InSingletonScope();
 
             container.Bind(c =>

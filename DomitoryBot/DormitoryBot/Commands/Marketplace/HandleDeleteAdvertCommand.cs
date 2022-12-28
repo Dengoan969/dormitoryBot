@@ -28,24 +28,24 @@ namespace DormitoryBot.Commands.Marketplace
                     {
                         dialogManager.Value.MarketPlace.RemoveAdvert(adverts[num - 1]);
                         await dialogManager.Value.SendTextMessageAsync(chatId, "Объявление удалено!");
-                        await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                        await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                             "Маркетплейс", DestinationState);
                     }
                     else
                     {
-                        await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                        await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                             "Кажется это неправильный номер", SourceState);
                     }
                 }
                 else
                 {
-                    await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                    await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                         "Кажется это не номер..", SourceState);
                 }
             }
             else
             {
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Кажется это не номер..", SourceState);
             }
         }

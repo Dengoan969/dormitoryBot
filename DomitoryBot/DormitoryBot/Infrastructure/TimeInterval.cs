@@ -1,6 +1,6 @@
 ﻿namespace DormitoryBot.Domain;
 
-public readonly struct TimeInterval //TimeSpan?????
+public readonly struct TimeInterval
 {
     public readonly DateTime Start;
     public readonly DateTime End;

@@ -53,7 +53,7 @@ namespace DormitoryBot.Domain.SubscribitionService
 
         public List<long> GetFollowers(string sub)
         {
-            return subscriptionRepository.GetFollowers(sub).ToList();
+            return subscriptionRepository.GetFollowers(FormattedNameOfSub(sub)).ToList();
         }
 
         private string FormattedNameOfSub(string sub)

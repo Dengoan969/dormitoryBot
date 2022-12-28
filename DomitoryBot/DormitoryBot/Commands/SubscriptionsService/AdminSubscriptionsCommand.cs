@@ -32,7 +32,7 @@ namespace DormitoryBot.Commands.SubscriptionsService
                     $"Твои рассылки:\n{string.Join("\n", subscriptions)}");
             }
 
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Управление рассылками", DestinationState);
         }
     }

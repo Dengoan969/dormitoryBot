@@ -31,7 +31,7 @@ namespace DormitoryBot.Commands.SubscriptionsService
                     $"Твои подписки:\n{string.Join("\n", subscriptions)}");
             }
 
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Подписки", DestinationState);
         }
     }

@@ -65,13 +65,13 @@ public class FreeSlotsCommand : IHandleTextCommand
             await dialogManager.Value.SendTextMessageAsync(chatId,
                 "Примечание: выбирайте время кратное 30 минутам.\n" +
                 "Например в промежутке от 15:00 до 16:00 доступно время 15:00 и 15:30");
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Стирка", DestinationState);
         }
 
         else
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Неправильный ввод", SourceState);
         }
     }

@@ -23,7 +23,7 @@ public class ToRecordsOfUser : IExecutableCommand
 
         if (records.Count == 0)
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "У вас нет записей", SourceState);
         }
         else
@@ -35,7 +35,7 @@ public class ToRecordsOfUser : IExecutableCommand
                           $" - {records[i].TimeInterval.End.ToString("dd.MM HH:mm")}" +
                           $" Номер машинки:{records[i].Machine}\n");
             await dialogManager.Value.SendTextMessageAsync(chatId, "Введите номер записи для удаления");
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 sb.ToString(), DestinationState);
         }
     }

@@ -22,12 +22,12 @@ public class HandleCreateSubscriptionCommand : IHandleTextCommand
         var subscriptionService = dialogManager.Value.SubscriptionService;
         if (message.Text != null && subscriptionService.TryCreateSubscription(message.Text, chatId))
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Круто, ты создал рассылку!", DestinationState);
         }
         else
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Кажется такая рассылка уже есть :( Попробуй другое название", SourceState);
         }
     }

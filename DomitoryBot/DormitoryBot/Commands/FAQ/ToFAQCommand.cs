@@ -5,9 +5,9 @@ namespace DormitoryBot.Commands.FAQ
 {
     public class ToFaqCommand : IExecutableCommand
     {
-        private readonly Lazy<ITelegramDialogSender> dialogManager;
+        private readonly Lazy<TelegramDialogManager> dialogManager;
 
-        public ToFaqCommand(Lazy<ITelegramDialogSender> dialogManager)
+        public ToFaqCommand(Lazy<TelegramDialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }
@@ -21,7 +21,7 @@ namespace DormitoryBot.Commands.FAQ
         public async Task Execute(long chatId)
         {
             await dialogManager.Value.SendTextMessageAsync(chatId, "Тут умное FAQ");
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Меню",
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId, "Меню",
                 DestinationState);
         }
     }

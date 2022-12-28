@@ -22,12 +22,12 @@ public class HandleDeleteSubscriptionCommand : IHandleTextCommand
         var subscriptionService = dialogManager.Value.SubscriptionService;
         if (message.Text != null && subscriptionService.TryDeleteSubscription(message.Text, chatId))
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Рассылка удалена!", DestinationState);
         }
         else
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Кажется ты не админ этой рассылки :(", SourceState);
         }
     }

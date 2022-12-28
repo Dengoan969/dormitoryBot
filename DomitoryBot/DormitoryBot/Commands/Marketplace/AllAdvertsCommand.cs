@@ -40,7 +40,7 @@ namespace DormitoryBot.Commands.Marketplace
                 }
             }
 
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Маркетплейс",
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId, "Маркетплейс",
                 DestinationState);
         }
     }

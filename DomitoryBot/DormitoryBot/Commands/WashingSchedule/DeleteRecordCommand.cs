@@ -24,18 +24,18 @@ public class DeleteRecordCommand : IHandleTextCommand
             if (num <= records.Count && num > 0)
             {
                 dialogManager.Value.Schedule.TryRemoveRecord(records[num - 1]);
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Запись успешно удалена", DestinationState);
             }
             else
             {
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Вы ввели неправильное число", SourceState);
             }
         }
         else
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Вы ввели не число", SourceState);
         }
     }

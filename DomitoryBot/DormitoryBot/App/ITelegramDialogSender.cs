@@ -1,7 +1,5 @@
-﻿using Telegram.Bot.Types.ReplyMarkups;
+﻿namespace DormitoryBot.App;
 
-namespace DormitoryBot.App;
-
-public interface ITelegramDialogSender : IDialogSender<IReplyMarkup, long, string>
+public interface ITelegramDialogSender : IDialogSender
 {
 }

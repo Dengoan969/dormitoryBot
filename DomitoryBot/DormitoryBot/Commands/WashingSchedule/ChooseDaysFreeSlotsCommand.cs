@@ -20,7 +20,8 @@ public class ChooseDaysFreeSlotsCommand : IExecutableCommand
 
     public async Task Execute(long chatId)
     {
-        await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-            "Введите интересующий день в формате день.месяц", DestinationState);
+        await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
+            "Доступны дни: сегодня, завтра, послезавтра.\nВведите интересующий день в формате день.месяц.",
+            DestinationState);
     }
 }

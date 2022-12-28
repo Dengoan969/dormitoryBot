@@ -20,7 +20,7 @@ namespace DormitoryBot.Commands.Ideas
 
         public async Task Execute(long chatId)
         {
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+            await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Какие есть предложения? :)", DestinationState);
         }
     }

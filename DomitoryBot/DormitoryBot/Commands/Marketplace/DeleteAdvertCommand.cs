@@ -25,7 +25,7 @@ namespace DormitoryBot.Commands.Marketplace
             if (adverts.Length == 0)
             {
                 await dialogManager.Value.SendTextMessageAsync(chatId, "У тебя пока нет объявлений..");
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Маркетплейс",
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId, "Маркетплейс",
                     SourceState);
             }
             else
@@ -41,7 +41,7 @@ namespace DormitoryBot.Commands.Marketplace
                     await dialogManager.Value.SendTextMessageAsync(chatId, sb.ToString());
                 }
 
-                await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
+                await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Введи номер объявления которое хочешь удалить", DestinationState);
             }
         }

@@ -5,15 +5,6 @@ namespace DormitoryBot.UI;
 
 public static class Keyboard
 {
-    private static readonly Dictionary<DialogState, InlineKeyboardMarkup> stateToKeyboard = new()
-    {
-        {DialogState.Menu, Menu},
-        {DialogState.Marketplace, Marketplace},
-        {DialogState.Washing, Washing},
-        {DialogState.Subscriptions, Subscriptions},
-        {DialogState.SubscriptionsManage, SubscriptionsManage}
-    };
-
     public static InlineKeyboardMarkup Menu = new(new[]
     {
         new[]
@@ -104,6 +95,16 @@ public static class Keyboard
             InlineKeyboardButton.WithCallbackData("Назад", "Back")
         }
     });
+
+    private static readonly Dictionary<DialogState, InlineKeyboardMarkup> stateToKeyboard = new()
+    {
+        {DialogState.Menu, Menu},
+        {DialogState.Marketplace, Marketplace},
+        {DialogState.Washing, Washing},
+        {DialogState.Subscriptions, Subscriptions},
+        {DialogState.SubscriptionsManage, SubscriptionsManage}
+    };
+
 
     public static InlineKeyboardMarkup GetKeyboardByState(DialogState dialogState)
     {
