@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.SubscriptionsService;
@@ -26,12 +25,12 @@ public class HandleAnnouncementSubscriptionCommand : IHandleTextCommand
             dialogManager.Value.TempInput[chatId] = new List<object>();
             dialogManager.Value.TempInput[chatId].Add(message.Text);
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Какое сообщение переслать? (можно с фото)", DestinationState, Keyboard.Back);
+                "Какое сообщение переслать? (можно с фото)", DestinationState);
         }
         else
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Кажется ты не админ этой рассылки :(", SourceState, Keyboard.Back);
+                "Кажется ты не админ этой рассылки :(", SourceState);
         }
     }
 }

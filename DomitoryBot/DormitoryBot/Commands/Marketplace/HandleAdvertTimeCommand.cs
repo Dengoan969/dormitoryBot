@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.Marketplace
@@ -26,31 +25,31 @@ namespace DormitoryBot.Commands.Marketplace
                 if (!int.TryParse(message.Text, out var days))
                 {
                     await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                        "Кажется ты вводишь что-то не то.. Необходимо целое число дней", SourceState, Keyboard.Back);
+                        "Кажется ты вводишь что-то не то.. Необходимо целое число дней", SourceState);
                 }
 
                 if (days <= 0)
                 {
                     await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                        "Попробуй положительное число :)", SourceState, Keyboard.Back);
+                        "Попробуй положительное число :)", SourceState);
                 }
                 else if (days > 30)
                 {
                     await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                        "Слишком много, давай не больше 30", SourceState, Keyboard.Back);
+                        "Слишком много, давай не больше 30", SourceState);
                 }
                 else
                 {
                     dialogManager.Value.MarketPlace.CreateAdvert(chatId, (string) tempInput[0], (string) tempInput[1],
                         TimeSpan.FromDays(days), message.From.Username);
                     await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                        "Маркетплейс", DestinationState, Keyboard.Marketplace);
+                        "Маркетплейс", DestinationState);
                 }
             }
             else
             {
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "На сколько дней разместить объявление?", SourceState, Keyboard.Back);
+                    "На сколько дней разместить объявление?", SourceState);
             }
         }
     }

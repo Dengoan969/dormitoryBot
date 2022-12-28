@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.WashingSchedule
 {
@@ -27,7 +26,7 @@ namespace DormitoryBot.Commands.WashingSchedule
             if (records.Count == 0)
             {
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "У вас нет записей", DestinationState, Keyboard.Washing);
+                    "У вас нет записей", DestinationState);
             }
             else
             {
@@ -40,7 +39,7 @@ namespace DormitoryBot.Commands.WashingSchedule
 
                 await dialogManager.Value.SendTextMessageAsync(chatId, sb.ToString());
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Стирка",
-                    DestinationState, Keyboard.Washing);
+                    DestinationState);
             }
         }
     }

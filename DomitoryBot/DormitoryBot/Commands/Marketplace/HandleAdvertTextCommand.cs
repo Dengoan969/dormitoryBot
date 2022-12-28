@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.Marketplace
@@ -25,12 +24,12 @@ namespace DormitoryBot.Commands.Marketplace
                 dialogManager.Value.TempInput[chatId] = new List<object>();
                 dialogManager.Value.TempInput[chatId].Add(message.Text);
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "Напиши что просишь/предложишь в награду", DestinationState, Keyboard.Back);
+                    "Напиши что просишь/предложишь в награду", DestinationState);
             }
             else
             {
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "Напиши описание объявления", SourceState, Keyboard.Back);
+                    "Напиши описание объявления", SourceState);
             }
         }
     }

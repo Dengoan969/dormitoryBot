@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.SubscriptionsService;
@@ -24,12 +23,12 @@ public class HandleCreateSubscriptionCommand : IHandleTextCommand
         if (message.Text != null && subscriptionService.TryCreateSubscription(message.Text, chatId))
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Круто, ты создал рассылку!", DestinationState, Keyboard.SubscriptionsManage);
+                "Круто, ты создал рассылку!", DestinationState);
         }
         else
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Кажется такая рассылка уже есть :( Попробуй другое название", SourceState, Keyboard.Back);
+                "Кажется такая рассылка уже есть :( Попробуй другое название", SourceState);
         }
     }
 }

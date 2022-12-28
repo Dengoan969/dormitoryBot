@@ -2,7 +2,6 @@
 using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -28,7 +27,7 @@ public class ToWashingTypeSelect : IHandleTextCommand
             if (value.Minute % 30 != 0)
             {
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "Недопустимое время :(", SourceState, Keyboard.Back);
+                    "Недопустимое время :(", SourceState);
             }
             else
             {
@@ -44,13 +43,13 @@ public class ToWashingTypeSelect : IHandleTextCommand
 
 
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    sb.ToString(), DestinationState, Keyboard.Back);
+                    sb.ToString(), DestinationState);
             }
 
             return;
         }
 
         await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-            "Неверный формат времени", SourceState, Keyboard.Back);
+            "Неверный формат времени", SourceState);
     }
 }

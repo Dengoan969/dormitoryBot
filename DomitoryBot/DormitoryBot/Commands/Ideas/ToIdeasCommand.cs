@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.Ideas
 {
@@ -22,7 +21,7 @@ namespace DormitoryBot.Commands.Ideas
         public async Task Execute(long chatId)
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Какие есть предложения? :)", DestinationState, Keyboard.Back);
+                "Какие есть предложения? :)", DestinationState);
         }
     }
 }

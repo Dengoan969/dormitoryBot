@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.Marketplace
@@ -30,24 +29,24 @@ namespace DormitoryBot.Commands.Marketplace
                         dialogManager.Value.MarketPlace.RemoveAdvert(adverts[num - 1]);
                         await dialogManager.Value.SendTextMessageAsync(chatId, "Объявление удалено!");
                         await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                            "Маркетплейс", DestinationState, Keyboard.Marketplace);
+                            "Маркетплейс", DestinationState);
                     }
                     else
                     {
                         await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                            "Кажется это неправильный номер", SourceState, Keyboard.Back);
+                            "Кажется это неправильный номер", SourceState);
                     }
                 }
                 else
                 {
                     await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                        "Кажется это не номер..", SourceState, Keyboard.Back);
+                        "Кажется это не номер..", SourceState);
                 }
             }
             else
             {
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "Кажется это не номер..", SourceState, Keyboard.Back);
+                    "Кажется это не номер..", SourceState);
             }
         }
     }

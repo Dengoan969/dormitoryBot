@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.Marketplace
 {
@@ -22,7 +21,7 @@ namespace DormitoryBot.Commands.Marketplace
         public async Task Execute(long chatId)
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Маркетплейс", DestinationState, Keyboard.Marketplace);
+                "Маркетплейс", DestinationState);
         }
     }
 }

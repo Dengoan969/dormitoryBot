@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.SubscriptionsService
 {
@@ -22,7 +21,7 @@ namespace DormitoryBot.Commands.SubscriptionsService
         public async Task Execute(long chatId)
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Объявления", DestinationState, Keyboard.Subscriptions);
+                "Объявления", DestinationState);
         }
     }
 }

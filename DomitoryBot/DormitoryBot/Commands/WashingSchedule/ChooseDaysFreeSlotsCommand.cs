@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.WashingSchedule;
 
@@ -22,6 +21,6 @@ public class ChooseDaysFreeSlotsCommand : IExecutableCommand
     public async Task Execute(long chatId)
     {
         await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-            "Введите интересующий день в формате день.месяц", DestinationState, Keyboard.Back);
+            "Введите интересующий день в формате день.месяц", DestinationState);
     }
 }

@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands
 {
@@ -22,8 +21,8 @@ namespace DormitoryBot.Commands
         public async Task Execute(long chatId)
         {
             dialogManager.Value.TempInput[chatId] = new List<object>();
-            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Меню", DestinationState,
-                Keyboard.Menu);
+            await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Меню",
+                DestinationState);
         }
     }
 }

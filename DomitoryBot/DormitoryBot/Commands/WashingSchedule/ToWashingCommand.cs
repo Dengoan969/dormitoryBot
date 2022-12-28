@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.WashingSchedule
 {
@@ -22,7 +21,7 @@ namespace DormitoryBot.Commands.WashingSchedule
         public async Task Execute(long chatId)
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Стирка",
-                DestinationState, Keyboard.Washing);
+                DestinationState);
         }
     }
 }

@@ -2,7 +2,6 @@
 using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -67,13 +66,13 @@ public class FreeSlotsCommand : IHandleTextCommand
                 "Примечание: выбирайте время кратное 30 минутам.\n" +
                 "Например в промежутке от 15:00 до 16:00 доступно время 15:00 и 15:30");
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Стирка", DestinationState, Keyboard.Washing);
+                "Стирка", DestinationState);
         }
 
         else
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Неправильный ввод", SourceState, Keyboard.Back);
+                "Неправильный ввод", SourceState);
         }
     }
 }

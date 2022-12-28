@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands
 {
@@ -23,7 +22,7 @@ namespace DormitoryBot.Commands
         {
             //ЗАГОТОВКА КОМАНДЫ
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Меню", DestinationState, Keyboard.Menu);
+                "Меню", DestinationState);
         }
     }
 }

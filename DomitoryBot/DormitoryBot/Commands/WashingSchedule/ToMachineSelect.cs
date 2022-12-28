@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.WashingSchedule;
 
@@ -20,6 +19,6 @@ public class ToMachineSelect : IExecutableCommand
     public async Task Execute(long chatId)
     {
         await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-            "Напишите номер стиралки", DestinationState, Keyboard.Back);
+            "Напишите номер стиралки", DestinationState);
     }
 }

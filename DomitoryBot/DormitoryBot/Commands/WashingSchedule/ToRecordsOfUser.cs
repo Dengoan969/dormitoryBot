@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.WashingSchedule;
 
@@ -25,7 +24,7 @@ public class ToRecordsOfUser : IExecutableCommand
         if (records.Count == 0)
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "У вас нет записей", SourceState, Keyboard.Washing);
+                "У вас нет записей", SourceState);
         }
         else
         {
@@ -37,7 +36,7 @@ public class ToRecordsOfUser : IExecutableCommand
                           $" Номер машинки:{records[i].Machine}\n");
             await dialogManager.Value.SendTextMessageAsync(chatId, "Введите номер записи для удаления");
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                sb.ToString(), DestinationState, Keyboard.Back);
+                sb.ToString(), DestinationState);
         }
     }
 }

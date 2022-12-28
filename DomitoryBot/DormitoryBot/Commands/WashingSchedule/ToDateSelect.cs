@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -24,12 +23,12 @@ public class ToDateSelect : IHandleTextCommand
             dialogManager.Value.TempInput[chatId] = new List<object>();
             dialogManager.Value.TempInput[chatId].Add(message.Text);
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Введите дату начала стирки в формате: число.месяц часы:минуты", DestinationState, Keyboard.Back);
+                "Введите дату начала стирки в формате: число.месяц часы:минуты", DestinationState);
         }
         else
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Не знаю такую стиралку", SourceState, Keyboard.Back);
+                "Не знаю такую стиралку", SourceState);
         }
     }
 }

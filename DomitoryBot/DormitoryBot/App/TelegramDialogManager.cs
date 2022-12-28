@@ -7,11 +7,10 @@ using DormitoryBot.UI;
 using Telegram.Bot;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace DormitoryBot.App
 {
-    public class TelegramDialogManager : IDialogManager<Update, IReplyMarkup, long, string>
+    public class TelegramDialogManager : ITelegramDialogSender, ITelegramUpdateHandler
     {
         private readonly TelegramBotClient BotClient;
         public readonly MarketPlace MarketPlace;
@@ -53,10 +52,10 @@ namespace DormitoryBot.App
         }
 
         public async Task SendTextMessageWithChangingStateAndKeyboardAsync(long chatId, string message,
-            DialogState newState,
-            IReplyMarkup keyboard)
+            DialogState newState)
         {
             Usr.SetState(chatId, newState);
+            var keyboard = Keyboard.GetKeyboardByState(newState);
             await BotClient.SendTextMessageAsync(chatId, message, replyMarkup: keyboard);
         }
 
@@ -75,8 +74,7 @@ namespace DormitoryBot.App
 
             if (!Usr.ContainsKey(chatId.Value))
             {
-                await SendTextMessageWithChangingStateAndKeyboardAsync(chatId.Value, "Меню", DialogState.Menu,
-                    Keyboard.Menu);
+                await SendTextMessageWithChangingStateAndKeyboardAsync(chatId.Value, "Меню", DialogState.Menu);
             }
             else
             {

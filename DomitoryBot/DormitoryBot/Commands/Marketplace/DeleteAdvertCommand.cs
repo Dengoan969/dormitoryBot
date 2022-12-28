@@ -1,7 +1,6 @@
 ﻿using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.Marketplace
 {
@@ -27,7 +26,7 @@ namespace DormitoryBot.Commands.Marketplace
             {
                 await dialogManager.Value.SendTextMessageAsync(chatId, "У тебя пока нет объявлений..");
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId, "Маркетплейс",
-                    SourceState, Keyboard.Marketplace);
+                    SourceState);
             }
             else
             {
@@ -43,7 +42,7 @@ namespace DormitoryBot.Commands.Marketplace
                 }
 
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "Введи номер объявления которое хочешь удалить", DestinationState, Keyboard.Back);
+                    "Введи номер объявления которое хочешь удалить", DestinationState);
             }
         }
     }

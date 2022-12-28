@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.SubscriptionsService;
@@ -24,12 +23,12 @@ public class HandleSubscribeCommand : IHandleTextCommand
         if (message.Text != null && subscriptionService.SubscribeUser(chatId, message.Text))
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Круто, ты подписался!", DestinationState, Keyboard.Subscriptions);
+                "Круто, ты подписался!", DestinationState);
         }
         else
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Кажется такой подписки нет или ты уже подписан..", SourceState, Keyboard.Back);
+                "Кажется такой подписки нет или ты уже подписан..", SourceState);
         }
     }
 }

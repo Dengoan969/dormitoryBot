@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.SubscriptionsService;
@@ -24,12 +23,12 @@ public class HandleDeleteSubscriptionCommand : IHandleTextCommand
         if (message.Text != null && subscriptionService.TryDeleteSubscription(message.Text, chatId))
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Рассылка удалена!", DestinationState, Keyboard.SubscriptionsManage);
+                "Рассылка удалена!", DestinationState);
         }
         else
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Кажется ты не админ этой рассылки :(", SourceState, Keyboard.Back);
+                "Кажется ты не админ этой рассылки :(", SourceState);
         }
     }
 }

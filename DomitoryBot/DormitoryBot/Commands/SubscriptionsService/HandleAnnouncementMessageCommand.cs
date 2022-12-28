@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -42,6 +41,6 @@ public class HandleAnnouncementMessageCommand : IHandleTextCommand
 
         await dialogManager.Value.SendTextMessageAsync(chatId, "Круто, всем разослал!");
         await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-            "Управление рассылками", DestinationState, Keyboard.SubscriptionsManage);
+            "Управление рассылками", DestinationState);
     }
 }

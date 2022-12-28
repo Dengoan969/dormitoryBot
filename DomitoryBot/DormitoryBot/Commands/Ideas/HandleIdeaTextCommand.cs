@@ -1,15 +1,14 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.Ideas
 {
     public class HandleIdeaTextCommand : IHandleTextCommand
     {
-        private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly Lazy<ITelegramDialogSender> dialogManager;
 
-        public HandleIdeaTextCommand(Lazy<TelegramDialogManager> dialogManager)
+        public HandleIdeaTextCommand(Lazy<ITelegramDialogSender> dialogManager)
         {
             this.dialogManager = dialogManager;
         }
@@ -24,12 +23,12 @@ namespace DormitoryBot.Commands.Ideas
             {
                 Console.WriteLine(message.Text);
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "Меню", DestinationState, Keyboard.Menu);
+                    "Меню", DestinationState);
             }
             else
             {
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "Какие есть предложения? :)", SourceState, Keyboard.Back);
+                    "Какие есть предложения? :)", SourceState);
             }
         }
     }

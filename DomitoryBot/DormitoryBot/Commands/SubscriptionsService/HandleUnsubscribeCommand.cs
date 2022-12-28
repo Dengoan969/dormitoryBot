@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.SubscriptionsService;
@@ -24,12 +23,12 @@ public class HandleUnsubscribeCommand : IHandleTextCommand
         if (message.Text != null && subscriptionService.UnsubscribeUser(chatId, message.Text))
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Ты успешно отписался :(", DestinationState, Keyboard.Subscriptions);
+                "Ты успешно отписался :(", DestinationState);
         }
         else
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Кажется такой подписки у тебя нет, попробуй ещё раз", SourceState, Keyboard.Back);
+                "Кажется такой подписки у тебя нет, попробуй ещё раз", SourceState);
         }
     }
 }

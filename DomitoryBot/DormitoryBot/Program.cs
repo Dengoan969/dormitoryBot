@@ -8,8 +8,6 @@ using DormitoryBot.Infrastructure;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Telegram.Bot;
-using Telegram.Bot.Types;
-using Telegram.Bot.Types.ReplyMarkups;
 
 namespace DormitoryBot
 {
@@ -53,7 +51,7 @@ namespace DormitoryBot
             container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>()
                 .WithConstructorArgument("adverts", new SortedSet<Advert>(new AdvertsComparator()));
 
-            container.Bind<IDialogManager<Update, IReplyMarkup, long, string>>().To<TelegramDialogManager>()
+            container.Bind<ITelegramUpdateHandler>().To<TelegramDialogManager>()
                 .InSingletonScope();
 
             container.Bind<TelegramBotClient>().ToConstant(new TelegramBotClient(token)).InSingletonScope();

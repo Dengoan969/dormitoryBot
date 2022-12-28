@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 
 namespace DormitoryBot.Commands.SubscriptionsService
 {
@@ -33,7 +32,7 @@ namespace DormitoryBot.Commands.SubscriptionsService
             }
 
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Подписки", DestinationState, Keyboard.Subscriptions);
+                "Подписки", DestinationState);
         }
     }
 }

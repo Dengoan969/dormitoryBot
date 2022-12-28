@@ -1,9 +1,19 @@
-﻿using Telegram.Bot.Types.ReplyMarkups;
+﻿using DormitoryBot.App;
+using Telegram.Bot.Types.ReplyMarkups;
 
 namespace DormitoryBot.UI;
 
 public static class Keyboard
 {
+    private static readonly Dictionary<DialogState, InlineKeyboardMarkup> stateToKeyboard = new()
+    {
+        {DialogState.Menu, Menu},
+        {DialogState.Marketplace, Marketplace},
+        {DialogState.Washing, Washing},
+        {DialogState.Subscriptions, Subscriptions},
+        {DialogState.SubscriptionsManage, SubscriptionsManage}
+    };
+
     public static InlineKeyboardMarkup Menu = new(new[]
     {
         new[]
@@ -38,22 +48,6 @@ public static class Keyboard
         }
     });
 
-    //public static InlineKeyboardMarkup Washing_Date = new InlineKeyboardMarkup(new[] {
-    //    new [] {InlineKeyboardButton.WithCallbackData("Сегодня","FreeSlots"),
-    //            InlineKeyboardButton.WithCallbackData("Завтра","MyEntries"),
-    //            InlineKeyboardButton.WithCallbackData("Послезавтра","Back"),
-    //            InlineKeyboardButton.WithCallbackData("Назад","Back")} });
-
-    public static InlineKeyboardMarkup WashingMachine = new(new[]
-    {
-        new[]
-        {
-            InlineKeyboardButton.WithCallbackData("1", "1"),
-            InlineKeyboardButton.WithCallbackData("2", "2"),
-            InlineKeyboardButton.WithCallbackData("3", "3"),
-            InlineKeyboardButton.WithCallbackData("Назад", "Back")
-        }
-    });
 
     public static InlineKeyboardMarkup Marketplace = new(new[]
     {
@@ -110,4 +104,11 @@ public static class Keyboard
             InlineKeyboardButton.WithCallbackData("Назад", "Back")
         }
     });
+
+    public static InlineKeyboardMarkup GetKeyboardByState(DialogState dialogState)
+    {
+        if (stateToKeyboard.ContainsKey(dialogState)) return stateToKeyboard[dialogState];
+
+        return Back;
+    }
 }

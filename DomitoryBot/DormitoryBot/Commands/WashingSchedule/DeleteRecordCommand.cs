@@ -1,6 +1,5 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.UI;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -26,18 +25,18 @@ public class DeleteRecordCommand : IHandleTextCommand
             {
                 dialogManager.Value.Schedule.TryRemoveRecord(records[num - 1]);
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "Запись успешно удалена", DestinationState, Keyboard.Washing);
+                    "Запись успешно удалена", DestinationState);
             }
             else
             {
                 await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                    "Вы ввели неправильное число", SourceState, Keyboard.Back);
+                    "Вы ввели неправильное число", SourceState);
             }
         }
         else
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAndKeyboardAsync(chatId,
-                "Вы ввели не число", SourceState, Keyboard.Back);
+                "Вы ввели не число", SourceState);
         }
     }
 }
