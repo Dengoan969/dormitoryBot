@@ -6,9 +6,9 @@ namespace DormitoryBot.Commands.FAQ
 {
     public class ToFaqCommand : IExecutableCommand
     {
-        private readonly Lazy<DialogManager> dialogManager;
+        private readonly Lazy<TelegramDialogManager> dialogManager;
 
-        public ToFaqCommand(Lazy<DialogManager> dialogManager)
+        public ToFaqCommand(Lazy<TelegramDialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

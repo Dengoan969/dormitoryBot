@@ -7,9 +7,9 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class AddRecordOfWashing : IHandleTextCommand
 {
-    private readonly Lazy<DialogManager> dm;
+    private readonly Lazy<TelegramDialogManager> dm;
 
-    public AddRecordOfWashing(Lazy<DialogManager> dm)
+    public AddRecordOfWashing(Lazy<TelegramDialogManager> dm)
     {
         this.dm = dm;
     }

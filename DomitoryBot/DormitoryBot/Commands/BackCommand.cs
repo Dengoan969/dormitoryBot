@@ -6,9 +6,9 @@ namespace DormitoryBot.Commands
 {
     public class BackCommand : IExecutableCommand
     {
-        private readonly Lazy<DialogManager> dialogManager;
+        private readonly Lazy<TelegramDialogManager> dialogManager;
 
-        public BackCommand(Lazy<DialogManager> dialogManager)
+        public BackCommand(Lazy<TelegramDialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

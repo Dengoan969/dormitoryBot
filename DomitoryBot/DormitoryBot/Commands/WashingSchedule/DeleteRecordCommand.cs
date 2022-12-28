@@ -7,9 +7,9 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class DeleteRecordCommand : IHandleTextCommand
 {
-    private readonly Lazy<DialogManager> dialogManager;
+    private readonly Lazy<TelegramDialogManager> dialogManager;
 
-    public DeleteRecordCommand(Lazy<DialogManager> dialogManager)
+    public DeleteRecordCommand(Lazy<TelegramDialogManager> dialogManager)
     {
         this.dialogManager = dialogManager;
     }

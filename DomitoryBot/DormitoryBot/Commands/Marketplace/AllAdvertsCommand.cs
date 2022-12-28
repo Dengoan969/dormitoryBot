@@ -7,9 +7,9 @@ namespace DormitoryBot.Commands.Marketplace
 {
     public class AllAdvertsCommand : IExecutableCommand
     {
-        private readonly Lazy<DialogManager> dialogManager;
+        private readonly Lazy<TelegramDialogManager> dialogManager;
 
-        public AllAdvertsCommand(Lazy<DialogManager> dialogManager)
+        public AllAdvertsCommand(Lazy<TelegramDialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

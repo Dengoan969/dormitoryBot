@@ -7,9 +7,9 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class ToRecordsOfUser : IExecutableCommand
 {
-    private readonly Lazy<DialogManager> dialogManager;
+    private readonly Lazy<TelegramDialogManager> dialogManager;
 
-    public ToRecordsOfUser(Lazy<DialogManager> dialogManager)
+    public ToRecordsOfUser(Lazy<TelegramDialogManager> dialogManager)
     {
         this.dialogManager = dialogManager;
     }

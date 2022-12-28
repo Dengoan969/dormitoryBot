@@ -7,9 +7,9 @@ namespace DormitoryBot.Commands.WashingSchedule
 {
     public class MyEntriesCommand : IExecutableCommand
     {
-        private readonly Lazy<DialogManager> dialogManager;
+        private readonly Lazy<TelegramDialogManager> dialogManager;
 
-        public MyEntriesCommand(Lazy<DialogManager> dialogManager)
+        public MyEntriesCommand(Lazy<TelegramDialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

@@ -11,7 +11,7 @@ using Telegram.Bot.Types.ReplyMarkups;
 
 namespace DormitoryBot.App
 {
-    public class DialogManager : IDialogManager<Update, IReplyMarkup, long, string>
+    public class TelegramDialogManager : IDialogManager<Update, IReplyMarkup, long, string>
     {
         private readonly TelegramBotClient BotClient;
         public readonly MarketPlace MarketPlace;
@@ -21,7 +21,7 @@ namespace DormitoryBot.App
         public readonly Dictionary<long, List<object>> TempInput = new();
         public readonly IUsersStateRepository Usr;
 
-        public DialogManager(TelegramBotClient botClient, IChatCommand[] commands, Schedule schedule,
+        public TelegramDialogManager(TelegramBotClient botClient, IChatCommand[] commands, Schedule schedule,
             MarketPlace marketPlace, SubscriptionService subscriptionService, IUsersStateRepository usr)
         {
             //todo сделать промежуточную сущность, вынести зависимость от телеграма
@@ -119,16 +119,5 @@ namespace DormitoryBot.App
                 await BotClient.SendTextMessageAsync(chatId, "Прости, но я тебя не понял :(");
             }
         }
-    }
-
-    public interface IDialogManager<in TUpdate, in TKeyboard, in TChatID, in TPhotoID>
-    {
-        Task SendTextMessageAsync(long chatId, string message);
-        Task SendPhotoAsync(TChatID chatId, TPhotoID photoId, string caption);
-
-        Task SendTextMessageWithChangingStateAndKeyboardAsync(long chatId, string message, DialogState newState,
-            TKeyboard keyboard);
-
-        Task HandleUpdate(TUpdate update);
     }
 }

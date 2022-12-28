@@ -53,7 +53,8 @@ namespace DormitoryBot
             container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>()
                 .WithConstructorArgument("adverts", new SortedSet<Advert>(new AdvertsComparator()));
 
-            container.Bind<IDialogManager<Update, IReplyMarkup, long, string>>().To<DialogManager>().InSingletonScope();
+            container.Bind<IDialogManager<Update, IReplyMarkup, long, string>>().To<TelegramDialogManager>()
+                .InSingletonScope();
 
             container.Bind<TelegramBotClient>().ToConstant(new TelegramBotClient(token)).InSingletonScope();
 

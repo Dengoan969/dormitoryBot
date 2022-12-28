@@ -7,9 +7,9 @@ namespace DormitoryBot.Commands.Ideas
 {
     public class HandleIdeaTextCommand : IHandleTextCommand
     {
-        private readonly Lazy<DialogManager> dialogManager;
+        private readonly Lazy<TelegramDialogManager> dialogManager;
 
-        public HandleIdeaTextCommand(Lazy<DialogManager> dialogManager)
+        public HandleIdeaTextCommand(Lazy<TelegramDialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

@@ -7,9 +7,9 @@ namespace DormitoryBot.Commands.SubscriptionsService;
 
 public class HandleCreateSubscriptionCommand : IHandleTextCommand
 {
-    private readonly Lazy<DialogManager> dialogManager;
+    private readonly Lazy<TelegramDialogManager> dialogManager;
 
-    public HandleCreateSubscriptionCommand(Lazy<DialogManager> dialogManager)
+    public HandleCreateSubscriptionCommand(Lazy<TelegramDialogManager> dialogManager)
     {
         this.dialogManager = dialogManager;
     }

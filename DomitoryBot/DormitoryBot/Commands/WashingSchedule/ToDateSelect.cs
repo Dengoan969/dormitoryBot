@@ -7,9 +7,9 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class ToDateSelect : IHandleTextCommand
 {
-    private readonly Lazy<DialogManager> dialogManager;
+    private readonly Lazy<TelegramDialogManager> dialogManager;
 
-    public ToDateSelect(Lazy<DialogManager> dialogManager)
+    public ToDateSelect(Lazy<TelegramDialogManager> dialogManager)
     {
         this.dialogManager = dialogManager;
     }
