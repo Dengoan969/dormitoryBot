@@ -27,7 +27,7 @@ public class ToWashingTypeSelect : IHandleTextCommand
             if (value.Minute % 30 != 0)
             {
                 await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
-                    "Недопустимое время :(", SourceState);
+                    "Недопустимое время, вводите время кратное 30 минутам", SourceState);
             }
             else
             {

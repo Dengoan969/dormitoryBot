@@ -41,48 +41,24 @@ public class MockSubscriptionRepository : ISubscriptionRepository
         return GetAdmins(sub).Contains(userId);
     }
 
-    public bool TryCreateSubscription(string sub, long userId)
+    public void CreateSubscription(string sub, long userId)
     {
-        if (db.ContainsKey(sub))
-        {
-            return false;
-        }
-
         db[sub] = new Dictionary<long, UserRights> {{userId, UserRights.Admin}};
-        return true;
     }
 
-    public bool TryDeleteSubscription(string sub, long userId)
+    public void DeleteSubscription(string sub, long userId)
     {
-        if (!db.ContainsKey(sub) || !IsUserAdmin(userId, sub))
-        {
-            return false;
-        }
-
         db.Remove(sub);
-        return true;
     }
 
-    public bool TrySubscribeUser(long userId, string name)
+    public void SubscribeUser(long userId, string name)
     {
-        if (!db.ContainsKey(name) || db[name].ContainsKey(userId))
-        {
-            return false;
-        }
-
         db[name][userId] = UserRights.Follower;
-        return true;
     }
 
-    public bool TryUnsubscribeUser(long userId, string name)
+    public void UnsubscribeUser(long userId, string name)
     {
-        if (!db.ContainsKey(name) || !db[name].ContainsKey(userId))
-        {
-            return false;
-        }
-
         db[name].Remove(userId);
-        return true;
     }
 
     public string[] GetSubscriptionsOfUser(long userId)
@@ -93,5 +69,10 @@ public class MockSubscriptionRepository : ISubscriptionRepository
     public string[] GetAdminSubscriptionsOfUser(long userId)
     {
         return db.Keys.Where(x => db[x].ContainsKey(userId) && db[x][userId] == UserRights.Admin).ToArray();
+    }
+
+    public string[] GetAllSubscriptions()
+    {
+        return db.Keys.ToArray();
     }
 }

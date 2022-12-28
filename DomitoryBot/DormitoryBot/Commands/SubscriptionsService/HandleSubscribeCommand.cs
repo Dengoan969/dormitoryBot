@@ -20,7 +20,7 @@ public class HandleSubscribeCommand : IHandleTextCommand
     public async Task HandleMessage(Message message, long chatId)
     {
         var subscriptionService = dialogManager.Value.SubscriptionService;
-        if (message.Text != null && subscriptionService.SubscribeUser(chatId, message.Text))
+        if (message.Text != null && subscriptionService.TrySubscribeUser(chatId, message.Text))
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Круто, ты подписался!", DestinationState);

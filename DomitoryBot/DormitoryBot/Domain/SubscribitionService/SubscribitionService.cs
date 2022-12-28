@@ -11,14 +11,30 @@ namespace DormitoryBot.Domain.SubscribitionService
             this.subscriptionRepository = subscriptionRepository;
         }
 
-        public bool SubscribeUser(long userId, string sub)
+        public bool TrySubscribeUser(long userId, string sub)
         {
-            return subscriptionRepository.TrySubscribeUser(userId, FormattedNameOfSub(sub));
+            var subs = subscriptionRepository.GetAllSubscriptions();
+            sub = FormattedNameOfSub(sub);
+            if (subs.Contains(sub))
+            {
+                subscriptionRepository.SubscribeUser(userId, FormattedNameOfSub(sub));
+                return true;
+            }
+
+            return false;
         }
 
         public bool UnsubscribeUser(long userId, string sub)
         {
-            return subscriptionRepository.TryUnsubscribeUser(userId, FormattedNameOfSub(sub));
+            var subs = subscriptionRepository.GetSubscriptionsOfUser(userId);
+            sub = FormattedNameOfSub(sub);
+            if (subs.Contains(sub))
+            {
+                subscriptionRepository.UnsubscribeUser(userId, FormattedNameOfSub(sub));
+                return true;
+            }
+
+            return false;
         }
 
         public string[] GetSubscriptionsOfUser(long userId)
@@ -31,10 +47,10 @@ namespace DormitoryBot.Domain.SubscribitionService
             return subscriptionRepository.GetAdminSubscriptionsOfUser(userId);
         }
 
-        public void AddAdmin(string sub, long caller, long userToAdd)
-        {
-            subscriptionRepository.AddAdmin(FormattedNameOfSub(sub), caller, userToAdd);
-        }
+        // public void AddAdmin(string sub, long caller, long userToAdd)
+        // {
+        //     subscriptionRepository.AddAdmin(FormattedNameOfSub(sub), caller, userToAdd);
+        // }
 
         public bool IsUserAdmin(long userId, string sub)
         {
@@ -43,12 +59,28 @@ namespace DormitoryBot.Domain.SubscribitionService
 
         public bool TryCreateSubscription(string sub, long userId)
         {
-            return subscriptionRepository.TryCreateSubscription(FormattedNameOfSub(sub), userId);
+            var subs = subscriptionRepository.GetAllSubscriptions();
+            sub = FormattedNameOfSub(sub);
+            if (!subs.Contains(sub))
+            {
+                subscriptionRepository.CreateSubscription(FormattedNameOfSub(sub), userId);
+                return true;
+            }
+
+            return false;
         }
 
         public bool TryDeleteSubscription(string sub, long userId)
         {
-            return subscriptionRepository.TryDeleteSubscription(FormattedNameOfSub(sub), userId);
+            var subs = subscriptionRepository.GetAdminSubscriptionsOfUser(userId);
+            sub = FormattedNameOfSub(sub);
+            if (subs.Contains(sub))
+            {
+                subscriptionRepository.DeleteSubscription(FormattedNameOfSub(sub), userId);
+                return true;
+            }
+
+            return false;
         }
 
         public List<long> GetFollowers(string sub)
