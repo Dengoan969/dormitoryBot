@@ -14,7 +14,7 @@ public class HandleSubscribeCommand : IHandleTextCommand
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState => DialogState.Subscriptions_Subscribe;
+    public DialogState SourceState => DialogState.SubscriptionsSubscribe;
     public DialogState DestinationState => DialogState.Subscriptions;
 
 

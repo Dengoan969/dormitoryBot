@@ -15,9 +15,9 @@ namespace DormitoryBot.Commands.SubscriptionsService
 
         public string Name => "CreateSubscription";
 
-        public DialogState SourceState => DialogState.Subscriptions_Manage;
+        public DialogState SourceState => DialogState.SubscriptionsManage;
 
-        public DialogState DestinationState => DialogState.Subscriptions_Manage_Create_Subscription;
+        public DialogState DestinationState => DialogState.SubscriptionsManageCreateSubscription;
 
         public async Task Execute(long chatId)
         {

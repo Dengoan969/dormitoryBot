@@ -17,7 +17,7 @@ namespace DormitoryBot.Commands.Marketplace
 
         public DialogState SourceState => DialogState.Marketplace;
 
-        public DialogState DestinationState => DialogState.Marketplace_Text;
+        public DialogState DestinationState => DialogState.MarketplaceText;
 
         public async Task Execute(long chatId)
         {

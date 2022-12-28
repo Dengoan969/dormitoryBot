@@ -1,4 +1,7 @@
 ﻿using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Marketplace;
+using DormitoryBot.Domain.Schedule;
+using DormitoryBot.Domain.SubscribitionService;
 using DormitoryBot.Infrastructure;
 using DormitoryBot.UI;
 using Telegram.Bot;
@@ -13,30 +16,30 @@ namespace DormitoryBot.App
         public readonly TelegramBotClient BotClient;
         public readonly MarketPlace MarketPlace;
         public readonly Schedule Schedule;
-        public readonly Dictionary<DialogState, IChatCommand[]> stateCommands;
+        public readonly Dictionary<DialogState, IChatCommand[]> StateCommands;
         public readonly SubscriptionService SubscriptionService;
-        public readonly Dictionary<long, List<object>> temp_input = new();
-        public readonly IUsersStateRepository USR;
+        public readonly Dictionary<long, List<object>> TempInput = new();
+        public readonly IUsersStateRepository Usr;
 
         public DialogManager(TelegramBotClient botClient, IChatCommand[] commands, Schedule schedule,
-            MarketPlace marketPlace, SubscriptionService subscriptionService, IUsersStateRepository USR)
+            MarketPlace marketPlace, SubscriptionService subscriptionService, IUsersStateRepository usr)
         {
             //todo сделать промежуточную сущность, вынести зависимость от телеграма
             BotClient = botClient;
             Schedule = schedule;
             MarketPlace = marketPlace;
             SubscriptionService = subscriptionService;
-            stateCommands = new Dictionary<DialogState, IChatCommand[]>();
+            StateCommands = new Dictionary<DialogState, IChatCommand[]>();
             foreach (var state in Enum.GetValues<DialogState>())
             {
-                stateCommands[state] = commands
+                StateCommands[state] = commands
                     .Where(x => x.SourceState == state || x.SourceState == DialogState.None
                         && state != DialogState.Start
                         && state != DialogState.Menu)
                     .ToArray();
             }
 
-            this.USR = USR;
+            Usr = usr;
         }
 
         public async Task HandleUpdate(Update update)
@@ -52,7 +55,7 @@ namespace DormitoryBot.App
                 return;
             }
 
-            if (!USR.ContainsKey(chatId.Value))
+            if (!Usr.ContainsKey(chatId.Value))
             {
                 await ChangeState(DialogState.Menu, chatId.Value, "Меню", Keyboard.Menu);
             }
@@ -76,7 +79,7 @@ namespace DormitoryBot.App
 
         private async Task TryExecuteCommand(string commandName, long chatId)
         {
-            var command = (IExecutableCommand) stateCommands[USR.GetState(chatId)]
+            var command = (IExecutableCommand) StateCommands[Usr.GetState(chatId)]
                 .FirstOrDefault(x => x is IExecutableCommand command && command.Name == commandName);
             if (command != null)
             {
@@ -87,7 +90,7 @@ namespace DormitoryBot.App
         private async Task TryHandleMessage(Message message, long chatId)
         {
             var command =
-                (IHandleTextCommand) stateCommands[USR.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
+                (IHandleTextCommand) StateCommands[Usr.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
             if (command != null)
             {
                 await command.HandleMessage(message, chatId);
@@ -100,7 +103,7 @@ namespace DormitoryBot.App
 
         public async Task ChangeState(DialogState newState, long chatId, string message, IReplyMarkup keyboard)
         {
-            USR.SetState(chatId, newState);
+            Usr.SetState(chatId, newState);
             await BotClient.SendTextMessageAsync(chatId, message, replyMarkup: keyboard);
         }
     }

@@ -14,7 +14,7 @@ public class DeleteRecordCommand : IHandleTextCommand
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState => DialogState.Washing_SelectToDelete;
+    public DialogState SourceState => DialogState.WashingSelectToDelete;
     public DialogState DestinationState => DialogState.Washing;
 
     public async Task HandleMessage(Message message, long chatId)

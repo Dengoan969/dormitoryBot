@@ -14,15 +14,15 @@ namespace DormitoryBot.Commands.Marketplace
             this.dialogManager = dialogManager;
         }
 
-        public DialogState SourceState => DialogState.Marketplace_Price;
-        public DialogState DestinationState => DialogState.Marketplace_Time;
+        public DialogState SourceState => DialogState.MarketplacePrice;
+        public DialogState DestinationState => DialogState.MarketplaceTime;
 
 
         public async Task HandleMessage(Message message, long chatId)
         {
             if (message.Text != null)
             {
-                dialogManager.Value.temp_input[chatId].Add(message.Text);
+                dialogManager.Value.TempInput[chatId].Add(message.Text);
                 await dialogManager.Value.ChangeState(DestinationState, chatId,
                     "На сколько дней разместить объявление?", Keyboard.Back);
             }

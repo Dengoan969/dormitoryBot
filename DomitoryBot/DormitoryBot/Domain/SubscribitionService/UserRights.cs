@@ -1,4 +1,4 @@
-﻿namespace DormitoryBot.Domain;
+﻿namespace DormitoryBot.Domain.SubscribitionService;
 
 public enum UserRights
 {

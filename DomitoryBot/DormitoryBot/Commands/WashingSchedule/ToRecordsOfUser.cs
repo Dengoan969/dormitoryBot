@@ -16,7 +16,7 @@ public class ToRecordsOfUser : IExecutableCommand
     }
 
     public DialogState SourceState => DialogState.Washing;
-    public DialogState DestinationState => DialogState.Washing_SelectToDelete;
+    public DialogState DestinationState => DialogState.WashingSelectToDelete;
     public string Name => "Delete record";
 
     public async Task Execute(long chatId)

@@ -1,4 +1,4 @@
-﻿namespace DormitoryBot.Domain;
+﻿namespace DormitoryBot.Domain.Marketplace;
 
 public enum AdvertStatus
 {

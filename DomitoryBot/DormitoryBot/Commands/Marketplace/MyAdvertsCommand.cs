@@ -37,6 +37,7 @@ namespace DormitoryBot.Commands.Marketplace
                     var sb = new StringBuilder();
                     sb.Append($"{advert.Text}\n\n");
                     sb.Append($"Цена вопроса: {advert.Price}\n");
+                    sb.Append($"Писать: @{advert.Username}");
                     await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, sb.ToString());
                 }
             }

@@ -14,7 +14,7 @@ namespace DormitoryBot.Commands.Ideas
             this.dialogManager = dialogManager;
         }
 
-        public DialogState SourceState => DialogState.Idea_Text;
+        public DialogState SourceState => DialogState.IdeaText;
 
         public DialogState DestinationState => DialogState.Menu;
 

@@ -15,7 +15,7 @@ namespace DormitoryBot.Commands.Marketplace
             this.dialogManager = dialogManager;
         }
 
-        public DialogState SourceState => DialogState.Marketplace_Delete_Advert;
+        public DialogState SourceState => DialogState.MarketplaceDeleteAdvert;
         public DialogState DestinationState => DialogState.Marketplace;
 
 

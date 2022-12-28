@@ -14,8 +14,8 @@ public class HandleAnnouncementSubscriptionCommand : IHandleTextCommand
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState => DialogState.Subscriptions_Manage_Announcement_Subscription;
-    public DialogState DestinationState => DialogState.Subscriptions_Manage_Announcement_Message;
+    public DialogState SourceState => DialogState.SubscriptionsManageAnnouncementSubscription;
+    public DialogState DestinationState => DialogState.SubscriptionsManageAnnouncementMessage;
 
 
     public async Task HandleMessage(Message message, long chatId)
@@ -23,8 +23,8 @@ public class HandleAnnouncementSubscriptionCommand : IHandleTextCommand
         var subscriptionService = dialogManager.Value.SubscriptionService;
         if (message.Text != null && subscriptionService.IsUserAdmin(chatId, message.Text))
         {
-            dialogManager.Value.temp_input[chatId] = new List<object>();
-            dialogManager.Value.temp_input[chatId].Add(message.Text);
+            dialogManager.Value.TempInput[chatId] = new List<object>();
+            dialogManager.Value.TempInput[chatId].Add(message.Text);
             await dialogManager.Value.ChangeState(DestinationState, chatId,
                 "Какое сообщение переслать? (можно с фото)", Keyboard.Back);
         }

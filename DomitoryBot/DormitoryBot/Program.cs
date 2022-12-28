@@ -1,6 +1,8 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.Domain;
+using DormitoryBot.Domain.Marketplace;
+using DormitoryBot.Domain.Schedule;
+using DormitoryBot.Domain.SubscribitionService;
 using DormitoryBot.Infrastructure;
 using Ninject;
 using Ninject.Extensions.Conventions;

@@ -14,7 +14,7 @@ public class HandleUnsubscribeCommand : IHandleTextCommand
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState => DialogState.Subscriptions_Unsubscribe;
+    public DialogState SourceState => DialogState.SubscriptionsUnsubscribe;
     public DialogState DestinationState => DialogState.Subscriptions;
 
 

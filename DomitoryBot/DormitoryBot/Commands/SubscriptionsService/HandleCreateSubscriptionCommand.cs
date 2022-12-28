@@ -14,8 +14,8 @@ public class HandleCreateSubscriptionCommand : IHandleTextCommand
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState => DialogState.Subscriptions_Manage_Create_Subscription;
-    public DialogState DestinationState => DialogState.Subscriptions_Manage;
+    public DialogState SourceState => DialogState.SubscriptionsManageCreateSubscription;
+    public DialogState DestinationState => DialogState.SubscriptionsManage;
 
 
     public async Task HandleMessage(Message message, long chatId)

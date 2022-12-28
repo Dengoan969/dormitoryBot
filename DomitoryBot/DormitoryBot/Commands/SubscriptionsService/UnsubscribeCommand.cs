@@ -17,7 +17,7 @@ namespace DormitoryBot.Commands.SubscriptionsService
 
         public DialogState SourceState => DialogState.Subscriptions;
 
-        public DialogState DestinationState => DialogState.Subscriptions_Unsubscribe;
+        public DialogState DestinationState => DialogState.SubscriptionsUnsubscribe;
 
         public async Task Execute(long chatId)
         {

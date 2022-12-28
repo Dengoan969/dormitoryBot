@@ -1,7 +1,6 @@
-﻿using DormitoryBot.Domain;
-using DormitoryBot.Infrastructure;
+﻿using DormitoryBot.Infrastructure;
 
-namespace DormitoryBot.App
+namespace DormitoryBot.Domain.Marketplace
 {
     public class MarketPlace
     {

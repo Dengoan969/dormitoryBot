@@ -19,7 +19,7 @@ namespace DormitoryBot.Commands.Marketplace
 
         public DialogState SourceState => DialogState.Marketplace;
 
-        public DialogState DestinationState => DialogState.Marketplace_Delete_Advert;
+        public DialogState DestinationState => DialogState.MarketplaceDeleteAdvert;
 
         public async Task Execute(long chatId)
         {

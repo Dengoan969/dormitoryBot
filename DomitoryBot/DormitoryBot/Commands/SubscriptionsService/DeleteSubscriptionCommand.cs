@@ -15,9 +15,9 @@ namespace DormitoryBot.Commands.SubscriptionsService
 
         public string Name => "DeleteSubscription";
 
-        public DialogState SourceState => DialogState.Subscriptions_Manage;
+        public DialogState SourceState => DialogState.SubscriptionsManage;
 
-        public DialogState DestinationState => DialogState.Subscriptions_Manage_Delete_Subscription;
+        public DialogState DestinationState => DialogState.SubscriptionsManageDeleteSubscription;
 
         public async Task Execute(long chatId)
         {

@@ -1,7 +1,7 @@
-﻿using DormitoryBot.Domain;
+﻿using DormitoryBot.Domain.Marketplace;
 using DormitoryBot.Infrastructure;
 
-namespace DormitoryBot.App;
+namespace DormitoryBot.Domain.SubscribitionService;
 
 public class MockAdvertsRepository : IAdvertsRepository
 {

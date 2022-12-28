@@ -17,7 +17,7 @@ public class FreeSlotsCommand : IHandleTextCommand
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState => DialogState.Washing_FreeSlots_ChooseDays;
+    public DialogState SourceState => DialogState.WashingFreeSlotsChooseDays;
     public DialogState DestinationState => DialogState.Washing;
 
     public async Task HandleMessage(Message message, long chatId)

@@ -5,11 +5,11 @@ using Telegram.Bot;
 
 namespace DormitoryBot.Commands.FAQ
 {
-    public class ToFAQCommand : IExecutableCommand
+    public class ToFaqCommand : IExecutableCommand
     {
         private readonly Lazy<DialogManager> dialogManager;
 
-        public ToFAQCommand(Lazy<DialogManager> dialogManager)
+        public ToFaqCommand(Lazy<DialogManager> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

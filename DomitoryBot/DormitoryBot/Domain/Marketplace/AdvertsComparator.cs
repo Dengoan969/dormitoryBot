@@ -1,6 +1,4 @@
-﻿using DormitoryBot.Domain;
-
-namespace DormitoryBot.App;
+﻿namespace DormitoryBot.Domain.Marketplace;
 
 public class AdvertsComparator : IComparer<Advert>
 {

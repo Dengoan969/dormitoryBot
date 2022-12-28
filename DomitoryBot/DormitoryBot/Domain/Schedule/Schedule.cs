@@ -1,37 +1,39 @@
-﻿using DormitoryBot.Domain;
-using DormitoryBot.Infrastructure;
+﻿using DormitoryBot.Infrastructure;
 
-namespace DormitoryBot.App
+namespace DormitoryBot.Domain.Schedule
 {
     public class Schedule
     {
-        public readonly string[] machineNames;
+        private readonly IRecordsRepository dataBase;
+        private readonly string[] machineNames;
         private readonly Timer timer;
-        public readonly Dictionary<string, TimeSpan> washingTypes;
-        private IRecordsRepository data;
+        private readonly Dictionary<string, TimeSpan> washingTypes;
 
-        public Schedule(IRecordsRepository data, Dictionary<string, TimeSpan> washingTypes)
+        public Schedule(IRecordsRepository dataBase, Dictionary<string, TimeSpan> washingTypes)
         {
-            this.data = data;
+            this.dataBase = dataBase;
             this.washingTypes = washingTypes;
-            machineNames = data.GetFreeTimes().Keys.ToArray();
+            machineNames = dataBase.GetFreeTimes().Keys.ToArray();
             timer = new Timer(ClearPreviousDay, new object(), DateTime.Today.AddDays(1) - DateTime.Now,
                 TimeSpan.FromDays(1));
         }
 
+        public string[] MachineNames => machineNames.ToArray();
+        public Dictionary<string, TimeSpan> WashingTypes => washingTypes.ToDictionary(x => x.Key, pair => pair.Value);
+
         private void ClearPreviousDay(object stateInfo)
         {
-            data.ClearPreviousDay();
+            dataBase.ClearPreviousDay();
             Console.WriteLine("Cleared previous day");
         }
 
         public bool TryAddRecord(long user, string machine, DateTime startDate, string washingType)
         {
-            var finishDate = startDate.Add(washingTypes[washingType]);
+            var finishDate = startDate.Add(WashingTypes[washingType]);
             var record = new ScheduleRecord(user, new TimeInterval(startDate, finishDate), machine);
             if (record.TimeInterval.Start.Minute % 30 != 0)
                 return false;
-            var freeTimes = data.GetFreeTimes()[machine];
+            var freeTimes = dataBase.GetFreeTimes()[machine];
             var timeToCheck = startDate;
             while (timeToCheck < finishDate)
             {
@@ -40,29 +42,29 @@ namespace DormitoryBot.App
                 timeToCheck = timeToCheck.AddMinutes(30);
             }
 
-            data.AddRecord(record);
+            dataBase.AddRecord(record);
             return true;
         }
 
         public bool TryRemoveRecord(ScheduleRecord record)
         {
-            var records = data.GetRecordsTimesByUser(record.User);
+            var records = dataBase.GetRecordsTimesByUser(record.User);
             if (!records.Contains(record)) return false;
 
-            data.RemoveRecord(record);
+            dataBase.RemoveRecord(record);
             return true;
         }
 
         public List<ScheduleRecord> GetRecordsTimesByUser(long user)
         {
-            return data.GetRecordsTimesByUser(user);
+            return dataBase.GetRecordsTimesByUser(user);
         }
 
         // record(Guid Id, Guid UserId, nvarchar(max) MachineName, Date Start, Date End)
 
         public Dictionary<string, List<DateTime>> GetFreeTimes()
         {
-            return data.GetFreeTimes();
+            return dataBase.GetFreeTimes();
         }
     }
 }

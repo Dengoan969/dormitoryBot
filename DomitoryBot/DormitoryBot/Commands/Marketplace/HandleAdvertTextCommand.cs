@@ -14,16 +14,16 @@ namespace DormitoryBot.Commands.Marketplace
             this.dialogManager = dialogManager;
         }
 
-        public DialogState SourceState => DialogState.Marketplace_Text;
-        public DialogState DestinationState => DialogState.Marketplace_Price;
+        public DialogState SourceState => DialogState.MarketplaceText;
+        public DialogState DestinationState => DialogState.MarketplacePrice;
 
 
         public async Task HandleMessage(Message message, long chatId)
         {
             if (message.Text != null)
             {
-                dialogManager.Value.temp_input[chatId] = new List<object>();
-                dialogManager.Value.temp_input[chatId].Add(message.Text);
+                dialogManager.Value.TempInput[chatId] = new List<object>();
+                dialogManager.Value.TempInput[chatId].Add(message.Text);
                 await dialogManager.Value.ChangeState(DestinationState, chatId,
                     "Напиши что просишь/предложишь в награду", Keyboard.Back);
             }

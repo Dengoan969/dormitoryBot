@@ -17,7 +17,7 @@ namespace DormitoryBot.Commands.Ideas
 
         public DialogState SourceState => DialogState.Menu;
 
-        public DialogState DestinationState => DialogState.Idea_Text;
+        public DialogState DestinationState => DialogState.IdeaText;
 
         public async Task Execute(long chatId)
         {

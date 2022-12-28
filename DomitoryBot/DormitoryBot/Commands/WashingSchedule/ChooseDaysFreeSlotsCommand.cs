@@ -17,7 +17,7 @@ public class ChooseDaysFreeSlotsCommand : IExecutableCommand
 
     public DialogState SourceState => DialogState.Washing;
 
-    public DialogState DestinationState => DialogState.Washing_FreeSlots_ChooseDays;
+    public DialogState DestinationState => DialogState.WashingFreeSlotsChooseDays;
 
     public async Task Execute(long chatId)
     {

@@ -1,3 +1,4 @@
+using DormitoryBot.Domain.Schedule;
 using Ninject;
 using NUnit.Framework;
 
@@ -5,7 +6,7 @@ namespace TestProject;
 
 public class Tests
 {
-    private StandardKernel container => new();
+    private StandardKernel Container => new();
 
     [SetUp]
     public void Setup()
@@ -15,7 +16,8 @@ public class Tests
     [Test]
     public void Test1()
     {
-        var c = container;
+        var c = Container;
+        Container.Bind<Schedule>().ToSelf().WithConstructorArgument("db");
         Assert.True(true);
     }
 }

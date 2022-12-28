@@ -15,14 +15,14 @@ public class HandleAnnouncementMessageCommand : IHandleTextCommand
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState => DialogState.Subscriptions_Manage_Announcement_Message;
-    public DialogState DestinationState => DialogState.Subscriptions_Manage;
+    public DialogState SourceState => DialogState.SubscriptionsManageAnnouncementMessage;
+    public DialogState DestinationState => DialogState.SubscriptionsManage;
 
 
     public async Task HandleMessage(Message message, long chatId)
     {
         dialogManager.Value.SubscriptionService.SendAnnouncement(dialogManager.Value.BotClient, message,
-            (string) dialogManager.Value.temp_input[chatId][0]);
+            (string) dialogManager.Value.TempInput[chatId][0]);
         await dialogManager.Value.BotClient.SendTextMessageAsync(chatId, "Круто, всем разослал!");
         await dialogManager.Value.ChangeState(DestinationState, chatId,
             "Управление рассылками", Keyboard.SubscriptionsManage);

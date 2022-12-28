@@ -14,7 +14,7 @@ public class ToMachineSelect : IExecutableCommand
     }
 
     public DialogState SourceState => DialogState.Washing;
-    public DialogState DestinationState => DialogState.Washing_Machine;
+    public DialogState DestinationState => DialogState.WashingMachine;
     public string Name => "Machine select";
 
     public async Task Execute(long chatId)

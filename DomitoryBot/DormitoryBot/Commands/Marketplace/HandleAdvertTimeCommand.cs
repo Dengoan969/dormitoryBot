@@ -14,7 +14,7 @@ namespace DormitoryBot.Commands.Marketplace
             this.dialogManager = dialogManager;
         }
 
-        public DialogState SourceState => DialogState.Marketplace_Time;
+        public DialogState SourceState => DialogState.MarketplaceTime;
         public DialogState DestinationState => DialogState.Marketplace;
 
 
@@ -22,7 +22,7 @@ namespace DormitoryBot.Commands.Marketplace
         {
             if (message.Text != null)
             {
-                var temp_input = dialogManager.Value.temp_input[chatId];
+                var tempInput = dialogManager.Value.TempInput[chatId];
                 if (!int.TryParse(message.Text, out var days))
                 {
                     await dialogManager.Value.ChangeState(SourceState, chatId,
@@ -41,7 +41,7 @@ namespace DormitoryBot.Commands.Marketplace
                 }
                 else
                 {
-                    dialogManager.Value.MarketPlace.CreateAdvert(chatId, (string) temp_input[0], (string) temp_input[1],
+                    dialogManager.Value.MarketPlace.CreateAdvert(chatId, (string) tempInput[0], (string) tempInput[1],
                         TimeSpan.FromDays(days), message.From.Username);
                     await dialogManager.Value.ChangeState(DestinationState, chatId,
                         "Маркетплейс", Keyboard.Marketplace);

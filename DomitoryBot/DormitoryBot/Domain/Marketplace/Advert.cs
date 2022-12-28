@@ -1,4 +1,4 @@
-﻿namespace DormitoryBot.Domain;
+﻿namespace DormitoryBot.Domain.Marketplace;
 
 public class Advert //Record? (not class)
 {
@@ -9,7 +9,7 @@ public class Advert //Record? (not class)
     public readonly string Price;
     public readonly string Text;
     public readonly TimeSpan TimeToLive;
-    public readonly string username;
+    public readonly string Username;
 
     public Advert(long author, string text, string price, TimeSpan timeToLive, string username)
     {
@@ -17,6 +17,6 @@ public class Advert //Record? (not class)
         Text = text;
         Price = price;
         TimeToLive = timeToLive;
-        this.username = username;
+        Username = username;
     }
 }

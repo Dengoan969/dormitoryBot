@@ -16,8 +16,8 @@ public class ToWashingTypeSelect : IHandleTextCommand
         this.dialogManager = dialogManager;
     }
 
-    public DialogState SourceState => DialogState.Washing_Date;
-    public DialogState DestinationState => DialogState.Washing_Type;
+    public DialogState SourceState => DialogState.WashingDate;
+    public DialogState DestinationState => DialogState.WashingType;
 
 
     public async Task HandleMessage(Message message, long chatId)
@@ -31,11 +31,11 @@ public class ToWashingTypeSelect : IHandleTextCommand
             }
             else
             {
-                dialogManager.Value.temp_input[chatId].Add(value);
+                dialogManager.Value.TempInput[chatId].Add(value);
                 var sb = new StringBuilder();
                 sb.Append("Отправьте мне номер типа стирки\n");
                 var i = 1;
-                foreach (var type in dialogManager.Value.Schedule.washingTypes)
+                foreach (var type in dialogManager.Value.Schedule.WashingTypes)
                 {
                     sb.Append($"{i}) {type.Key} - {type.Value.Hours * 60 + type.Value.Minutes} минут\n");
                     i++;

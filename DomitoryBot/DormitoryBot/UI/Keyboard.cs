@@ -44,7 +44,7 @@ public static class Keyboard
     //            InlineKeyboardButton.WithCallbackData("Послезавтра","Back"),
     //            InlineKeyboardButton.WithCallbackData("Назад","Back")} });
 
-    public static InlineKeyboardMarkup Washing_Machine = new(new[]
+    public static InlineKeyboardMarkup WashingMachine = new(new[]
     {
         new[]
         {
