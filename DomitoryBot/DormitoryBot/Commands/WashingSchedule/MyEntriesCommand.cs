@@ -35,7 +35,7 @@ namespace DormitoryBot.Commands.WashingSchedule
                 for (var i = 0; i < records.Count; i++)
                     sb.Append($"{i + 1}. {records[i].TimeInterval.Start.ToString("dd.MM HH:mm")}" +
                               $" - {records[i].TimeInterval.End.ToString("dd.MM HH:mm")}" +
-                              $" Номер машинки: {records[i].Machine}");
+                              $" Номер машинки: {records[i].Machine}\n");
 
                 await dialogManager.Value.SendTextMessageAsync(chatId, sb.ToString());
                 await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId, "Стирка",
