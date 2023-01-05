@@ -1,5 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Marketplace;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.Marketplace
@@ -7,10 +8,12 @@ namespace DormitoryBot.Commands.Marketplace
     public class HandleDeleteAdvertCommand : IHandleTextCommand
     {
         private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly MarketPlace marketPlace;
 
-        public HandleDeleteAdvertCommand(Lazy<TelegramDialogManager> dialogManager)
+        public HandleDeleteAdvertCommand(Lazy<TelegramDialogManager> dialogManager, MarketPlace marketPlace)
         {
             this.dialogManager = dialogManager;
+            this.marketPlace = marketPlace;
         }
 
         public DialogState SourceState => DialogState.MarketplaceDeleteAdvert;
@@ -21,12 +24,12 @@ namespace DormitoryBot.Commands.Marketplace
         {
             if (message.Text != null)
             {
-                var adverts = dialogManager.Value.MarketPlace.GetUserAdverts(chatId);
+                var adverts = marketPlace.GetUserAdverts(chatId);
                 if (int.TryParse(message.Text, out var num))
                 {
                     if (num > 0 && num <= adverts.Length)
                     {
-                        dialogManager.Value.MarketPlace.RemoveAdvert(adverts[num - 1]);
+                        marketPlace.RemoveAdvert(adverts[num - 1]);
                         await dialogManager.Value.SendTextMessageAsync(chatId, "Объявление удалено!");
                         await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                             "Маркетплейс", DestinationState);

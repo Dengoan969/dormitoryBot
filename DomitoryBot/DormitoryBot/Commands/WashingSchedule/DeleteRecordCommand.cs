@@ -1,5 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Schedule;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -7,10 +8,12 @@ namespace DormitoryBot.Commands.WashingSchedule;
 public class DeleteRecordCommand : IHandleTextCommand
 {
     private readonly Lazy<TelegramDialogManager> dialogManager;
+    private readonly Schedule schedule;
 
-    public DeleteRecordCommand(Lazy<TelegramDialogManager> dialogManager)
+    public DeleteRecordCommand(Lazy<TelegramDialogManager> dialogManager, Schedule schedule)
     {
         this.dialogManager = dialogManager;
+        this.schedule = schedule;
     }
 
     public DialogState SourceState => DialogState.WashingSelectToDelete;
@@ -20,10 +23,10 @@ public class DeleteRecordCommand : IHandleTextCommand
     {
         if (int.TryParse(message.Text, out var num))
         {
-            var records = dialogManager.Value.Schedule.GetRecordsTimesByUser(chatId);
+            var records = schedule.GetRecordsTimesByUser(chatId);
             if (num <= records.Count && num > 0)
             {
-                dialogManager.Value.Schedule.TryRemoveRecord(records[num - 1]);
+                schedule.TryRemoveRecord(records[num - 1]);
                 await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Запись успешно удалена", DestinationState);
             }

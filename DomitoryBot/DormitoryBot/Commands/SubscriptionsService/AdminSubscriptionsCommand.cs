@@ -1,15 +1,18 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.SubscribitionService;
 
 namespace DormitoryBot.Commands.SubscriptionsService
 {
     public class AdminSubscriptionsCommand : IExecutableCommand
     {
         private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly SubscriptionService service;
 
-        public AdminSubscriptionsCommand(Lazy<TelegramDialogManager> dialogManager)
+        public AdminSubscriptionsCommand(Lazy<TelegramDialogManager> dialogManager, SubscriptionService service)
         {
             this.dialogManager = dialogManager;
+            this.service = service;
         }
 
         public string Name => "AdminSubscriptions";
@@ -20,7 +23,7 @@ namespace DormitoryBot.Commands.SubscriptionsService
 
         public async Task Execute(long chatId)
         {
-            var subscriptions = dialogManager.Value.SubscriptionService.GetAdminSubscriptionsOfUser(chatId);
+            var subscriptions = service.GetAdminSubscriptionsOfUser(chatId);
             if (subscriptions.Length == 0)
             {
                 await dialogManager.Value.SendTextMessageAsync(chatId,

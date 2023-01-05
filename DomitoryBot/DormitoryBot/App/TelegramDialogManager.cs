@@ -1,7 +1,4 @@
 ﻿using DormitoryBot.Commands.Interfaces;
-using DormitoryBot.Domain.Marketplace;
-using DormitoryBot.Domain.Schedule;
-using DormitoryBot.Domain.SubscribitionService;
 using DormitoryBot.Infrastructure;
 using DormitoryBot.UI;
 using Telegram.Bot;
@@ -12,50 +9,46 @@ namespace DormitoryBot.App
 {
     public class TelegramDialogManager : ITelegramDialogSender, ITelegramUpdateHandler
     {
-        private readonly TelegramBotClient BotClient;
-        public readonly MarketPlace MarketPlace;
-        public readonly Schedule Schedule;
-        public readonly Dictionary<DialogState, IChatCommand[]> StateCommands;
-        public readonly SubscriptionService SubscriptionService;
-        public readonly Dictionary<long, List<object>> TempInput = new();
-        public readonly IUsersStateRepository Usr;
+        private readonly TelegramBotClient botClient;
+        private readonly Dictionary<DialogState, IChatCommand[]> stateCommands;
+        private readonly IUsersStateRepository usersStateRepository;
 
-        public TelegramDialogManager(TelegramBotClient botClient, IChatCommand[] commands, Schedule schedule,
-            MarketPlace marketPlace, SubscriptionService subscriptionService, IUsersStateRepository usr)
+        public TelegramDialogManager(TelegramBotClient botClient,
+            IChatCommand[] commands, IUsersStateRepository usersStateRepository)
         {
-            BotClient = botClient;
-            Schedule = schedule;
-            MarketPlace = marketPlace;
-            SubscriptionService = subscriptionService;
-            StateCommands = new Dictionary<DialogState, IChatCommand[]>();
+            this.botClient = botClient;
+            stateCommands = new Dictionary<DialogState, IChatCommand[]>();
             foreach (var state in Enum.GetValues<DialogState>())
             {
-                StateCommands[state] = commands
+                stateCommands[state] = commands
                     .Where(x => x.SourceState == state || x.SourceState == DialogState.None
                         && state != DialogState.Start
                         && state != DialogState.Menu)
                     .ToArray();
             }
 
-            Usr = usr;
+            TempInput = new Dictionary<long, List<object>>();
+            this.usersStateRepository = usersStateRepository;
         }
+
+        public Dictionary<long, List<object>> TempInput { get; }
 
         public async Task SendTextMessageAsync(long chatId, string message)
         {
-            await BotClient.SendTextMessageAsync(chatId, message);
+            await botClient.SendTextMessageAsync(chatId, message);
         }
 
         public async Task SendPhotoAsync(long chatId, string photoId, string? caption = null)
         {
-            await BotClient.SendPhotoAsync(chatId, photoId, caption);
+            await botClient.SendPhotoAsync(chatId, photoId, caption);
         }
 
         public async Task SendTextMessageWithChangingStateAsync(long chatId, string message,
             DialogState newState)
         {
-            Usr.SetState(chatId, newState);
+            usersStateRepository.SetState(chatId, newState);
             var keyboard = Keyboard.GetKeyboardByState(newState);
-            await BotClient.SendTextMessageAsync(chatId, message, replyMarkup: keyboard);
+            await botClient.SendTextMessageAsync(chatId, message, replyMarkup: keyboard);
         }
 
         public async Task HandleUpdate(Update update)
@@ -71,7 +64,7 @@ namespace DormitoryBot.App
                 return;
             }
 
-            if (!Usr.ContainsKey(chatId.Value))
+            if (!usersStateRepository.ContainsKey(chatId.Value))
             {
                 await SendTextMessageWithChangingStateAsync(chatId.Value, "Меню", DialogState.Menu);
             }
@@ -87,7 +80,7 @@ namespace DormitoryBot.App
                     case UpdateType.CallbackQuery:
                         var command = update.CallbackQuery.Data;
                         await TryExecuteCommand(command, chatId.Value);
-                        await BotClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
+                        await botClient.DeleteMessageAsync(chatId, update.CallbackQuery.Message.MessageId);
                         break;
                 }
             }
@@ -95,25 +88,25 @@ namespace DormitoryBot.App
 
         private async Task TryExecuteCommand(string commandName, long chatId)
         {
-            var command = (IExecutableCommand) StateCommands[Usr.GetState(chatId)]
+            var command = stateCommands[usersStateRepository.GetState(chatId)]
                 .FirstOrDefault(x => x is IExecutableCommand command && command.Name == commandName);
             if (command != null)
             {
-                await command.Execute(chatId);
+                await ((IExecutableCommand) command).Execute(chatId);
             }
         }
 
         private async Task TryHandleMessage(Message message, long chatId)
         {
             var command =
-                (IHandleTextCommand) StateCommands[Usr.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
+                stateCommands[usersStateRepository.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
             if (command != null)
             {
-                await command.HandleMessage(message, chatId);
+                await ((IHandleTextCommand) command).HandleMessage(message, chatId);
             }
             else
             {
-                await BotClient.SendTextMessageAsync(chatId, "Прости, но я тебя не понял :(");
+                await botClient.SendTextMessageAsync(chatId, "Прости, но я тебя не понял :(");
             }
         }
     }

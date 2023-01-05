@@ -1,5 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.SubscribitionService;
 using Telegram.Bot.Types;
 using Telegram.Bot.Types.Enums;
 
@@ -8,10 +9,12 @@ namespace DormitoryBot.Commands.SubscriptionsService;
 public class HandleAnnouncementMessageCommand : IHandleTextCommand
 {
     private readonly Lazy<TelegramDialogManager> dialogManager;
+    private readonly SubscriptionService service;
 
-    public HandleAnnouncementMessageCommand(Lazy<TelegramDialogManager> dialogManager)
+    public HandleAnnouncementMessageCommand(Lazy<TelegramDialogManager> dialogManager, SubscriptionService service)
     {
         this.dialogManager = dialogManager;
+        this.service = service;
     }
 
     public DialogState SourceState => DialogState.SubscriptionsManageAnnouncementMessage;
@@ -22,7 +25,7 @@ public class HandleAnnouncementMessageCommand : IHandleTextCommand
     {
         var sub = (string) dialogManager.Value.TempInput[chatId][0];
         sub = sub.StartsWith("#") ? sub : "#" + sub;
-        var followers = dialogManager.Value.SubscriptionService.GetFollowers(sub);
+        var followers = service.GetFollowers(sub);
         switch (message.Type)
         {
             case MessageType.Photo:

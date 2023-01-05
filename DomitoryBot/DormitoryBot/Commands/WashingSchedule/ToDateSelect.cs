@@ -1,5 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Schedule;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -7,10 +8,12 @@ namespace DormitoryBot.Commands.WashingSchedule;
 public class ToDateSelect : IHandleTextCommand
 {
     private readonly Lazy<TelegramDialogManager> dialogManager;
+    private readonly Schedule schedule;
 
-    public ToDateSelect(Lazy<TelegramDialogManager> dialogManager)
+    public ToDateSelect(Lazy<TelegramDialogManager> dialogManager, Schedule schedule)
     {
         this.dialogManager = dialogManager;
+        this.schedule = schedule;
     }
 
     public DialogState SourceState => DialogState.WashingMachine;
@@ -18,7 +21,7 @@ public class ToDateSelect : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if (dialogManager.Value.Schedule.MachineNames.Contains(message.Text))
+        if (schedule.MachineNames.Contains(message.Text))
         {
             dialogManager.Value.TempInput[chatId] = new List<object>();
             dialogManager.Value.TempInput[chatId].Add(message.Text);

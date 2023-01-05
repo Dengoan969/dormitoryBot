@@ -1,15 +1,18 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.SubscribitionService;
 
 namespace DormitoryBot.Commands.SubscriptionsService
 {
     public class MySubscriptionsCommand : IExecutableCommand
     {
         private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly SubscriptionService service;
 
-        public MySubscriptionsCommand(Lazy<TelegramDialogManager> dialogManager)
+        public MySubscriptionsCommand(Lazy<TelegramDialogManager> dialogManager, SubscriptionService service)
         {
             this.dialogManager = dialogManager;
+            this.service = service;
         }
 
         public string Name => "MySubscriptions";
@@ -20,7 +23,7 @@ namespace DormitoryBot.Commands.SubscriptionsService
 
         public async Task Execute(long chatId)
         {
-            var subscriptions = dialogManager.Value.SubscriptionService.GetSubscriptionsOfUser(chatId);
+            var subscriptions = service.GetSubscriptionsOfUser(chatId);
             if (subscriptions.Length == 0)
             {
                 await dialogManager.Value.SendTextMessageAsync(chatId, "У тебя пока нет подписок ._.");

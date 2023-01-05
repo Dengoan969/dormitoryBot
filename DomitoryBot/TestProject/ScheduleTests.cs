@@ -45,7 +45,6 @@ public class ScheduleTests
         var record = new ScheduleRecord(1, new TimeInterval(DateTime.Today, DateTime.Today.AddMinutes(30)), "1");
         Assert.AreEqual(schedule.GetRecordsTimesByUser(1)[0], record);
         Assert.IsEmpty(schedule.GetRecordsTimesByUser(2));
-
         Assert.True(schedule.TryRemoveRecord(record));
     }
 

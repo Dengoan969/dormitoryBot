@@ -1,5 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Schedule;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -7,10 +8,12 @@ namespace DormitoryBot.Commands.WashingSchedule;
 public class AddRecordOfWashing : IHandleTextCommand
 {
     private readonly Lazy<TelegramDialogManager> dm;
+    private readonly Schedule schedule;
 
-    public AddRecordOfWashing(Lazy<TelegramDialogManager> dm)
+    public AddRecordOfWashing(Lazy<TelegramDialogManager> dm, Schedule schedule)
     {
         this.dm = dm;
+        this.schedule = schedule;
     }
 
     public DialogState SourceState => DialogState.WashingType;
@@ -20,7 +23,7 @@ public class AddRecordOfWashing : IHandleTextCommand
     {
         if (int.TryParse(message.Text, out var num))
         {
-            var washingTypes = dm.Value.Schedule.WashingTypes;
+            var washingTypes = schedule.WashingTypes;
             if (num < 1 || num > washingTypes.Count)
                 await dm.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Неправильно указан номер типа стирки", SourceState);
@@ -29,7 +32,7 @@ public class AddRecordOfWashing : IHandleTextCommand
             var machine = dm.Value.TempInput[chatId][0] as string;
             var date = dm.Value.TempInput[chatId][1] as DateTime?;
             dm.Value.TempInput[chatId] = new List<object>();
-            if (dm.Value.Schedule.TryAddRecord(chatId, machine, date.Value, type))
+            if (schedule.TryAddRecord(chatId, machine, date.Value, type))
                 await dm.Value.SendTextMessageWithChangingStateAsync(chatId,
                     "Вы успешно записались на стирку", DestinationState);
             else

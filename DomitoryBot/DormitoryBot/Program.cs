@@ -53,6 +53,11 @@ namespace DormitoryBot
 
             container.Bind<ITelegramUpdateHandler>().To<TelegramDialogManager>()
                 .InSingletonScope();
+            container.Bind<ITelegramDialogSender>().To<TelegramDialogManager>().InSingletonScope();
+
+            container.Bind<MarketPlace>().ToSelf().InSingletonScope();
+            container.Bind<Schedule>().ToSelf().InSingletonScope();
+            container.Bind<SubscriptionService>().ToSelf().InSingletonScope();
 
             container.Bind<TelegramDialogManager>().ToSelf().InSingletonScope();
 

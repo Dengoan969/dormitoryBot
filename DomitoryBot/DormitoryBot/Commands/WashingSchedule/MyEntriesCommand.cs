@@ -1,16 +1,19 @@
 ﻿using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Schedule;
 
 namespace DormitoryBot.Commands.WashingSchedule
 {
     public class MyEntriesCommand : IExecutableCommand
     {
         private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly Schedule schedule;
 
-        public MyEntriesCommand(Lazy<TelegramDialogManager> dialogManager)
+        public MyEntriesCommand(Lazy<TelegramDialogManager> dialogManager, Schedule schedule)
         {
             this.dialogManager = dialogManager;
+            this.schedule = schedule;
         }
 
         public string Name => "My Records";
@@ -21,7 +24,7 @@ namespace DormitoryBot.Commands.WashingSchedule
 
         public async Task Execute(long chatId)
         {
-            var records = dialogManager.Value.Schedule.GetRecordsTimesByUser(chatId);
+            var records = schedule.GetRecordsTimesByUser(chatId);
 
             if (records.Count == 0)
             {

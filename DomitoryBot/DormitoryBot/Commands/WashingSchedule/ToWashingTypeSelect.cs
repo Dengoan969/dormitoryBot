@@ -2,6 +2,7 @@
 using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Schedule;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -9,10 +10,12 @@ namespace DormitoryBot.Commands.WashingSchedule;
 public class ToWashingTypeSelect : IHandleTextCommand
 {
     private readonly Lazy<TelegramDialogManager> dialogManager;
+    private readonly Schedule schedule;
 
-    public ToWashingTypeSelect(Lazy<TelegramDialogManager> dialogManager)
+    public ToWashingTypeSelect(Lazy<TelegramDialogManager> dialogManager, Schedule schedule)
     {
         this.dialogManager = dialogManager;
+        this.schedule = schedule;
     }
 
     public DialogState SourceState => DialogState.WashingDate;
@@ -35,7 +38,7 @@ public class ToWashingTypeSelect : IHandleTextCommand
                 var sb = new StringBuilder();
                 sb.Append("Отправьте мне номер типа стирки\n");
                 var i = 1;
-                foreach (var type in dialogManager.Value.Schedule.WashingTypes)
+                foreach (var type in schedule.WashingTypes)
                 {
                     sb.Append($"{i}) {type.Key} - {type.Value.Hours * 60 + type.Value.Minutes} минут\n");
                     i++;

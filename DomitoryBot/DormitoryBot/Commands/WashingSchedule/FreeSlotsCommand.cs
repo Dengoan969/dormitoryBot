@@ -1,7 +1,9 @@
 ﻿using System.Globalization;
 using System.Text;
+using DomitoryBot.Infrastructure;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Schedule;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.WashingSchedule;
@@ -9,10 +11,12 @@ namespace DormitoryBot.Commands.WashingSchedule;
 public class FreeSlotsCommand : IHandleTextCommand
 {
     private readonly Lazy<TelegramDialogManager> dialogManager;
+    private readonly Schedule schedule;
 
-    public FreeSlotsCommand(Lazy<TelegramDialogManager> dialogManager)
+    public FreeSlotsCommand(Lazy<TelegramDialogManager> dialogManager, Schedule schedule)
     {
         this.dialogManager = dialogManager;
+        this.schedule = schedule;
     }
 
     public DialogState SourceState => DialogState.WashingFreeSlotsChooseDays;
@@ -23,39 +27,15 @@ public class FreeSlotsCommand : IHandleTextCommand
         if (DateTime.TryParseExact(message.Text, "d.M", new CultureInfo("ru-RU"), DateTimeStyles.None,
                 out var value))
         {
-            var freeTimes = dialogManager.Value.Schedule.GetFreeTimes();
+            var freeTimes = schedule.GetFreeTimes();
 
             foreach (var rec in freeTimes)
             {
                 var sb = new StringBuilder();
                 sb.Append(rec.Key + "\n");
-                var begin = DateTime.MinValue;
-                var last = DateTime.MinValue;
-                foreach (var date in rec.Value)
-                    if (date.Day == value.Day && date.Month == value.Month)
-                    {
-                        if (begin == DateTime.MinValue && last == DateTime.MinValue)
-                        {
-                            begin = date;
-                            last = date;
-                            continue;
-                        }
-
-                        if (date - last == TimeSpan.FromMinutes(30))
-                        {
-                            last = date;
-                        }
-                        else
-                        {
-                            sb.Append(
-                                $"{begin.ToString("dd.MM HH:mm")} - {last.AddMinutes(30).ToString("dd.MM HH:mm")}\n");
-                            begin = date;
-                            last = date;
-                        }
-                    }
-
-                if (!(begin == DateTime.MinValue && last == DateTime.MinValue))
-                    sb.Append($"{begin.ToString("dd.MM HH:mm")} - {last.AddMinutes(30).ToString("dd.MM HH:mm")}\n");
+                foreach (var interval in rec.Value.Where(date => date.Day == value.Day && date.Month == value.Month)
+                             .ToList().UnionDateTimeIntervals(30))
+                    sb.Append($"{interval.Start.ToString("dd.MM HH:mm")} - {interval.End.ToString("dd.MM HH:mm")}\n");
                 if (sb.Length == (rec.Key + "\n").Length)
                     await dialogManager.Value.SendTextMessageAsync(chatId, sb + "Эта дата не доступна");
                 else

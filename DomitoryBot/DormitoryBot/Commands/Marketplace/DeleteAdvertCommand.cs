@@ -1,16 +1,19 @@
 ﻿using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Marketplace;
 
 namespace DormitoryBot.Commands.Marketplace
 {
     public class DeleteAdvertCommand : IExecutableCommand
     {
         private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly MarketPlace marketPlace;
 
-        public DeleteAdvertCommand(Lazy<TelegramDialogManager> dialogManager)
+        public DeleteAdvertCommand(Lazy<TelegramDialogManager> dialogManager, MarketPlace marketPlace)
         {
             this.dialogManager = dialogManager;
+            this.marketPlace = marketPlace;
         }
 
         public string Name => "DeleteAdvert";
@@ -21,7 +24,7 @@ namespace DormitoryBot.Commands.Marketplace
 
         public async Task Execute(long chatId)
         {
-            var adverts = dialogManager.Value.MarketPlace.GetUserAdverts(chatId);
+            var adverts = marketPlace.GetUserAdverts(chatId);
             if (adverts.Length == 0)
             {
                 await dialogManager.Value.SendTextMessageAsync(chatId, "У тебя пока нет объявлений..");

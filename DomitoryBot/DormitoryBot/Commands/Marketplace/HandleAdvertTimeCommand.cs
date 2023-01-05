@@ -1,5 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Marketplace;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.Marketplace
@@ -7,10 +8,12 @@ namespace DormitoryBot.Commands.Marketplace
     public class HandleAdvertTimeCommand : IHandleTextCommand
     {
         private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly MarketPlace marketPlace;
 
-        public HandleAdvertTimeCommand(Lazy<TelegramDialogManager> dialogManager)
+        public HandleAdvertTimeCommand(Lazy<TelegramDialogManager> dialogManager, MarketPlace marketPlace)
         {
             this.dialogManager = dialogManager;
+            this.marketPlace = marketPlace;
         }
 
         public DialogState SourceState => DialogState.MarketplaceTime;
@@ -41,7 +44,7 @@ namespace DormitoryBot.Commands.Marketplace
                 }
                 else
                 {
-                    dialogManager.Value.MarketPlace.CreateAdvert(chatId, (string) tempInput[0], (string) tempInput[1],
+                    marketPlace.CreateAdvert(chatId, (string) tempInput[0], (string) tempInput[1],
                         TimeSpan.FromDays(days), message.From.Username);
                     await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                         "Маркетплейс", DestinationState);

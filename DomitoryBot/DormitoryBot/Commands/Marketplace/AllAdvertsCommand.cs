@@ -1,16 +1,19 @@
 ﻿using System.Text;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.Marketplace;
 
 namespace DormitoryBot.Commands.Marketplace
 {
     public class AllAdvertsCommand : IExecutableCommand
     {
         private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly MarketPlace marketPlace;
 
-        public AllAdvertsCommand(Lazy<TelegramDialogManager> dialogManager)
+        public AllAdvertsCommand(Lazy<TelegramDialogManager> dialogManager, MarketPlace marketPlace)
         {
             this.dialogManager = dialogManager;
+            this.marketPlace = marketPlace;
         }
 
         public string Name => "AllAdverts";
@@ -21,7 +24,7 @@ namespace DormitoryBot.Commands.Marketplace
 
         public async Task Execute(long chatId)
         {
-            var adverts = dialogManager.Value.MarketPlace.GetAdverts();
+            var adverts = marketPlace.GetAdverts();
             if (adverts.Length == 0)
             {
                 await dialogManager.Value.SendTextMessageAsync(chatId,

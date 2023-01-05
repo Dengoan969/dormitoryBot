@@ -1,5 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.SubscribitionService;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.SubscriptionsService;
@@ -7,10 +8,12 @@ namespace DormitoryBot.Commands.SubscriptionsService;
 public class HandleDeleteSubscriptionCommand : IHandleTextCommand
 {
     private readonly Lazy<TelegramDialogManager> dialogManager;
+    private readonly SubscriptionService service;
 
-    public HandleDeleteSubscriptionCommand(Lazy<TelegramDialogManager> dialogManager)
+    public HandleDeleteSubscriptionCommand(Lazy<TelegramDialogManager> dialogManager, SubscriptionService service)
     {
         this.dialogManager = dialogManager;
+        this.service = service;
     }
 
     public DialogState SourceState => DialogState.SubscriptionsManageDeleteSubscription;
@@ -19,8 +22,7 @@ public class HandleDeleteSubscriptionCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        var subscriptionService = dialogManager.Value.SubscriptionService;
-        if (message.Text != null && subscriptionService.TryDeleteSubscription(message.Text, chatId))
+        if (message.Text != null && service.TryDeleteSubscription(message.Text, chatId))
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Рассылка удалена!", DestinationState);

@@ -1,5 +1,6 @@
 ﻿using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
+using DormitoryBot.Domain.SubscribitionService;
 using Telegram.Bot.Types;
 
 namespace DormitoryBot.Commands.SubscriptionsService;
@@ -7,10 +8,12 @@ namespace DormitoryBot.Commands.SubscriptionsService;
 public class HandleSubscribeCommand : IHandleTextCommand
 {
     private readonly Lazy<TelegramDialogManager> dialogManager;
+    private readonly SubscriptionService service;
 
-    public HandleSubscribeCommand(Lazy<TelegramDialogManager> dialogManager)
+    public HandleSubscribeCommand(Lazy<TelegramDialogManager> dialogManager, SubscriptionService service)
     {
         this.dialogManager = dialogManager;
+        this.service = service;
     }
 
     public DialogState SourceState => DialogState.SubscriptionsSubscribe;
@@ -19,8 +22,7 @@ public class HandleSubscribeCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        var subscriptionService = dialogManager.Value.SubscriptionService;
-        if (message.Text != null && subscriptionService.TrySubscribeUser(chatId, message.Text))
+        if (message.Text != null && service.TrySubscribeUser(chatId, message.Text))
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Круто, ты подписался!", DestinationState);
