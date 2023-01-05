@@ -70,11 +70,12 @@ public static class Keyboard
         {
             InlineKeyboardButton.WithCallbackData("Подписаться", "Subscribe"),
             InlineKeyboardButton.WithCallbackData("Отписаться", "Unsubscribe"),
-            InlineKeyboardButton.WithCallbackData("Мои подписки", "MySubscriptions")
+            InlineKeyboardButton.WithCallbackData("Все рассылки", "AllSubscriptions")
         },
 
         new[]
         {
+            InlineKeyboardButton.WithCallbackData("Мои подписки", "MySubscriptions"),
             InlineKeyboardButton.WithCallbackData("Управление рассылками", "SubscriptionsManage"),
             InlineKeyboardButton.WithCallbackData("Назад", "Back")
         }

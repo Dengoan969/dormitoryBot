@@ -32,6 +32,10 @@ namespace DormitoryBot
             container.Bind<ISubscriptionRepository>().To<MockSubscriptionRepository>();
             container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>();
 
+            container.Bind<MarketPlace>().ToSelf().InSingletonScope();
+            container.Bind<Schedule>().ToSelf().InSingletonScope();
+            container.Bind<SubscriptionService>().ToSelf().InSingletonScope();
+
             container.Bind(c =>
                 c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>()
                 .BindAllInterfaces());

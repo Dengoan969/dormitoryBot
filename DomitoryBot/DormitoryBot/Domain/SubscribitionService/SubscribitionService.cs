@@ -88,6 +88,11 @@ namespace DormitoryBot.Domain.SubscribitionService
             return subscriptionRepository.GetFollowers(FormattedNameOfSub(sub)).ToList();
         }
 
+        public string[] GetAllSubscriptions()
+        {
+            return subscriptionRepository.GetAllSubscriptions();
+        }
+
         private string FormattedNameOfSub(string sub)
         {
             if (sub.StartsWith("#")) return sub;
