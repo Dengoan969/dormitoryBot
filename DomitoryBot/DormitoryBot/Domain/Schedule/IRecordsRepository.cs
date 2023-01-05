@@ -1,6 +1,6 @@
 ﻿using DormitoryBot.Domain.Schedule;
 
-namespace DormitoryBot.Infrastructure;
+namespace DomitoryBot.Domain.Schedule;
 
 public interface IRecordsRepository
 {

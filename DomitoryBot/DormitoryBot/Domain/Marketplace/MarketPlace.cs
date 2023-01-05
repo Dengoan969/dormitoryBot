@@ -1,4 +1,4 @@
-﻿using DormitoryBot.Infrastructure;
+﻿using DomitoryBot.Domain.Marketplace;
 
 namespace DormitoryBot.Domain.Marketplace
 {

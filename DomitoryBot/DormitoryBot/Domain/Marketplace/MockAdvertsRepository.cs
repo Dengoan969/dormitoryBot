@@ -1,5 +1,5 @@
-﻿using DormitoryBot.Domain.Marketplace;
-using DormitoryBot.Infrastructure;
+﻿using DomitoryBot.Domain.Marketplace;
+using DormitoryBot.Domain.Marketplace;
 
 namespace DormitoryBot.Domain.Marketplace;
 

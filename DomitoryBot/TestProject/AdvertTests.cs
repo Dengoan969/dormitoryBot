@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using DomitoryBot.Domain.Marketplace;
 using DormitoryBot.Domain.Marketplace;
-using DormitoryBot.Infrastructure;
 using Ninject;
 using NUnit.Framework;
 

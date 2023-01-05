@@ -1,4 +1,4 @@
-﻿using DormitoryBot.Infrastructure;
+﻿using DomitoryBot.Domain.SubscribitionService;
 
 namespace DormitoryBot.Domain.SubscribitionService
 {

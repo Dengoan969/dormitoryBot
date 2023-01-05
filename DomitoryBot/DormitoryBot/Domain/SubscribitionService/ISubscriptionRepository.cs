@@ -1,4 +1,4 @@
-﻿namespace DormitoryBot.Infrastructure;
+﻿namespace DomitoryBot.Domain.SubscribitionService;
 
 public interface ISubscriptionRepository
 {

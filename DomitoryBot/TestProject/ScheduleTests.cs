@@ -1,9 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using DomitoryBot.Domain.Schedule;
 using DormitoryBot.Domain;
 using DormitoryBot.Domain.Schedule;
-using DormitoryBot.Infrastructure;
 using Ninject;
 using NUnit.Framework;
 

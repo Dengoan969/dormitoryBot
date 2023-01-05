@@ -1,6 +1,6 @@
 ﻿using DormitoryBot.Domain.Marketplace;
 
-namespace DormitoryBot.Infrastructure;
+namespace DomitoryBot.Domain.Marketplace;
 
 public interface IAdvertsRepository
 {

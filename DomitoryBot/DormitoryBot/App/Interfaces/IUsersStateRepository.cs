@@ -1,6 +1,6 @@
 ﻿using DormitoryBot.App;
 
-namespace DormitoryBot.Infrastructure;
+namespace DomitoryBot.App.Interfaces;
 
 public interface IUsersStateRepository
 {
