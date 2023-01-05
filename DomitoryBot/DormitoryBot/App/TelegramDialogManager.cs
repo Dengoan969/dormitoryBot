@@ -1,4 +1,5 @@
-﻿using DormitoryBot.Commands.Interfaces;
+﻿using DomitoryBot.App.Commands.Interfaces;
+using DomitoryBot.App.Interfaces;
 using DormitoryBot.Infrastructure;
 using DormitoryBot.UI;
 using Telegram.Bot;

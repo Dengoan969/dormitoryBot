@@ -1,4 +1,5 @@
-﻿using Telegram.Bot;
+﻿using DomitoryBot.App.Interfaces;
+using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;
 using Telegram.Bot.Types;
