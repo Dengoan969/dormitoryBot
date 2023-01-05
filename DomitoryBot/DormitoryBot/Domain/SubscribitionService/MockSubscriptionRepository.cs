@@ -11,6 +11,8 @@ public class MockSubscriptionRepository : ISubscriptionRepository
         this.db = db;
     }
 
+    public MockSubscriptionRepository() : this(new Dictionary<string, Dictionary<long, UserRights>>()) { }
+
     public long[] GetFollowers(string name)
     {
         return db[name].Keys.ToArray();
@@ -43,7 +45,7 @@ public class MockSubscriptionRepository : ISubscriptionRepository
 
     public void CreateSubscription(string sub, long userId)
     {
-        db[sub] = new Dictionary<long, UserRights> {{userId, UserRights.Admin}};
+        db[sub] = new Dictionary<long, UserRights> { { userId, UserRights.Admin } };
     }
 
     public void DeleteSubscription(string sub, long userId)

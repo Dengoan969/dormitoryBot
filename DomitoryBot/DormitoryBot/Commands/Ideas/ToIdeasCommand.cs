@@ -5,9 +5,9 @@ namespace DormitoryBot.Commands.Ideas
 {
     public class ToIdeasCommand : IExecutableCommand
     {
-        private readonly Lazy<IDialogSender> dialogManager;
+        private readonly Lazy<IMessageSender> dialogManager;
 
-        public ToIdeasCommand(Lazy<IDialogSender> dialogManager)
+        public ToIdeasCommand(Lazy<IMessageSender> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

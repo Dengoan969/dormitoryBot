@@ -7,10 +7,10 @@ namespace DormitoryBot.Commands.SubscriptionsService;
 
 public class HandleUnsubscribeCommand : IHandleTextCommand
 {
-    private readonly Lazy<IDialogSender> dialogManager;
+    private readonly Lazy<IMessageSender> dialogManager;
     private readonly SubscriptionService service;
 
-    public HandleUnsubscribeCommand(Lazy<IDialogSender> dialogManager, SubscriptionService service)
+    public HandleUnsubscribeCommand(Lazy<IMessageSender> dialogManager, SubscriptionService service)
     {
         this.dialogManager = dialogManager;
         this.service = service;

@@ -5,9 +5,9 @@ namespace DormitoryBot.Commands.SubscriptionsService
 {
     public class SubscribeCommand : IExecutableCommand
     {
-        private readonly Lazy<IDialogSender> dialogManager;
+        private readonly Lazy<IMessageSender> dialogManager;
 
-        public SubscribeCommand(Lazy<IDialogSender> dialogManager)
+        public SubscribeCommand(Lazy<IMessageSender> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

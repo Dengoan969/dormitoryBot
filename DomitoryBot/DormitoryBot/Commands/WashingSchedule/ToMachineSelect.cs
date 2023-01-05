@@ -5,9 +5,9 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class ToMachineSelect : IExecutableCommand
 {
-    private readonly Lazy<IDialogSender> dialogManager;
+    private readonly Lazy<IMessageSender> dialogManager;
 
-    public ToMachineSelect(Lazy<IDialogSender> dialogManager)
+    public ToMachineSelect(Lazy<IMessageSender> dialogManager)
     {
         this.dialogManager = dialogManager;
     }

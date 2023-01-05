@@ -5,9 +5,9 @@ namespace DormitoryBot.Commands.Marketplace
 {
     public class ToMarketplaceCommand : IExecutableCommand
     {
-        private readonly Lazy<IDialogSender> dialogManager;
+        private readonly Lazy<IMessageSender> dialogManager;
 
-        public ToMarketplaceCommand(Lazy<IDialogSender> dialogManager)
+        public ToMarketplaceCommand(Lazy<IMessageSender> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

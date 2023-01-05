@@ -7,10 +7,10 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class DeleteRecordCommand : IHandleTextCommand
 {
-    private readonly Lazy<IDialogSender> dialogManager;
+    private readonly Lazy<IMessageSender> dialogManager;
     private readonly Schedule schedule;
 
-    public DeleteRecordCommand(Lazy<IDialogSender> dialogManager, Schedule schedule)
+    public DeleteRecordCommand(Lazy<IMessageSender> dialogManager, Schedule schedule)
     {
         this.dialogManager = dialogManager;
         this.schedule = schedule;

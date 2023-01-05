@@ -7,10 +7,10 @@ namespace DormitoryBot.Commands.Marketplace
 {
     public class HandleAdvertTimeCommand : IHandleTextCommand
     {
-        private readonly Lazy<IDialogSender> dialogManager;
+        private readonly Lazy<IMessageSender> dialogManager;
         private readonly MarketPlace marketPlace;
 
-        public HandleAdvertTimeCommand(Lazy<IDialogSender> dialogManager, MarketPlace marketPlace)
+        public HandleAdvertTimeCommand(Lazy<IMessageSender> dialogManager, MarketPlace marketPlace)
         {
             this.dialogManager = dialogManager;
             this.marketPlace = marketPlace;

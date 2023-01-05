@@ -1,7 +1,7 @@
 ﻿using DormitoryBot.Domain.Marketplace;
 using DormitoryBot.Infrastructure;
 
-namespace DomitoryBot.Domain.Marketplace;
+namespace DormitoryBot.Domain.Marketplace;
 
 public class MockAdvertsRepository : IAdvertsRepository
 {
@@ -11,6 +11,8 @@ public class MockAdvertsRepository : IAdvertsRepository
     {
         this.adverts = adverts;
     }
+
+    public MockAdvertsRepository() : this(new SortedSet<Advert>()) { }
 
     public void AddAdvert(Advert advert)
     {

@@ -1,6 +1,6 @@
 ﻿namespace DormitoryBot.App;
 
-public interface IDialogSender
+public interface IMessageSender
 {
     Dictionary<long, List<object>> TempInput { get; }
     Task SendTextMessageAsync(long chatId, string message);

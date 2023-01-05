@@ -9,10 +9,10 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class ToWashingTypeSelect : IHandleTextCommand
 {
-    private readonly Lazy<IDialogSender> dialogManager;
+    private readonly Lazy<IMessageSender> dialogManager;
     private readonly Schedule schedule;
 
-    public ToWashingTypeSelect(Lazy<IDialogSender> dialogManager, Schedule schedule)
+    public ToWashingTypeSelect(Lazy<IMessageSender> dialogManager, Schedule schedule)
     {
         this.dialogManager = dialogManager;
         this.schedule = schedule;

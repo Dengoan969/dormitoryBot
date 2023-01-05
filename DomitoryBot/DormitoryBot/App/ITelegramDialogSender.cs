@@ -1,5 +1,5 @@
 ﻿namespace DormitoryBot.App;
 
-public interface ITelegramDialogSender : IDialogSender
+public interface ITelegramDialogSender : IMessageSender
 {
 }

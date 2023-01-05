@@ -1,6 +1,6 @@
 ﻿using System.Globalization;
 using System.Text;
-using DomitoryBot.Infrastructure;
+using DormitoryBot.Infrastructure;
 using DormitoryBot.App;
 using DormitoryBot.Commands.Interfaces;
 using DormitoryBot.Domain.Schedule;
@@ -10,10 +10,10 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class FreeSlotsCommand : IHandleTextCommand
 {
-    private readonly Lazy<IDialogSender> dialogManager;
+    private readonly Lazy<IMessageSender> dialogManager;
     private readonly Schedule schedule;
 
-    public FreeSlotsCommand(Lazy<IDialogSender> dialogManager, Schedule schedule)
+    public FreeSlotsCommand(Lazy<IMessageSender> dialogManager, Schedule schedule)
     {
         this.dialogManager = dialogManager;
         this.schedule = schedule;

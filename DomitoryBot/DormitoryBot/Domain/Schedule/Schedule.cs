@@ -7,12 +7,16 @@ namespace DormitoryBot.Domain.Schedule
         private readonly IRecordsRepository dataBase;
         private readonly string[] machineNames;
         private readonly Timer timer;
-        private readonly Dictionary<string, TimeSpan> washingTypes;
+        private readonly Dictionary<string, TimeSpan> washingTypes = new Dictionary<string, TimeSpan>
+                {
+                    {"Полчаса", TimeSpan.FromMinutes(30)},
+                    {"Полтора часа", TimeSpan.FromMinutes(90)},
+                    {"Два с половиной часа", TimeSpan.FromMinutes(150)}
+                };
 
-        public Schedule(IRecordsRepository dataBase, Dictionary<string, TimeSpan> washingTypes)
+        public Schedule(IRecordsRepository dataBase)
         {
             this.dataBase = dataBase;
-            this.washingTypes = washingTypes;
             machineNames = dataBase.GetFreeTimes().Keys.ToArray();
             timer = new Timer(ClearPreviousDay, new object(), DateTime.Today.AddDays(1) - DateTime.Now,
                 TimeSpan.FromDays(1));

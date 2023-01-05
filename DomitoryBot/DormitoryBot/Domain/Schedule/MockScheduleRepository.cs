@@ -14,6 +14,15 @@ public class MockScheduleRepository : IRecordsRepository
         this.dataBase = dataBase;
     }
 
+    public MockScheduleRepository() : this(
+        new Dictionary<string, bool[]>
+                {
+                    {"1", new bool[48 * 3]},
+                    {"2", new bool[48 * 3]},
+                    {"3", new bool[48 * 3]}
+                }, 
+        new Dictionary<long, List<ScheduleRecord>>()){ }
+
     public void AddRecord(ScheduleRecord record)
     {
         var startIndex = GetIndexByDate(record.TimeInterval.Start);

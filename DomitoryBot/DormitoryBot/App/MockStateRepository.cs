@@ -11,6 +11,8 @@ public class MockStateRepository : IUsersStateRepository
         this.db = db;
     }
 
+    public MockStateRepository() : this(new Dictionary<long, DialogState>()) { }
+
     public DialogState GetState(long id)
     {
         if (!db.ContainsKey(id)) throw new ArgumentException("User doesn't exists");

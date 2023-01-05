@@ -1,6 +1,6 @@
 ﻿using DormitoryBot.Domain;
 
-namespace DomitoryBot.Infrastructure;
+namespace DormitoryBot.Infrastructure;
 
 public static class DateTimeExtensions
 {

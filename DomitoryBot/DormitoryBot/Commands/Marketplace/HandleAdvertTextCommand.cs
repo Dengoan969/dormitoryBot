@@ -6,9 +6,9 @@ namespace DormitoryBot.Commands.Marketplace
 {
     public class HandleAdvertTextCommand : IHandleTextCommand
     {
-        private readonly Lazy<IDialogSender> dialogManager;
+        private readonly Lazy<IMessageSender> dialogManager;
 
-        public HandleAdvertTextCommand(Lazy<IDialogSender> dialogManager)
+        public HandleAdvertTextCommand(Lazy<IMessageSender> dialogManager)
         {
             this.dialogManager = dialogManager;
         }
