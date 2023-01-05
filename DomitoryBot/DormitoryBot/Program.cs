@@ -25,21 +25,22 @@ namespace DormitoryBot
         private static TelegramBotCore CreateBot(string token)
         {
             var container = new StandardKernel();
+            container.Settings.AllowNullInjection = true;
 
             container.Bind<IRecordsRepository>().To<MockScheduleRepository>();
             container.Bind<IUsersStateRepository>().To<MockStateRepository>();
             container.Bind<ISubscriptionRepository>().To<MockSubscriptionRepository>();
             container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>();
 
+            container.Bind(c =>
+                c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>()
+                .BindAllInterfaces());
+
             container.Bind<ITelegramUpdateHandler, IMessageSender, ITelegramDialogSender>()
                 .To<TelegramDialogManager>()
                 .InSingletonScope();
 
-            container.Bind<TelegramBotClient>().ToConstant(new TelegramBotClient(token)).InSingletonScope();
-
-            container.Bind(c =>
-                c.FromThisAssembly().SelectAllClasses().InheritedFrom<IChatCommand>()
-                .BindAllInterfaces());
+            container.Bind<TelegramBotClient>().ToSelf().WithConstructorArgument("token", token);
 
             return container.Get<TelegramBotCore>();
         }
