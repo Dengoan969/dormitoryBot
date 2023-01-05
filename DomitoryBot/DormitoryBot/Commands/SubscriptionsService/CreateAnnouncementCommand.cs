@@ -5,9 +5,9 @@ namespace DormitoryBot.Commands.SubscriptionsService
 {
     public class CreateAnnouncementCommand : IExecutableCommand
     {
-        private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly Lazy<IDialogSender> dialogManager;
 
-        public CreateAnnouncementCommand(Lazy<TelegramDialogManager> dialogManager)
+        public CreateAnnouncementCommand(Lazy<IDialogSender> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

@@ -5,9 +5,9 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class ChooseDaysFreeSlotsCommand : IExecutableCommand
 {
-    private readonly Lazy<TelegramDialogManager> dialogManager;
+    private readonly Lazy<IDialogSender> dialogManager;
 
-    public ChooseDaysFreeSlotsCommand(Lazy<TelegramDialogManager> dialogManager)
+    public ChooseDaysFreeSlotsCommand(Lazy<IDialogSender> dialogManager)
     {
         this.dialogManager = dialogManager;
     }

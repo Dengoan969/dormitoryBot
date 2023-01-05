@@ -7,10 +7,10 @@ namespace DormitoryBot.Commands.Marketplace
 {
     public class DeleteAdvertCommand : IExecutableCommand
     {
-        private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly Lazy<IDialogSender> dialogManager;
         private readonly MarketPlace marketPlace;
 
-        public DeleteAdvertCommand(Lazy<TelegramDialogManager> dialogManager, MarketPlace marketPlace)
+        public DeleteAdvertCommand(Lazy<IDialogSender> dialogManager, MarketPlace marketPlace)
         {
             this.dialogManager = dialogManager;
             this.marketPlace = marketPlace;

@@ -10,10 +10,10 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class FreeSlotsCommand : IHandleTextCommand
 {
-    private readonly Lazy<TelegramDialogManager> dialogManager;
+    private readonly Lazy<IDialogSender> dialogManager;
     private readonly Schedule schedule;
 
-    public FreeSlotsCommand(Lazy<TelegramDialogManager> dialogManager, Schedule schedule)
+    public FreeSlotsCommand(Lazy<IDialogSender> dialogManager, Schedule schedule)
     {
         this.dialogManager = dialogManager;
         this.schedule = schedule;

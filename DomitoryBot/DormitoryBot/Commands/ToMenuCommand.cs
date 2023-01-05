@@ -5,9 +5,9 @@ namespace DormitoryBot.Commands
 {
     public class ToMenuCommand : IExecutableCommand
     {
-        private readonly Lazy<TelegramDialogManager> dialogManager;
+        private readonly Lazy<IDialogSender> dialogManager;
 
-        public ToMenuCommand(Lazy<TelegramDialogManager> dialogManager)
+        public ToMenuCommand(Lazy<IDialogSender> dialogManager)
         {
             this.dialogManager = dialogManager;
         }

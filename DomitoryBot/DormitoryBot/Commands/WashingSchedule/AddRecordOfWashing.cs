@@ -7,10 +7,10 @@ namespace DormitoryBot.Commands.WashingSchedule;
 
 public class AddRecordOfWashing : IHandleTextCommand
 {
-    private readonly Lazy<TelegramDialogManager> dm;
+    private readonly Lazy<IDialogSender> dm;
     private readonly Schedule schedule;
 
-    public AddRecordOfWashing(Lazy<TelegramDialogManager> dm, Schedule schedule)
+    public AddRecordOfWashing(Lazy<IDialogSender> dm, Schedule schedule)
     {
         this.dm = dm;
         this.schedule = schedule;
