@@ -1,6 +1,6 @@
-﻿using DomitoryBot.Domain.SubscribitionService;
+﻿using DormitoryBot.Domain.SubscriptionService;
 
-namespace DormitoryBot.Domain.SubscribitionService;
+namespace DormitoryBot.Domain.SubscriptionService;
 
 public class MockSubscriptionRepository : ISubscriptionRepository
 {
@@ -12,6 +12,8 @@ public class MockSubscriptionRepository : ISubscriptionRepository
     }
 
     public MockSubscriptionRepository() : this(new Dictionary<string, Dictionary<long, UserRights>>()) { }
+
+    public string[] AllSubscriptions => db.Keys.ToArray();
 
     public long[] GetFollowers(string name)
     {
@@ -73,8 +75,5 @@ public class MockSubscriptionRepository : ISubscriptionRepository
         return db.Keys.Where(x => db[x].ContainsKey(userId) && db[x][userId] == UserRights.Admin).ToArray();
     }
 
-    public string[] GetAllSubscriptions()
-    {
-        return db.Keys.ToArray();
-    }
+    
 }

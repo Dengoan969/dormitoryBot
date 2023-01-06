@@ -1,6 +1,6 @@
 ﻿using DormitoryBot.App;
 
-namespace DomitoryBot.App.Commands.Interfaces
+namespace DormitoryBot.App.Commands.Interfaces
 {
     public interface IChatCommand
     {

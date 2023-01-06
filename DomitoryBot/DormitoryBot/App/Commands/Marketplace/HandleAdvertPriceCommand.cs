@@ -1,9 +1,9 @@
-﻿using DomitoryBot.App.Commands.Interfaces;
-using DomitoryBot.App.Interfaces;
+﻿using DormitoryBot.App.Commands.Interfaces;
+using DormitoryBot.App.Interfaces;
 using DormitoryBot.App;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.App.Commands.Marketplace
+namespace DormitoryBot.App.Commands.Marketplace
 {
     public class HandleAdvertPriceCommand : IHandleTextCommand
     {

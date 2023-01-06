@@ -1,10 +1,10 @@
-﻿using DomitoryBot.App.Commands.Interfaces;
-using DomitoryBot.App.Interfaces;
+﻿using DormitoryBot.App.Commands.Interfaces;
+using DormitoryBot.App.Interfaces;
 using DormitoryBot.App;
-using DormitoryBot.Domain.SubscribitionService;
+using DormitoryBot.Domain.SubscriptionService;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.App.Commands.SubscriptionsService;
+namespace DormitoryBot.App.Commands.SubscriptionsService;
 
 public class HandleDeleteSubscriptionCommand : IHandleTextCommand
 {

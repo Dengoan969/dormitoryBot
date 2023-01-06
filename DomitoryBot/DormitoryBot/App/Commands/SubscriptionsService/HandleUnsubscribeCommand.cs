@@ -1,10 +1,10 @@
-﻿using DomitoryBot.App.Commands.Interfaces;
-using DomitoryBot.App.Interfaces;
+﻿using DormitoryBot.App.Commands.Interfaces;
+using DormitoryBot.App.Interfaces;
 using DormitoryBot.App;
-using DormitoryBot.Domain.SubscribitionService;
+using DormitoryBot.Domain.SubscriptionService;
 using Telegram.Bot.Types;
 
-namespace DomitoryBot.App.Commands.SubscriptionsService;
+namespace DormitoryBot.App.Commands.SubscriptionsService;
 
 public class HandleUnsubscribeCommand : IHandleTextCommand
 {
@@ -23,7 +23,7 @@ public class HandleUnsubscribeCommand : IHandleTextCommand
 
     public async Task HandleMessage(Message message, long chatId)
     {
-        if (message.Text != null && service.UnsubscribeUser(chatId, message.Text))
+        if (message.Text != null && service.TryUnsubscribeUser(chatId, message.Text))
         {
             await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                 "Ты успешно отписался :(", DestinationState);

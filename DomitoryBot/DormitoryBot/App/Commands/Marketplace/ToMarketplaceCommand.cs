@@ -1,8 +1,8 @@
-﻿using DomitoryBot.App.Commands.Interfaces;
-using DomitoryBot.App.Interfaces;
+﻿using DormitoryBot.App.Commands.Interfaces;
+using DormitoryBot.App.Interfaces;
 using DormitoryBot.App;
 
-namespace DomitoryBot.App.Commands.Marketplace
+namespace DormitoryBot.App.Commands.Marketplace
 {
     public class ToMarketplaceCommand : IExecutableCommand
     {

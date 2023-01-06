@@ -1,10 +1,10 @@
 ﻿using System.Text;
-using DomitoryBot.App.Commands.Interfaces;
-using DomitoryBot.App.Interfaces;
+using DormitoryBot.App.Commands.Interfaces;
+using DormitoryBot.App.Interfaces;
 using DormitoryBot.App;
 using DormitoryBot.Domain.Schedule;
 
-namespace DomitoryBot.App.Commands.WashingSchedule;
+namespace DormitoryBot.App.Commands.WashingSchedule;
 
 public class ToRecordsOfUser : IExecutableCommand
 {

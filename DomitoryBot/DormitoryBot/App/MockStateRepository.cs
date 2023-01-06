@@ -1,4 +1,4 @@
-﻿using DomitoryBot.App.Interfaces;
+﻿using DormitoryBot.App.Interfaces;
 
 namespace DormitoryBot.App;
 

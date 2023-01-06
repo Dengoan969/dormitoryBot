@@ -1,4 +1,4 @@
-﻿namespace DomitoryBot.App.Commands.Interfaces
+﻿namespace DormitoryBot.App.Commands.Interfaces
 {
     public interface IExecutableCommand : IChatCommand
     {

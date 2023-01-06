@@ -4,10 +4,10 @@ using DormitoryBot.Infrastructure;
 using DormitoryBot.App;
 using DormitoryBot.Domain.Schedule;
 using Telegram.Bot.Types;
-using DomitoryBot.App.Commands.Interfaces;
-using DomitoryBot.App.Interfaces;
+using DormitoryBot.App.Commands.Interfaces;
+using DormitoryBot.App.Interfaces;
 
-namespace DomitoryBot.App.Commands.WashingSchedule;
+namespace DormitoryBot.App.Commands.WashingSchedule;
 
 public class FreeSlotsCommand : IHandleTextCommand
 {

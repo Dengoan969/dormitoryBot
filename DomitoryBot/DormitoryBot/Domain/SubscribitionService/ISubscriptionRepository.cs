@@ -1,17 +1,27 @@
-﻿namespace DomitoryBot.Domain.SubscribitionService;
-
-public interface ISubscriptionRepository
+﻿namespace DormitoryBot.Domain.SubscriptionService
 {
-    public long[] GetFollowers(string name);
-    public void AddAdmin(string sub, long caller, long userToAdd);
-    public long[] GetAdmins(string name);
-    public bool IsUserAdmin(long userId, string sub);
-    public void CreateSubscription(string sub, long userId);
-    public void DeleteSubscription(string sub, long userId);
-    public void SubscribeUser(long userId, string name);
-    public void UnsubscribeUser(long userId, string name);
-    public string[] GetSubscriptionsOfUser(long userId);
-    public string[] GetAdminSubscriptionsOfUser(long userId);
+    public interface ISubscriptionRepository
+    {
+        string[] AllSubscriptions { get; }
 
-    string[] GetAllSubscriptions();
+        string[] GetSubscriptionsOfUser(long userId);
+
+        string[] GetAdminSubscriptionsOfUser(long userId);
+
+        long[] GetFollowers(string sub);
+
+        long[] GetAdmins(string sub);
+
+        bool IsUserAdmin(long userId, string sub);
+
+        void AddAdmin(string sub, long caller, long userToAdd);
+
+        void CreateSubscription(string sub, long userId);
+
+        void DeleteSubscription(string sub, long userId);
+
+        void SubscribeUser(long userId, string name);
+
+        void UnsubscribeUser(long userId, string name);
+    }
 }

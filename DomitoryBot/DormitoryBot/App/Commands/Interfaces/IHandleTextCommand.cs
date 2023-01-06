@@ -1,6 +1,6 @@
 ﻿using Telegram.Bot.Types;
 
-namespace DomitoryBot.App.Commands.Interfaces
+namespace DormitoryBot.App.Commands.Interfaces
 {
     public interface IHandleTextCommand : IChatCommand
     {

@@ -1,15 +1,12 @@
 ﻿using DormitoryBot.Domain.Marketplace;
 using DormitoryBot.Domain.Schedule;
-using DormitoryBot.Domain.SubscribitionService;
+using DormitoryBot.Domain.SubscriptionService;
 using DormitoryBot.App;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Telegram.Bot;
-using DomitoryBot.App.Commands.Interfaces;
-using DomitoryBot.App.Interfaces;
-using DomitoryBot.Domain.Marketplace;
-using DomitoryBot.Domain.Schedule;
-using DomitoryBot.Domain.SubscribitionService;
+using DormitoryBot.App.Commands.Interfaces;
+using DormitoryBot.App.Interfaces;
 
 namespace DormitoryBot
 {

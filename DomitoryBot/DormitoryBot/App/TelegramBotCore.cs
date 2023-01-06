@@ -1,4 +1,4 @@
-﻿using DomitoryBot.App.Interfaces;
+﻿using DormitoryBot.App.Interfaces;
 using Telegram.Bot;
 using Telegram.Bot.Exceptions;
 using Telegram.Bot.Polling;

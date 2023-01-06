@@ -1,4 +1,4 @@
-﻿using DomitoryBot.Domain.Schedule;
+﻿using DormitoryBot.Domain.Schedule;
 
 namespace DormitoryBot.Domain.Schedule;
 

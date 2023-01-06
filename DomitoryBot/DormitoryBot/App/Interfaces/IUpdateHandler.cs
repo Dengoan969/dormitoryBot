@@ -1,4 +1,4 @@
-﻿namespace DomitoryBot.App.Interfaces;
+﻿namespace DormitoryBot.App.Interfaces;
 
 public interface IUpdateHandler<TUpdate>
 {
