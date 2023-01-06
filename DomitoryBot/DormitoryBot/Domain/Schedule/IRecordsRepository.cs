@@ -1,12 +1,15 @@
-﻿using DormitoryBot.Domain.Schedule;
-
-namespace DormitoryBot.Domain.Schedule;
-
-public interface IRecordsRepository
+﻿namespace DormitoryBot.Domain.Schedule
 {
-    void AddRecord(ScheduleRecord scheduleRecord);
-    void RemoveRecord(ScheduleRecord scheduleRecord);
-    List<ScheduleRecord> GetRecordsTimesByUser(long user);
-    Dictionary<string, List<DateTime>> GetFreeTimes();
-    void ClearPreviousDay();
+    public interface IRecordsRepository
+    {
+        void AddRecord(ScheduleRecord scheduleRecord);
+
+        void RemoveRecord(ScheduleRecord scheduleRecord);
+
+        List<ScheduleRecord> GetRecordsByUser(long user);
+
+        Dictionary<string, List<DateTime>> FreeTimes { get; }
+
+        void ClearPreviousDay();
+    }
 }

@@ -1,11 +1,8 @@
-﻿using DormitoryBot.Domain.Schedule;
-
-namespace DormitoryBot.Domain.Schedule
+﻿namespace DormitoryBot.Domain.Schedule
 {
     public class Schedule
     {
-        private readonly IRecordsRepository dataBase;
-        private readonly string[] machineNames;
+        private readonly IRecordsRepository repository;
         private readonly Timer timer;
         private readonly Dictionary<string, TimeSpan> washingTypes = new Dictionary<string, TimeSpan>
                 {
@@ -14,20 +11,22 @@ namespace DormitoryBot.Domain.Schedule
                     {"Два с половиной часа", TimeSpan.FromMinutes(150)}
                 };
 
-        public Schedule(IRecordsRepository dataBase)
+        public Schedule(IRecordsRepository repository)
         {
-            this.dataBase = dataBase;
-            machineNames = dataBase.GetFreeTimes().Keys.ToArray();
+            this.repository = repository;
             timer = new Timer(ClearPreviousDay, new object(), DateTime.Today.AddDays(1) - DateTime.Now,
                 TimeSpan.FromDays(1));
         }
 
-        public string[] MachineNames => machineNames.ToArray();
-        public Dictionary<string, TimeSpan> WashingTypes => washingTypes.ToDictionary(x => x.Key, pair => pair.Value);
+        public string[] MachineNames => 
+            repository.FreeTimes.Keys.ToArray();
+
+        public Dictionary<string, TimeSpan> WashingTypes =>
+            washingTypes.ToDictionary(x => x.Key, pair => pair.Value);
 
         private void ClearPreviousDay(object stateInfo)
         {
-            dataBase.ClearPreviousDay();
+            repository.ClearPreviousDay();
             Console.WriteLine("Cleared previous day");
         }
 
@@ -37,7 +36,7 @@ namespace DormitoryBot.Domain.Schedule
             var record = new ScheduleRecord(user, new TimeInterval(startDate, finishDate), machine);
             if (record.TimeInterval.Start.Minute % 30 != 0)
                 return false;
-            var freeTimes = dataBase.GetFreeTimes()[machine];
+            var freeTimes = repository.FreeTimes[machine];
             var timeToCheck = startDate;
             while (timeToCheck < finishDate)
             {
@@ -46,29 +45,29 @@ namespace DormitoryBot.Domain.Schedule
                 timeToCheck = timeToCheck.AddMinutes(30);
             }
 
-            dataBase.AddRecord(record);
+            repository.AddRecord(record);
             return true;
         }
 
         public bool TryRemoveRecord(ScheduleRecord record)
         {
-            var records = dataBase.GetRecordsTimesByUser(record.User);
+            var records = repository.GetRecordsByUser(record.User);
             if (!records.Contains(record)) return false;
 
-            dataBase.RemoveRecord(record);
+            repository.RemoveRecord(record);
             return true;
         }
 
         public List<ScheduleRecord> GetRecordsTimesByUser(long user)
         {
-            return dataBase.GetRecordsTimesByUser(user);
+            return repository.GetRecordsByUser(user);
         }
 
         // record(Guid Id, Guid UserId, nvarchar(max) MachineName, Date Start, Date End)
 
         public Dictionary<string, List<DateTime>> GetFreeTimes()
         {
-            return dataBase.GetFreeTimes();
+            return repository.FreeTimes;
         }
     }
 }

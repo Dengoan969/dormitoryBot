@@ -1,7 +1,8 @@
-﻿namespace DormitoryBot.Domain.SubscriptionService;
-
-public enum UserRights
+﻿namespace DormitoryBot.Domain.SubscriptionService
 {
-    Follower = 1,
-    Admin = 2
+    public enum UserRights
+    {
+        Follower = 1,
+        Admin = 2
+    }
 }
