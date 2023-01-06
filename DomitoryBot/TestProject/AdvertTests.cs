@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using DormitoryBot.Domain.Marketplace;
-using DormitoryBot.Domain.Marketplace;
 using Ninject;
 using NUnit.Framework;
 
@@ -26,11 +25,11 @@ public class AdvertTests
             );
         var mp = c.Get<MarketPlace>();
         mp.CreateAdvert(1, "ad", "100", TimeSpan.FromDays(1), "1");
-        Assert.IsNotEmpty(mp.GetAdverts());
-        var advert = mp.GetAdverts()[0];
+        Assert.IsNotEmpty(mp.Adverts);
+        var advert = mp.Adverts[0];
         Assert.Contains(advert, mp.GetUserAdverts(1));
         mp.RemoveAdvert(advert);
-        Assert.IsEmpty(mp.GetAdverts());
+        Assert.IsEmpty(mp.Adverts);
         Assert.IsEmpty(mp.GetUserAdverts(1));
     }
 

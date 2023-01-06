@@ -1,7 +1,8 @@
-﻿namespace DormitoryBot.Domain.Marketplace;
-
-public enum AdvertStatus
+﻿namespace DormitoryBot.Domain.Marketplace
 {
-    Active,
-    Finished
+    public enum AdvertStatus
+    {
+        Active,
+        Finished
+    }
 }

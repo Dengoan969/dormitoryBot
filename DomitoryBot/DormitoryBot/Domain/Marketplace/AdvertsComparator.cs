@@ -1,11 +1,12 @@
-﻿namespace DormitoryBot.Domain.Marketplace;
-
-public class AdvertsComparator : IComparer<Advert>
+﻿namespace DormitoryBot.Domain.Marketplace
 {
-    public int Compare(Advert? x, Advert? y)
+    public class AdvertsComparator : IComparer<Advert>
     {
-        var firstTimeToExpire = x.CreationTime + x.TimeToLive;
-        var secondTimeToExpire = y.CreationTime + y.TimeToLive;
-        return DateTime.Compare(firstTimeToExpire, secondTimeToExpire);
+        public int Compare(Advert? x, Advert? y)
+        {
+            var firstTimeToExpire = x.CreationTime + x.TimeToLive;
+            var secondTimeToExpire = y.CreationTime + y.TimeToLive;
+            return DateTime.Compare(firstTimeToExpire, secondTimeToExpire);
+        }
     }
 }

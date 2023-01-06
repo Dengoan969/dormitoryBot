@@ -25,7 +25,7 @@ namespace DormitoryBot.App.Commands.Marketplace
 
         public async Task Execute(long chatId)
         {
-            var adverts = marketPlace.GetAdverts();
+            var adverts = marketPlace.Adverts;
             if (adverts.Length == 0)
             {
                 await dialogManager.Value.SendTextMessageAsync(chatId,
