@@ -1,141 +1,99 @@
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using DormitoryBot.Domain.Schedule;
 using DormitoryBot.Domain;
-using Ninject;
 using NUnit.Framework;
+using FakeItEasy;
 
-namespace TestProject;
-
-public class ScheduleTests
+namespace TestProject
 {
-    private StandardKernel Container => new();
-
-    [SetUp]
-    public void Setup()
+    public class ScheduleTests
     {
-    }
+        private IRecordsRepository repository;
+        private Schedule schedule;
 
-    [Test]
-    public void TestSchedule_WhenAllOk()
-    {
-        var container = Container;
-        container.Bind<IRecordsRepository>()
-            .To<MockScheduleRepository>()
-            .WithConstructorArgument("freeTimes", new Dictionary<string, bool[]>
+        [SetUp]
+        public void Setup()
+        {
+            repository = A.Fake<IRecordsRepository>();
+            schedule = new Schedule(repository);
+        }
+
+        [Test]
+        public void TestSchedule_TryAddRecord_WhenWrongTimeFormat()
+        {
+            var washingType = "Полчаса";
+            A.CallTo(() => repository.FreeTimes).Returns(A.Dummy<Dictionary<string, List<DateTime>>>());
+            Assert.False(schedule.TryAddRecord(A.Dummy<long>(), A.Dummy<string>(),
+                DateTime.Today.AddMinutes(42), washingType));
+            Assert.False(schedule.TryAddRecord(A.Dummy<long>(), A.Dummy<string>(),
+                DateTime.Today.AddMinutes(10), washingType));
+        }
+
+        [Test]
+        public void TestSchedule_TryAddRecord_WhenNoFreeTime()
+        {
+            var machineName = A.Dummy<string>();
+            var washingType = "Полчаса";
+            A.CallTo(() => repository.FreeTimes).Returns(new Dictionary<string, List<DateTime>>
             {
-                {"1", new bool[48 * 3]},
-                {"2", new bool[48 * 3]},
-                {"3", new bool[48 * 3]}
-            })
-            .WithConstructorArgument("dataBase", new Dictionary<long, List<ScheduleRecord>>());
+                {machineName, new List<DateTime>()},
+            });
+            Assert.False(schedule.TryAddRecord(A.Dummy<long>(), machineName, A.Dummy<DateTime>(), washingType));
+        }
 
-        container.Bind<Schedule>().ToSelf().WithConstructorArgument("washingTypes",
-            new Dictionary<string, TimeSpan>
+        [Test]
+        public void TestSchedule_TryAddRecord_WhenNoFitFreeTime()
+        {
+            var machineName = A.Dummy<string>();
+            var washingType = "Полчаса";
+            A.CallTo(() => repository.FreeTimes).Returns(new Dictionary<string, List<DateTime>>
             {
-                {"Полчаса", TimeSpan.FromMinutes(30)},
-                {"Полтора часа", TimeSpan.FromMinutes(90)},
-                {"Два с половиной часа", TimeSpan.FromMinutes(150)}
-            }
-        );
-        var schedule = container.Get<Schedule>();
-        Assert.True(schedule.TryAddRecord(1, "1", DateTime.Today, "Полчаса"));
-        var record = new ScheduleRecord(1, new TimeInterval(DateTime.Today, DateTime.Today.AddMinutes(30)), "1");
-        Assert.AreEqual(schedule.GetRecordsTimesByUser(1)[0], record);
-        Assert.IsEmpty(schedule.GetRecordsTimesByUser(2));
-        Assert.True(schedule.TryRemoveRecord(record));
-    }
+                {machineName, new List<DateTime>(){DateTime.Today, DateTime.Today.AddMinutes(50)} },
+            });
+            Assert.False(schedule.TryAddRecord(A.Dummy<long>(), machineName, DateTime.Today.AddMinutes(42), washingType));
+        }
 
-    [Test]
-    public void TestSchedule_WhenCannotAddRecord()
-    {
-        var container = Container;
-        container.Bind<IRecordsRepository>()
-            .To<MockScheduleRepository>()
-            .WithConstructorArgument("freeTimes", new Dictionary<string, bool[]>
+        [Test]
+        public void TestSchedule_TryAddRecord_CallAddRecord()
+        {
+            var user = A.Dummy<long>();
+            var machineName = A.Dummy<string>();
+            var washingType = "Полчаса";
+            var date = A.Dummy<DateTime>();
+            A.CallTo(() => repository.FreeTimes).Returns(new Dictionary<string, List<DateTime>>
             {
-                {"1", new bool[48 * 3]},
-                {"2", new bool[48 * 3]},
-                {"3", new bool[48 * 3]}
-            })
-            .WithConstructorArgument("dataBase", new Dictionary<long, List<ScheduleRecord>>());
+                {machineName, new List<DateTime>(){date} },
+            });
+            Assert.True(schedule.TryAddRecord(user, machineName, date, washingType));
+            var finishDate = date.Add(TimeSpan.FromMinutes(30));
+            var record = new ScheduleRecord(user, new TimeInterval(date, finishDate), machineName);
+            A.CallTo(() => repository.AddRecord(record)).MustHaveHappenedOnceExactly();
+        }
 
-        container.Bind<Schedule>().ToSelf().WithConstructorArgument("washingTypes",
-            new Dictionary<string, TimeSpan>
-            {
-                {"1", TimeSpan.FromMinutes(30)},
-                {"2", TimeSpan.FromMinutes(90)},
-                {"3", TimeSpan.FromMinutes(150)}
-            }
-        );
-        var schedule = container.Get<Schedule>();
-        schedule.TryAddRecord(1, "1", DateTime.Today, "1");
-        Assert.False(schedule.TryAddRecord(2, "1", DateTime.Today, "3"));
-        Assert.False(schedule.TryAddRecord(2, "1", DateTime.Today.AddDays(-1), "3"));
-        Assert.False(schedule.TryAddRecord(2, "1", DateTime.Today.AddDays(10000), "3"));
-    }
+        [Test]
+        public void TestSchedule_TryRemoveRecord_WhenNoRecords()
+        {
+            var record = A.Dummy<ScheduleRecord>();
+            A.CallTo(() => repository.GetRecordsByUser(record.User)).Returns(new List<ScheduleRecord>());
+            Assert.False(schedule.TryRemoveRecord(record));
+        }
 
-    [Test]
-    public void TestSchedule_WhenCannotRemoveRecord()
-    {
-        var container = Container;
-        container.Bind<IRecordsRepository>()
-            .To<MockScheduleRepository>()
-            .WithConstructorArgument("freeTimes", new Dictionary<string, bool[]>
-            {
-                {"1", new bool[48 * 3]},
-                {"2", new bool[48 * 3]},
-                {"3", new bool[48 * 3]}
-            })
-            .WithConstructorArgument("dataBase", new Dictionary<long, List<ScheduleRecord>>());
+        public void TestSchedule_TryRemoveRecord_WhenFitRecord()
+        {
+            var record = A.Dummy<ScheduleRecord>();
+            A.CallTo(() => repository.GetRecordsByUser(record.User)).Returns(new List<ScheduleRecord>() { });
+            Assert.False(schedule.TryRemoveRecord(record));
+        }
 
-        container.Bind<Schedule>().ToSelf().WithConstructorArgument("washingTypes",
-            new Dictionary<string, TimeSpan>
-            {
-                {"1", TimeSpan.FromMinutes(30)},
-                {"2", TimeSpan.FromMinutes(90)},
-                {"3", TimeSpan.FromMinutes(150)}
-            }
-        );
-
-        var schedule = container.Get<Schedule>();
-        schedule.TryAddRecord(1, "1", DateTime.Today, "1");
-        Assert.False(schedule.TryRemoveRecord(new ScheduleRecord(2,
-            new TimeInterval(DateTime.Today, DateTime.Today.AddMinutes(30)), "1")));
-        Assert.False(schedule.TryRemoveRecord(new ScheduleRecord(2,
-            new TimeInterval(DateTime.Today, DateTime.Today.AddMinutes(150)), "1")));
-    }
-
-    [Test]
-    public void TestSchedule_WhenNoFreeTime()
-    {
-        var container = Container;
-        var ft = new bool[48 * 3];
-        for (var i = 0; i < ft.Length; i++) ft[i] = true;
-        container.Bind<IRecordsRepository>()
-            .To<MockScheduleRepository>()
-            .WithConstructorArgument("freeTimes", new Dictionary<string, bool[]>
-            {
-                {"1", ft.ToArray()},
-                {"2", ft.ToArray()},
-                {"3", ft.ToArray()}
-            })
-            .WithConstructorArgument("dataBase", new Dictionary<long, List<ScheduleRecord>>());
-
-        container.Bind<Schedule>().ToSelf().WithConstructorArgument("washingTypes",
-            new Dictionary<string, TimeSpan>
-            {
-                {"1", TimeSpan.FromMinutes(30)},
-                {"2", TimeSpan.FromMinutes(90)},
-                {"3", TimeSpan.FromMinutes(150)}
-            }
-        );
-
-        var schedule = container.Get<Schedule>();
-        Assert.False(schedule.TryAddRecord(1, "1", DateTime.Today, "3"));
-        Assert.False(schedule.TryAddRecord(2, "2", DateTime.Today.AddHours(23), "2"));
-        Assert.False(schedule.TryAddRecord(3, "3", DateTime.Today.AddDays(2), "3"));
-        foreach (var freeTimes in schedule.GetFreeTimes().Values) Assert.IsEmpty(freeTimes);
+        [Test]
+        public void TestSchedule_TryRemoveRecord_CallGetUserRecords_CallRemoveRecord()
+        {
+            var record = A.Dummy<ScheduleRecord>();
+            A.CallTo(() => repository.GetRecordsByUser(record.User)).Returns(new List<ScheduleRecord>() { record });
+            Assert.True(schedule.TryRemoveRecord(record));
+            A.CallTo(() => repository.GetRecordsByUser(record.User)).MustHaveHappenedOnceExactly();
+            A.CallTo(() => repository.RemoveRecord(record)).MustHaveHappenedOnceExactly();
+        }
     }
 }
