@@ -21,7 +21,7 @@ public class HandleSubscribeCommand : IHandleTextCommand
     public DialogState DestinationState => DialogState.Subscriptions;
 
 
-    public async Task HandleMessage(Message message, long chatId)
+    public async Task HandleMessage(ChatMessage message, long chatId)
     {
         if (message.Text != null && service.TrySubscribeUser(chatId, message.Text))
         {

@@ -97,7 +97,9 @@ namespace DormitoryBot.App
                 stateCommands[usersStateRepository.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
             if (command != null)
             {
-                await ((IHandleTextCommand) command).HandleMessage(message, chatId);
+                var photoIds = message.Photo.Select(x => x.FileId).ToArray();
+                var chatMessage = new ChatMessage(message.Text, message.From.Username, photoIds, message.Caption);
+                await ((IHandleTextCommand) command).HandleMessage(chatMessage, chatId);
             }
             else
             {

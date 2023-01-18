@@ -22,25 +22,21 @@ public class HandleAnnouncementMessageCommand : IHandleTextCommand
     public DialogState DestinationState => DialogState.SubscriptionsManage;
 
 
-    public async Task HandleMessage(Message message, long chatId)
+    public async Task HandleMessage(ChatMessage message, long chatId)
     {
         var sub = (string)dialogManager.Value.TempInput[chatId][0];
         sub = sub.StartsWith("#") ? sub : "#" + sub;
         var followers = service.GetFollowers(sub);
-        switch (message.Type)
+        if(message.PhotoIds != null)
         {
-            case MessageType.Photo:
-                {
-                    foreach (var user in followers)
-                        await dialogManager.Value.SendPhotoAsync(user, message.Photo[0].FileId,
-                            $"{sub}\n{message.Caption}");
-                    break;
-                }
-
-            case MessageType.Text:
-                foreach (var user in followers)
-                    await dialogManager.Value.SendTextMessageAsync(user, $"{sub}\n{message.Text}");
-                break;
+            foreach (var user in followers)
+                await dialogManager.Value.SendPhotoAsync(user, message.PhotoIds[0],
+                    $"{sub}\n{message.Caption}");
+        }
+        else
+        {
+            foreach (var user in followers)
+                await dialogManager.Value.SendTextMessageAsync(user, $"{sub}\n{message.Text}");
         }
 
         await dialogManager.Value.SendTextMessageAsync(chatId, "Круто, всем разослал!");

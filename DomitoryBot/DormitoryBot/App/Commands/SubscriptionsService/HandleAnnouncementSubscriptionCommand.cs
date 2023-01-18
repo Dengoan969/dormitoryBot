@@ -21,7 +21,7 @@ public class HandleAnnouncementSubscriptionCommand : IHandleTextCommand
     public DialogState DestinationState => DialogState.SubscriptionsManageAnnouncementMessage;
 
 
-    public async Task HandleMessage(Message message, long chatId)
+    public async Task HandleMessage(ChatMessage message, long chatId)
     {
         if (message.Text != null && service.IsUserAdmin(chatId, message.Text))
         {

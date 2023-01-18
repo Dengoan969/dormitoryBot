@@ -20,7 +20,7 @@ public class DeleteRecordCommand : IHandleTextCommand
     public DialogState SourceState => DialogState.WashingSelectToDelete;
     public DialogState DestinationState => DialogState.Washing;
 
-    public async Task HandleMessage(Message message, long chatId)
+    public async Task HandleMessage(ChatMessage message, long chatId)
     {
         if (int.TryParse(message.Text, out var num))
         {

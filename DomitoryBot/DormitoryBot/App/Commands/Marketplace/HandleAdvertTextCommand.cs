@@ -18,7 +18,7 @@ namespace DormitoryBot.App.Commands.Marketplace
         public DialogState DestinationState => DialogState.MarketplacePrice;
 
 
-        public async Task HandleMessage(Message message, long chatId)
+        public async Task HandleMessage(ChatMessage message, long chatId)
         {
             if (message.Text != null)
             {

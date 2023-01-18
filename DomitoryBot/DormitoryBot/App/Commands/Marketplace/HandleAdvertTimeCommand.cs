@@ -21,7 +21,7 @@ namespace DormitoryBot.App.Commands.Marketplace
         public DialogState DestinationState => DialogState.Marketplace;
 
 
-        public async Task HandleMessage(Message message, long chatId)
+        public async Task HandleMessage(ChatMessage message, long chatId)
         {
             if (message.Text != null)
             {
@@ -46,7 +46,7 @@ namespace DormitoryBot.App.Commands.Marketplace
                 else
                 {
                     marketPlace.CreateAdvert(chatId, (string)tempInput[0], (string)tempInput[1],
-                        TimeSpan.FromDays(days), message.From.Username);
+                        TimeSpan.FromDays(days), message.From);
                     await dialogManager.Value.SendTextMessageWithChangingStateAsync(chatId,
                         "Маркетплейс", DestinationState);
                 }
