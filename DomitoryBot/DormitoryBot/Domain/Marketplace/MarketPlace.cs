@@ -17,7 +17,7 @@ namespace DormitoryBot.Domain.Marketplace
 
         public void CreateAdvert(long author, string text, string price, TimeSpan time, string username)
         {
-            var advert = new Advert(author, text, price, time, username);
+            var advert = new Advert(author, username, text, price, DateTime.Now, time);
             repository.AddAdvert(advert);
         }
 
