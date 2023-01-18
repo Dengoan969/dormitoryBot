@@ -1,5 +1,6 @@
 ﻿using DormitoryBot.App.Commands.Interfaces;
 using DormitoryBot.App.Interfaces;
+using DormitoryBot.Infrastructure;
 using DormitoryBot.UI;
 using Telegram.Bot;
 using Telegram.Bot.Types;
@@ -12,9 +13,10 @@ namespace DormitoryBot.App
         private readonly TelegramBotClient botClient;
         private readonly Dictionary<DialogState, IChatCommand[]> stateCommands;
         private readonly IUsersStateRepository usersStateRepository;
+        private readonly IDateTimeService dateTimeService;
 
         public TelegramDialogManager(TelegramBotClient botClient,
-            IChatCommand[] commands, IUsersStateRepository usersStateRepository)
+            IChatCommand[] commands, IUsersStateRepository usersStateRepository, IDateTimeService dateTimeService)
         {
             this.botClient = botClient;
             stateCommands = new Dictionary<DialogState, IChatCommand[]>();
@@ -29,6 +31,7 @@ namespace DormitoryBot.App
 
             TempInput = new Dictionary<long, List<object>>();
             this.usersStateRepository = usersStateRepository;
+            this.dateTimeService = dateTimeService;
         }
 
         public Dictionary<long, List<object>> TempInput { get; }
@@ -53,6 +56,10 @@ namespace DormitoryBot.App
 
         public async Task HandleUpdate(Update update)
         {
+            // if (update.CallbackQuery.Message.Date <= dateTimeService.Now - TimeSpan.FromSeconds(10))
+            // {
+            //     return;
+            // }
             var chatId = update.Message?.Chat.Id ?? update.CallbackQuery?.Message.Chat.Id;
             if (!chatId.HasValue)
             {
@@ -97,7 +104,7 @@ namespace DormitoryBot.App
                 stateCommands[usersStateRepository.GetState(chatId)].FirstOrDefault(x => x is IHandleTextCommand);
             if (command != null)
             {
-                var photoIds = message.Photo.Select(x => x.FileId).ToArray();
+                var photoIds = message.Photo?.Select(x => x.FileId).ToArray();
                 var chatMessage = new ChatMessage(message.Text, message.From.Username, photoIds, message.Caption);
                 await ((IHandleTextCommand) command).HandleMessage(chatMessage, chatId);
             }
