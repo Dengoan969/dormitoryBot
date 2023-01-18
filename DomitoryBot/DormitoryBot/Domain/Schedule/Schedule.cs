@@ -1,8 +1,11 @@
-﻿namespace DormitoryBot.Domain.Schedule
+﻿using DormitoryBot.Infrastructure;
+
+namespace DormitoryBot.Domain.Schedule
 {
     public class Schedule
     {
         private readonly IRecordsRepository repository;
+        private readonly IDateTimeService dateTimeService;
         private readonly Timer timer;
         private readonly Dictionary<string, TimeSpan> washingTypes = new Dictionary<string, TimeSpan>
                 {
@@ -11,10 +14,11 @@
                     {"Два с половиной часа", TimeSpan.FromMinutes(150)}
                 };
 
-        public Schedule(IRecordsRepository repository)
+        public Schedule(IRecordsRepository repository, IDateTimeService dateTimeService)
         {
             this.repository = repository;
-            timer = new Timer(ClearPreviousDay, new object(), DateTime.Today.AddDays(1) - DateTime.Now,
+            this.dateTimeService = dateTimeService;
+            timer = new Timer(ClearPreviousDay, new object(), dateTimeService.Today.AddDays(1) - dateTimeService.Now,
                 TimeSpan.FromDays(1));
         }
 

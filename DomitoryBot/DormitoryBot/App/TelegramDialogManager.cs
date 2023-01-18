@@ -53,11 +53,6 @@ namespace DormitoryBot.App
 
         public async Task HandleUpdate(Update update)
         {
-            if (update.Message?.Date >= DateTime.Now - TimeSpan.FromSeconds(10))
-            {
-                return;
-            }
-
             var chatId = update.Message?.Chat.Id ?? update.CallbackQuery?.Message.Chat.Id;
             if (!chatId.HasValue)
             {

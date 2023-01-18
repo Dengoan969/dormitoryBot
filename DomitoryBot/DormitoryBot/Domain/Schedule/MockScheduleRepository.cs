@@ -1,4 +1,6 @@
-﻿namespace DormitoryBot.Domain.Schedule
+﻿using DormitoryBot.Infrastructure;
+
+namespace DormitoryBot.Domain.Schedule
 {
     public class MockScheduleRepository : IRecordsRepository
     {
@@ -6,11 +8,15 @@
 
         private readonly Dictionary<string, bool[]> freeTimes;
 
+        private readonly IDateTimeService dateTimeService;
+
         public MockScheduleRepository(Dictionary<string, bool[]> freeTimes,
-                                      Dictionary<long, List<ScheduleRecord>> dataBase)
+                                      Dictionary<long, List<ScheduleRecord>> dataBase,
+                                      IDateTimeService dateTimeService)
         {
             this.freeTimes = freeTimes;
             this.dataBase = dataBase;
+            this.dateTimeService = dateTimeService;
         }
 
         public MockScheduleRepository() : this(
@@ -20,7 +26,8 @@
                     {"2", new bool[48 * 3]},
                     {"3", new bool[48 * 3]}
                     },
-            new Dictionary<long, List<ScheduleRecord>>())
+            new Dictionary<long, List<ScheduleRecord>>(),
+            new DefaultDateTimeService())
         { }
 
         public void AddRecord(ScheduleRecord record)
@@ -60,7 +67,7 @@
         {
             get
             {
-                var today = DateTime.Today;
+                var today = dateTimeService.Today;
                 var times = new Dictionary<string, List<DateTime>>();
                 foreach (var machine in freeTimes.Keys)
                 {
@@ -82,12 +89,12 @@
                 freeTimes[machine] = newDay;
             }
             foreach (var user in dataBase.Keys)
-                dataBase[user] = dataBase[user].Where(x => x.TimeInterval.Start >= DateTime.Today).ToList();
+                dataBase[user] = dataBase[user].Where(x => x.TimeInterval.Start >= dateTimeService.Today).ToList();
         }
 
-        private static int GetIndexByDate(DateTime date)
+        private int GetIndexByDate(DateTime date)
         {
-            var today = DateTime.Today;
+            var today = dateTimeService.Today;
             var diff = date - today;
             return diff.Days * 48 + diff.Hours * 2 + diff.Minutes / 30;
         }

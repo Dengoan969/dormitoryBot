@@ -2,6 +2,7 @@
 using DormitoryBot.Domain.Schedule;
 using DormitoryBot.Domain.SubscriptionService;
 using DormitoryBot.App;
+using DormitoryBot.Infrastructure;
 using Ninject;
 using Ninject.Extensions.Conventions;
 using Telegram.Bot;
@@ -26,9 +27,11 @@ namespace DormitoryBot
             container.Settings.AllowNullInjection = true;
 
             container.Bind<IRecordsRepository>().To<MockScheduleRepository>();
-            container.Bind<IUsersStateRepository>().To<PgSqlUsersStateRepository>();
+            container.Bind<IUsersStateRepository>().To<MockStateRepository>();
             container.Bind<ISubscriptionRepository>().To<MockSubscriptionRepository>();
             container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>();
+
+            container.Bind<IDateTimeService>().To<DefaultDateTimeService>().InSingletonScope();
 
             container.Bind<MarketPlace>().ToSelf().InSingletonScope();
             container.Bind<Schedule>().ToSelf().InSingletonScope();

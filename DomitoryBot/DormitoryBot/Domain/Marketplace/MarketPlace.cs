@@ -1,15 +1,18 @@
-﻿using DormitoryBot.Domain.Marketplace;
+﻿using DormitoryBot.Infrastructure;
+using DormitoryBot.Domain.Marketplace;
 
 namespace DormitoryBot.Domain.Marketplace
 {
     public class MarketPlace
     {
         private readonly IAdvertsRepository repository;
+        private readonly IDateTimeService dateTimeService;
         private readonly Timer timer;
 
-        public MarketPlace(IAdvertsRepository repository)
+        public MarketPlace(IAdvertsRepository repository, IDateTimeService dateTimeService)
         {
             this.repository = repository;
+            this.dateTimeService = dateTimeService;
             timer = new Timer(ClearExpiredAdverts, new object(), TimeSpan.FromDays(1), TimeSpan.FromHours(1));
         }
 
@@ -17,7 +20,7 @@ namespace DormitoryBot.Domain.Marketplace
 
         public void CreateAdvert(long author, string text, string price, TimeSpan time, string username)
         {
-            var advert = new Advert(author, username, text, price, DateTime.Now, time);
+            var advert = new Advert(author, username, text, price, dateTimeService.Now, time);
             repository.AddAdvert(advert);
         }
 
@@ -34,7 +37,7 @@ namespace DormitoryBot.Domain.Marketplace
         private void ClearExpiredAdverts(object stateInfo)
         {
             for (var i = 0; i < Adverts.Length; i++)
-                if (DateTime.Now >= Adverts[i].CreationTime + Adverts[i].TimeToLive)
+                if (dateTimeService.Now >= Adverts[i].CreationTime + Adverts[i].TimeToLive)
                     RemoveAdvert(Adverts[i]);
                 else
                     break;
