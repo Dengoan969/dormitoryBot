@@ -39,6 +39,7 @@ public class PgSqlAdvertsRepository : IAdvertsRepository
     {
         get
         {
+            var res = new List<Advert>();
             using var conn = new NpgsqlConnection(connString);
             conn.Open();
             using var command =
@@ -46,15 +47,41 @@ public class PgSqlAdvertsRepository : IAdvertsRepository
             var reader = command.ExecuteReader();
             while (reader.Read())
             {
-                
+                var user_id = reader.GetFieldValue<long>(0);
+                var username = reader.GetFieldValue<string>(1);
+                var text = reader.GetFieldValue<string>(2);
+                var price = reader.GetFieldValue<string>(3);
+                var creation = reader.GetFieldValue<DateTime>(4);
+                var ttl = reader.GetFieldValue<TimeSpan>(5);
+                res.Add(new Advert(user_id, username, text, price, creation, ttl));
             }
 
-            return Array.Empty<Advert>();
+            return res.ToArray();
         }
     }
 
     public Advert[] GetUserAdverts(long user)
     {
-        throw new NotImplementedException();
+        {
+            var res = new List<Advert>();
+            using var conn = new NpgsqlConnection(connString);
+            conn.Open();
+            using var command =
+                new NpgsqlCommand("SELECT user_id, username, text, price, creation, ttl FROM adverts WHERE user_id = @1");
+            command.Parameters.AddWithValue("1", user);
+            var reader = command.ExecuteReader();
+            while (reader.Read())
+            {
+                var user_id = reader.GetFieldValue<long>(0);
+                var username = reader.GetFieldValue<string>(1);
+                var text = reader.GetFieldValue<string>(2);
+                var price = reader.GetFieldValue<string>(3);
+                var creation = reader.GetFieldValue<DateTime>(4);
+                var ttl = reader.GetFieldValue<TimeSpan>(5);
+                res.Add(new Advert(user_id, username, text, price, creation, ttl));
+            }
+
+            return res.ToArray();
+        }
     }
 }

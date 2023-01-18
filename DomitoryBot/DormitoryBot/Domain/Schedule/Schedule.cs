@@ -66,8 +66,7 @@ namespace DormitoryBot.Domain.Schedule
         {
             return repository.GetRecordsByUser(user);
         }
-
-        // record(Guid Id, Guid UserId, nvarchar(max) MachineName, Date Start, Date End)
+        
 
         public Dictionary<string, List<DateTime>> GetFreeTimes()
         {
