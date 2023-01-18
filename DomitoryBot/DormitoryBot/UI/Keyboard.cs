@@ -5,7 +5,7 @@ namespace DormitoryBot.UI;
 
 public static class Keyboard
 {
-    public static InlineKeyboardMarkup Menu = new(new[]
+    private static InlineKeyboardMarkup Menu = new(new[]
     {
         new[]
         {
@@ -23,7 +23,7 @@ public static class Keyboard
 
     //public static ReplyKeyboardMarkup Back = new ReplyKeyboardMarkup(new KeyboardButton("Назад"));
 
-    public static InlineKeyboardMarkup Washing = new(new[]
+    private static InlineKeyboardMarkup Washing = new(new[]
     {
         new[]
         {
@@ -40,7 +40,7 @@ public static class Keyboard
     });
 
 
-    public static InlineKeyboardMarkup Marketplace = new(new[]
+    private static InlineKeyboardMarkup Marketplace = new(new[]
     {
         new[]
         {
@@ -56,7 +56,7 @@ public static class Keyboard
         }
     });
 
-    public static InlineKeyboardMarkup Back = new(new[]
+    private static InlineKeyboardMarkup Back = new(new[]
     {
         new[]
         {
@@ -64,7 +64,7 @@ public static class Keyboard
         }
     });
 
-    public static InlineKeyboardMarkup Subscriptions = new(new[]
+    private static InlineKeyboardMarkup Subscriptions = new(new[]
     {
         new[]
         {
@@ -81,7 +81,7 @@ public static class Keyboard
         }
     });
 
-    public static InlineKeyboardMarkup SubscriptionsManage = new(new[]
+    private static InlineKeyboardMarkup SubscriptionsManage = new(new[]
     {
         new[]
         {
@@ -109,8 +109,6 @@ public static class Keyboard
 
     public static InlineKeyboardMarkup GetKeyboardByState(DialogState dialogState)
     {
-        if (stateToKeyboard.ContainsKey(dialogState)) return stateToKeyboard[dialogState];
-
-        return Back;
+        return stateToKeyboard.ContainsKey(dialogState) ? stateToKeyboard[dialogState] : Back;
     }
 }

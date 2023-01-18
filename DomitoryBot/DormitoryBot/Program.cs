@@ -7,6 +7,7 @@ using Ninject.Extensions.Conventions;
 using Telegram.Bot;
 using DormitoryBot.App.Commands.Interfaces;
 using DormitoryBot.App.Interfaces;
+using System.Configuration;
 
 namespace DormitoryBot
 {
@@ -25,7 +26,7 @@ namespace DormitoryBot
             container.Settings.AllowNullInjection = true;
 
             container.Bind<IRecordsRepository>().To<MockScheduleRepository>();
-            container.Bind<IUsersStateRepository>().To<MockStateRepository>();
+            container.Bind<IUsersStateRepository>().To<PgSqlUsersStateRepository>();
             container.Bind<ISubscriptionRepository>().To<MockSubscriptionRepository>();
             container.Bind<IAdvertsRepository>().To<MockAdvertsRepository>();
 
