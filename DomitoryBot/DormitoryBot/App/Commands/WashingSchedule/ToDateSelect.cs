@@ -20,7 +20,7 @@ public class ToDateSelect : IHandleTextCommand
     public DialogState SourceState => DialogState.WashingMachine;
     public DialogState DestinationState => DialogState.WashingDate;
 
-    public async Task HandleMessage(Message message, long chatId)
+    public async Task HandleMessage(ChatMessage message, long chatId)
     {
         if (schedule.MachineNames.Contains(message.Text))
         {

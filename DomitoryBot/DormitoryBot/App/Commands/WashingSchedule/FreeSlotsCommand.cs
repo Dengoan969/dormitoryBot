@@ -23,7 +23,7 @@ public class FreeSlotsCommand : IHandleTextCommand
     public DialogState SourceState => DialogState.WashingFreeSlotsChooseDays;
     public DialogState DestinationState => DialogState.Washing;
 
-    public async Task HandleMessage(Message message, long chatId)
+    public async Task HandleMessage(ChatMessage message, long chatId)
     {
         if (DateTime.TryParseExact(message.Text, "d.M", new CultureInfo("ru-RU"), DateTimeStyles.None,
                 out var value))

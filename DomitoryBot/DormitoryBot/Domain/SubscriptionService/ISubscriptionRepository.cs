@@ -9,12 +9,8 @@
         string[] GetAdminSubscriptionsOfUser(long userId);
 
         long[] GetFollowers(string sub);
-
-        long[] GetAdmins(string sub);
-
+        
         bool IsUserAdmin(long userId, string sub);
-
-        void AddAdmin(string sub, long caller, long userToAdd);
 
         void CreateSubscription(string sub, long userId);
 

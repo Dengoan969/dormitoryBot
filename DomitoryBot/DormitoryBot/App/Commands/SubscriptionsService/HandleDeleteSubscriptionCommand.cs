@@ -21,7 +21,7 @@ public class HandleDeleteSubscriptionCommand : IHandleTextCommand
     public DialogState DestinationState => DialogState.SubscriptionsManage;
 
 
-    public async Task HandleMessage(Message message, long chatId)
+    public async Task HandleMessage(ChatMessage message, long chatId)
     {
         if (message.Text != null && service.TryDeleteSubscription(message.Text, chatId))
         {

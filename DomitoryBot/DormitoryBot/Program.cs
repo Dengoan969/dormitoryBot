@@ -26,10 +26,10 @@ namespace DormitoryBot
             var container = new StandardKernel();
             container.Settings.AllowNullInjection = true;
 
-            container.Bind<IRecordsRepository>().To<MockScheduleRepository>();
-            container.Bind<IUsersStateRepository>().To<PgSqlUsersStateRepository>();
-            container.Bind<ISubscriptionRepository>().To<MockSubscriptionRepository>();
-            container.Bind<IAdvertsRepository>().To<PgSqlAdvertsRepository>();
+            container.Bind<IRecordsRepository>().To<PgSqlScheduleRepository>();
+            container.Bind<IUsersStateRepository>().To<PgSqlUsersStateRepository>().InSingletonScope();
+            container.Bind<ISubscriptionRepository>().To<PgSqlSubscriptionRepository>().InSingletonScope();
+            container.Bind<IAdvertsRepository>().To<PgSqlAdvertsRepository>().InSingletonScope();
 
             container.Bind<IDateTimeService>().To<DefaultDateTimeService>().InSingletonScope();
 

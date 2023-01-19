@@ -18,7 +18,7 @@ namespace DormitoryBot.App.Commands.Ideas
 
         public DialogState DestinationState => DialogState.Menu;
 
-        public async Task HandleMessage(Message message, long chatId)
+        public async Task HandleMessage(ChatMessage message, long chatId)
         {
             if (message.Text != null)
             {
